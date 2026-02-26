@@ -4,6 +4,7 @@ import Home from "../pages/Home.vue";
 import Projects from "../pages/Projects.vue";
 import About from "../pages/About.vue";
 import Contact from "../pages/Contact.vue";
+import ProjectDetail from "../pages/ProjectDetail.vue";
 
 export const router = createRouter({
   history: createWebHashHistory(), // use hash history for GitHub Pages
@@ -12,6 +13,7 @@ export const router = createRouter({
     { path: "/projects", name: "projects", component: Projects },
     { path: "/about", name: "about", component: About },
     { path: "/contact", name: "contact", component: Contact },
+    { path: "/projects/:slug", name: "projectDetail", component: ProjectDetail },
   ],
   scrollBehavior() {
     return { top: 0 };

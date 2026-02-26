@@ -1,10 +1,27 @@
 :root {
+  /* Colors */
   --bg: #ffffff;
   --text: #0b0b0d;
   --muted: rgba(0, 0, 0, 0.68);
   --border: rgba(0, 0, 0, 0.12);
   --card: #ffffff;
   --shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+
+  /* Layout + spacing */
+  --container: 1040px;
+
+  --space-1: 8px;
+  --space-2: 12px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 48px;
+
+  /* Radius */
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 20px;
+  --r-pill: 999px;
 }
 
 html[data-theme="dark"] {
@@ -27,25 +44,64 @@ body {
 
 a { color: inherit; }
 
+/* ---- Global layout helpers ---- */
 .container {
-  max-width: 1040px;
+  max-width: var(--container);
   margin: 0 auto;
-  padding: 28px 20px 56px;
+  padding: var(--space-5) 20px var(--space-6);
 }
 
+.section {
+  margin-top: var(--space-6);
+}
+
+.sectionTitle {
+  margin: 0 0 var(--space-3);
+  letter-spacing: -0.02em;
+}
+
+/* ---- Buttons (use everywhere) ---- */
 .btn {
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
-  padding: 10px 14px;
-  border-radius: 14px;
-  font-weight: 800;
-  text-decoration: none;
+  position: relative;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   gap: 10px;
+
+  padding: 10px 14px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+
+  font-weight: 850;
+  text-decoration: none;
+  line-height: 1;
+
+  transform: translateZ(0);
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease;
 }
 
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.btn:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+.btn:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--text) 25%, transparent);
+  outline-offset: 3px;
+}
+
+/* Filled variant (optional) */
 .btn.primary {
   background: var(--text);
   color: var(--bg);
@@ -53,10 +109,20 @@ a { color: inherit; }
   box-shadow: var(--shadow);
 }
 
+/* ---- Cards (use everywhere) ---- */
 .card {
   border: 1px solid var(--border);
   background: var(--card);
-  border-radius: 18px;
-  padding: 14px;
-  box-shadow: none;
+  border-radius: var(--r-lg);
+  padding: var(--space-3);
+}
+
+/* ---- Inputs ---- */
+.input {
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-weight: 800;
 }

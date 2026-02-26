@@ -1,15 +1,26 @@
 <template>
   <header class="nav">
-    <div class="container navInner">
-      <RouterLink class="brand" to="/">Aaron Ho</RouterLink>
+    <div class="container navContainer">
+      <div class="navInner">
+        <RouterLink class="brand" to="/">Aaron Ho</RouterLink>
 
-      <nav class="links">
-        <RouterLink to="/projects">Projects</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-        <RouterLink to="/contact">Contact</RouterLink>
-        <a class="btn" :href="resumeHref" target="_blank" rel="noreferrer">Resume</a>
-        <ThemeToggle />
-      </nav>
+        <nav class="links">
+          <RouterLink to="/projects">Projects</RouterLink>
+          <RouterLink to="/about">About</RouterLink>
+          <RouterLink to="/contact">Contact</RouterLink>
+
+          <a
+            class="btn"
+            :href="resumeHref"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Resume
+          </a>
+
+          <ThemeToggle />
+        </nav>
+      </div>
     </div>
   </header>
 </template>
@@ -21,15 +32,22 @@ const resumeHref = `${import.meta.env.BASE_URL}Resume_Aaron_Ho.pdf`;
 </script>
 
 <style scoped>
+/* Sticky glass nav */
 .nav {
   position: sticky;
   top: 0;
   z-index: 50;
   backdrop-filter: blur(10px);
-  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
   border-bottom: 1px solid var(--border);
 }
 
+/* Override container padding for nav only */
+.navContainer {
+  padding: 14px 20px;
+}
+
+/* Layout */
 .navInner {
   display: flex;
   align-items: center;
@@ -41,8 +59,10 @@ const resumeHref = `${import.meta.env.BASE_URL}Resume_Aaron_Ho.pdf`;
   font-weight: 900;
   letter-spacing: -0.02em;
   text-decoration: none;
+  color: var(--text);
 }
 
+/* Links */
 .links {
   display: flex;
   align-items: center;
@@ -52,11 +72,20 @@ const resumeHref = `${import.meta.env.BASE_URL}Resume_Aaron_Ho.pdf`;
 
 .links a {
   text-decoration: none;
-  font-weight: 800;
+  font-weight: 850;
   color: var(--muted);
+  transition: color 160ms ease;
 }
 
+.links a:hover {
+  color: var(--text);
+}
+
+/* Active route highlight */
 .links a.router-link-active {
   color: var(--text);
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 6px;
 }
 </style>

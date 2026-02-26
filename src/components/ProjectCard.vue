@@ -1,14 +1,16 @@
 <template>
-  <button class="card" type="button">
+  <RouterLink class="card linkCard" :to="`/projects/${project.slug}`">
     <div class="top">
       <h3>{{ project.title }}</h3>
-      <span class="hint">View</span>
+      <span class="chev">View</span>
     </div>
-    <p>{{ project.description }}</p>
+
+    <p class="muted">{{ project.subtitle }}</p>
+
     <div class="tags">
       <span v-for="t in project.tags" :key="t" class="tag">{{ t }}</span>
     </div>
-  </button>
+  </RouterLink>
 </template>
 
 <script setup>
@@ -18,21 +20,55 @@ defineProps({
 </script>
 
 <style scoped>
-.card {
-  text-align: left;
-  width: 100%;
-  border: 1px solid rgba(0,0,0,0.12);
-  background: white;
-  border-radius: 18px;
-  padding: 14px;
-  cursor: pointer;
-  transition: transform 120ms ease, box-shadow 120ms ease;
+.linkCard {
+  display: block;
+  text-decoration: none;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
 }
-.card:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(0,0,0,0.08); }
-.top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
-h3 { margin: 0; font-size: 16px; letter-spacing: -0.01em; }
-p { margin: 10px 0 0; color: rgba(0,0,0,0.65); line-height: 1.5; }
-.hint { color: rgba(0,0,0,0.45); font-weight: 800; font-size: 12px; }
-.tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
-.tag { border: 1px solid rgba(0,0,0,0.12); border-radius: 999px; padding: 6px 10px; font-weight: 800; font-size: 12px; color: rgba(0,0,0,0.6); }
+
+.linkCard:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+h3 {
+  margin: 0;
+  letter-spacing: -0.01em;
+  font-size: 16px;
+}
+
+.muted {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.tag {
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  padding: 6px 10px;
+  font-weight: 850;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.chev {
+  color: var(--muted);
+  font-weight: 900;
+  font-size: 12px;
+}
 </style>
