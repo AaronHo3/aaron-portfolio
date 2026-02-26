@@ -15,7 +15,8 @@ export const router = createRouter({
     { path: "/contact", name: "contact", component: Contact },
     { path: "/projects/:slug", name: "projectDetail", component: ProjectDetail },
   ],
-  scrollBehavior() {
-    return { top: 0 };
+  scrollBehavior(to, from, savedPosition) {
+  if (savedPosition) return savedPosition;
+  return { top: 0, behavior: "smooth" };
   },
 });

@@ -1,21 +1,37 @@
 <template>
-  <Navbar />
-  <main class="container">
-    <RouterView />
-    <footer class="footer">© {{ new Date().getFullYear() }} Aaron Ho</footer>
-  </main>
+  <div>
+    <Navbar />
+
+    <main class="container">
+      <RouterView v-slot="{ Component }">
+        <Transition name="page" mode="out-in">
+          <component :is="Component" />
+        </Transition>
+      </RouterView>
+    </main>
+  </div>
 </template>
 
 <script setup>
 import Navbar from "./components/Navbar.vue";
 </script>
 
-<style scoped>
-.footer {
-  margin-top: 54px;
-  padding-top: 18px;
-  border-top: 1px solid var(--border);
-  color: var(--muted);
-  font-weight: 700;
+<style>
+/* ---- Page transitions ---- */
+.page-enter-active,
+.page-leave-active {
+  transition:
+    opacity 260ms ease,
+    transform 260ms ease;
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
 }
 </style>
