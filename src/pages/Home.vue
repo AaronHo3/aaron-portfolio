@@ -15,9 +15,24 @@
         </p>
 
         <div class="cta" :class="{ in: mounted }">
-          <RouterLink class="btn" to="/projects">View Projects</RouterLink>
+          <RouterLink class="btn primary" to="/projects">View Projects</RouterLink>
           <a class="btn" :href="resumeHref" target="_blank" rel="noreferrer">Resume</a>
           <RouterLink class="btn" to="/contact">Contact</RouterLink>
+        </div>
+
+        <div class="trustRow" :class="{ in: mounted }">
+          <div class="trustStat">
+            <strong>6+</strong>
+            <span>Applied AI projects</span>
+          </div>
+          <div class="trustStat">
+            <strong>Healthcare + Biotech</strong>
+            <span>Domain focus</span>
+          </div>
+          <div class="trustStat">
+            <strong>Dashboards to Deployment</strong>
+            <span>End-to-end builds</span>
+          </div>
         </div>
       </div>
 
@@ -131,7 +146,8 @@ function onLeave() {
 .pill,
 .title,
 .sub,
-.cta {
+.cta,
+.trustRow {
   opacity: 0;
   transform: translateY(8px);
   filter: blur(6px);
@@ -145,11 +161,13 @@ function onLeave() {
 .title.in { transition-delay: 140ms; }
 .sub.in { transition-delay: 220ms; }
 .cta.in { transition-delay: 300ms; }
+.trustRow.in { transition-delay: 360ms; }
 
 .pill.in,
 .title.in,
 .sub.in,
-.cta.in {
+.cta.in,
+.trustRow.in {
   opacity: 1;
   transform: translateY(0);
   filter: blur(0);
@@ -173,9 +191,10 @@ h1 {
 }
 
 .accent {
-  text-decoration: underline;
-  text-decoration-thickness: 6px;
-  text-underline-offset: 6px;
+  background: linear-gradient(110deg, var(--text), var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .sub {
@@ -191,6 +210,35 @@ h1 {
   gap: 12px;
   flex-wrap: wrap;
   margin-top: 18px;
+}
+
+.trustRow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.trustStat {
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, var(--border));
+  background: color-mix(in srgb, var(--accent-soft) 46%, var(--card));
+}
+
+.trustStat strong {
+  display: block;
+  font-family: "Sora", "Plus Jakarta Sans", system-ui, sans-serif;
+  letter-spacing: -0.02em;
+  font-size: 13px;
+}
+
+.trustStat span {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 700;
 }
 
 /* ---- PROFILE PICTURE TILT + ENTRANCE ---- */
@@ -224,6 +272,16 @@ h1 {
   background: var(--card);
   box-shadow: var(--shadow);
   transform: translateZ(18px);
+}
+
+.tilt::after {
+  content: "";
+  position: absolute;
+  inset: -34px;
+  border-radius: 999px;
+  pointer-events: none;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 22%, transparent), transparent 60%);
+  z-index: -1;
 }
 
 /* More noticeable ring pulse:
@@ -290,6 +348,8 @@ h1 {
 .featuredCard {
   display: block;
   text-decoration: none;
+  position: relative;
+  isolation: isolate;
 
   opacity: 0;
   transform: translateY(10px);
@@ -314,8 +374,24 @@ h1 {
 .featuredCard.d2 { transition-delay: 420ms; }
 
 .featuredCard:hover {
-  box-shadow: var(--shadow);
-  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--accent) 34%, var(--border));
+  box-shadow: 0 16px 30px color-mix(in srgb, var(--accent) 18%, transparent);
+  transform: translateY(-4px);
+}
+
+.featuredCard::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 82%, white), color-mix(in srgb, var(--text) 66%, var(--accent)));
+  opacity: 0.55;
+  transition: opacity 160ms ease;
+}
+
+.featuredCard:hover::before {
+  opacity: 0.92;
 }
 
 .cardTop {
@@ -361,7 +437,7 @@ h1 {
 
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .pill, .title, .sub, .cta, .tilt, .featuredCard {
+  .pill, .title, .sub, .cta, .trustRow, .tilt, .featuredCard {
     transition: none !important;
     animation: none !important;
     opacity: 1 !important;
@@ -370,5 +446,11 @@ h1 {
   }
   .ring, .ring2 { animation: none !important; filter: none !important; }
   .pfp { transform: none !important; }
+}
+
+@media (max-width: 760px) {
+  .trustRow {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

@@ -57,6 +57,10 @@ const filtered = computed(() => {
   flex-wrap: wrap;
 }
 
+.head :deep(.input) {
+  min-width: min(320px, 100%);
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -74,7 +78,7 @@ const filtered = computed(() => {
 /* simple chip button */
 .chip {
   border: 1px solid var(--border);
-  background: var(--card);
+  background: color-mix(in srgb, var(--card) 90%, var(--bg-elev));
   color: var(--muted);
   padding: 8px 12px;
   border-radius: var(--r-pill);
@@ -84,13 +88,16 @@ const filtered = computed(() => {
 }
 
 .chip:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow);
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--accent) 34%, var(--border));
+  box-shadow: 0 10px 22px color-mix(in srgb, var(--accent) 18%, transparent);
   color: var(--text);
 }
 
 .chip.active {
-  color: var(--text);
-  box-shadow: var(--shadow);
+  color: color-mix(in srgb, white 90%, var(--bg));
+  border-color: transparent;
+  background: linear-gradient(110deg, var(--text), color-mix(in srgb, var(--text) 72%, var(--accent)));
+  box-shadow: 0 14px 24px color-mix(in srgb, var(--accent) 18%, transparent);
 }
 </style>

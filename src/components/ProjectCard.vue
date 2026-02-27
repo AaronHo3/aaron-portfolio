@@ -1,21 +1,36 @@
 <template>
-  <RouterLink class="card linkCard" :to="`/projects/${project.slug}`">
+  <RouterLink class="card linkCard" :to="`/projects/${props.project.slug}`" :style="{ '--tone': tone }">
     <div class="top">
-      <h3>{{ project.title }}</h3>
+      <h3>{{ props.project.title }}</h3>
       <span class="chev">View</span>
     </div>
 
-    <p class="muted">{{ project.subtitle }}</p>
+    <p class="muted">{{ props.project.subtitle }}</p>
 
     <div class="tags">
-      <span v-for="t in project.tags" :key="t" class="tag">{{ t }}</span>
+      <span v-for="t in props.project.tags" :key="t" class="tag">{{ t }}</span>
     </div>
   </RouterLink>
 </template>
 
 <script setup>
-defineProps({
+import { computed } from "vue";
+
+const props = defineProps({
   project: { type: Object, required: true },
+});
+
+const toneByTag = {
+  "Machine Learning": "#4d8b62",
+  "Deep Learning": "#3567ac",
+  "Data Viz": "#a65f2a",
+  "Healthcare": "#6b53ab",
+  "Computer Vision": "#267c80",
+};
+
+const tone = computed(() => {
+  const match = props.project.tags.find((t) => toneByTag[t]);
+  return match ? toneByTag[match] : "var(--accent)";
 });
 </script>
 
@@ -23,12 +38,42 @@ defineProps({
 .linkCard {
   display: block;
   text-decoration: none;
-  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+  position: relative;
+  overflow: hidden;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.linkCard::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--tone) 84%, white), var(--tone));
+  opacity: 0.7;
+}
+
+.linkCard::after {
+  content: "";
+  position: absolute;
+  inset: -40% auto auto -10%;
+  width: 180px;
+  height: 180px;
+  border-radius: 999px;
+  pointer-events: none;
+  background: radial-gradient(circle, color-mix(in srgb, var(--tone) 14%, transparent), transparent 66%);
+  transition: opacity 160ms ease;
+  opacity: 0.5;
 }
 
 .linkCard:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow);
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--tone) 42%, var(--border));
+  box-shadow: 0 16px 30px color-mix(in srgb, var(--tone) 20%, transparent);
+  background: color-mix(in srgb, var(--card) 88%, var(--tone) 4%);
+}
+
+.linkCard:hover::after {
+  opacity: 0.86;
 }
 
 .top {
@@ -64,6 +109,7 @@ h3 {
   font-weight: 850;
   font-size: 12px;
   color: var(--muted);
+  background: color-mix(in srgb, var(--tone) 8%, transparent);
 }
 
 .chev {
