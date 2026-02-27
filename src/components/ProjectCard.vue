@@ -1,5 +1,14 @@
 <template>
   <RouterLink class="card linkCard" :to="`/projects/${props.project.slug}`" :style="{ '--tone': tone }">
+    <div class="visual">
+      <component :is="projectIcon(props.project.slug)" class="visualIcon" />
+      <div class="visualBars" aria-hidden="true">
+        <span :style="{ width: miniBarWidths(props.project.slug)[0] }"></span>
+        <span :style="{ width: miniBarWidths(props.project.slug)[1] }"></span>
+        <span :style="{ width: miniBarWidths(props.project.slug)[2] }"></span>
+      </div>
+    </div>
+
     <div class="top">
       <h3>{{ props.project.title }}</h3>
       <span class="chev">View</span>
@@ -15,6 +24,7 @@
 
 <script setup>
 import { computed } from "vue";
+import { Activity, BrainCircuit, ChartScatter, ScanSearch } from "lucide-vue-next";
 
 const props = defineProps({
   project: { type: Object, required: true },
@@ -32,6 +42,28 @@ const tone = computed(() => {
   const match = props.project.tags.find((t) => toneByTag[t]);
   return match ? toneByTag[match] : "var(--accent)";
 });
+
+const iconBySlug = {
+  "eeg-seizure-classification": BrainCircuit,
+  "luna16-nodule-segmentation": ScanSearch,
+  "imagined-handwriting-decoding": Activity,
+  "gapminder-dashboard": ChartScatter,
+};
+
+const barsBySlug = {
+  "eeg-seizure-classification": ["84%", "74%", "92%"],
+  "luna16-nodule-segmentation": ["90%", "82%", "76%"],
+  "imagined-handwriting-decoding": ["72%", "88%", "80%"],
+  "gapminder-dashboard": ["62%", "85%", "90%"],
+};
+
+function projectIcon(slug) {
+  return iconBySlug[slug] || ChartScatter;
+}
+
+function miniBarWidths(slug) {
+  return barsBySlug[slug] || ["74%", "68%", "86%"];
+}
 </script>
 
 <style scoped>
@@ -74,6 +106,40 @@ const tone = computed(() => {
 
 .linkCard:hover::after {
   opacity: 0.86;
+}
+
+.visual {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: var(--r-md);
+  border: 1px dashed color-mix(in srgb, var(--tone) 38%, var(--border));
+  background: color-mix(in srgb, var(--tone) 12%, transparent);
+  margin-bottom: 12px;
+}
+
+.visualIcon {
+  width: 42px;
+  height: 42px;
+  padding: 9px;
+  border-radius: 11px;
+  color: color-mix(in srgb, white 90%, var(--bg));
+  background: linear-gradient(140deg, var(--tone), color-mix(in srgb, var(--tone) 62%, black));
+}
+
+.visualBars {
+  flex: 1;
+  display: grid;
+  gap: 6px;
+}
+
+.visualBars span {
+  display: block;
+  height: 5px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--tone) 82%, white), color-mix(in srgb, var(--tone) 82%, black));
+  opacity: 0.9;
 }
 
 .top {

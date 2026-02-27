@@ -4,6 +4,8 @@ export const projects = [
     title: "EEG Seizure Classification (CHB-MIT)",
     subtitle: "Ensemble ML + ROC/AUC evaluation",
     tags: ["EEG", "ML", "Classification"],
+    modelTypes: ["Classical ML", "Ensemble", "Classification"],
+    languages: ["Python"],
     stack: ["Python", "scikit-learn", "NumPy"],
     metrics: ["AUC: TBD", "F1: TBD"],
     links: {
@@ -23,6 +25,8 @@ export const projects = [
     title: "Lung Nodule Segmentation + Classification (LUNA16)",
     subtitle: "U-Net patches + ResNet50 classifier",
     tags: ["CT", "Deep Learning", "U-Net", "ResNet"],
+    modelTypes: ["Deep Learning", "Segmentation", "Classification"],
+    languages: ["Python"],
     stack: ["PyTorch", "U-Net", "ResNet50"],
     metrics: ["Dice: TBD", "AUC: TBD"],
     links: {
@@ -42,6 +46,8 @@ export const projects = [
     title: "Neural Decoding (Imagined Handwriting)",
     subtitle: "Poisson HMM vs RCNN sequence decoder",
     tags: ["BCI", "Sequence Models", "Time Series"],
+    modelTypes: ["Sequence Models", "Probabilistic Models", "Deep Learning"],
+    languages: ["Python"],
     stack: ["Python", "PyTorch", "State-space models"],
     metrics: ["Trajectory fidelity: TBD"],
     links: {
@@ -61,6 +67,8 @@ export const projects = [
     title: "Interactive Gapminder Dashboard (Vue + D3)",
     subtitle: "Linked interactions + filtering",
     tags: ["Visualization", "Vue", "D3"],
+    modelTypes: ["Visualization"],
+    languages: ["JavaScript"],
     stack: ["Vue 3", "D3.js", "Bootstrap"],
     metrics: ["4 linked charts"],
     links: {

@@ -1,15 +1,49 @@
 <template>
-  <section class="section">
+  <section class="section projectsWide">
     <div class="head">
       <h2 class="sectionTitle">Projects</h2>
       <input v-model="q" class="input" placeholder="Search…" />
     </div>
 
-    <div class="chips">
-      <button class="chip" :class="{ active: tag === 'All' }" @click="tag = 'All'">All</button>
-      <button v-for="t in tags" :key="t" class="chip" :class="{ active: tag === t }" @click="tag = t">
-        {{ t }}
-      </button>
+    <div class="filterGroup">
+      <p class="filterLabel">Model Type</p>
+      <div class="chips">
+        <button class="chip" :class="{ active: modelType === 'All' }" @click="modelType = 'All'">All</button>
+        <button
+          v-for="m in visibleModelTypes"
+          :key="m"
+          class="chip"
+          :class="{ active: modelType === m }"
+          @click="modelType = m"
+        >
+          {{ m }}
+        </button>
+        <button
+          v-if="modelTypes.length > MODEL_TYPE_PREVIEW_COUNT"
+          class="chip moreChip"
+          type="button"
+          :aria-expanded="showMoreModelTypes ? 'true' : 'false'"
+          @click="showMoreModelTypes = !showMoreModelTypes"
+        >
+          {{ showMoreModelTypes ? "Less" : "More" }}
+        </button>
+      </div>
+    </div>
+
+    <div class="filterGroup">
+      <p class="filterLabel">Language</p>
+      <div class="chips">
+        <button class="chip" :class="{ active: language === 'All' }" @click="language = 'All'">All</button>
+        <button
+          v-for="l in languages"
+          :key="l"
+          class="chip"
+          :class="{ active: language === l }"
+          @click="language = l"
+        >
+          {{ l }}
+        </button>
+      </div>
     </div>
 
     <div class="grid">
@@ -24,12 +58,35 @@ import { projects } from "../data/projects";
 import ProjectCard from "../components/ProjectCard.vue";
 
 const q = ref("");
-const tag = ref("All");
+const modelType = ref("All");
+const language = ref("All");
+const showMoreModelTypes = ref(false);
+const MODEL_TYPE_PREVIEW_COUNT = 4;
 
-const tags = computed(() => {
+const modelTypes = computed(() => {
   const s = new Set();
-  for (const p of projects) for (const t of p.tags) s.add(t);
+  for (const p of projects) for (const m of p.modelTypes || []) s.add(m);
   return Array.from(s).sort();
+});
+
+const languages = computed(() => {
+  const s = new Set();
+  for (const p of projects) for (const l of p.languages || []) s.add(l);
+  return Array.from(s).sort();
+});
+
+const visibleModelTypes = computed(() => {
+  if (showMoreModelTypes.value) return modelTypes.value;
+
+  const preview = modelTypes.value.slice(0, MODEL_TYPE_PREVIEW_COUNT);
+  if (
+    modelType.value !== "All"
+    && !preview.includes(modelType.value)
+    && modelTypes.value.includes(modelType.value)
+  ) {
+    return [...preview, modelType.value];
+  }
+  return preview;
 });
 
 const filtered = computed(() => {
@@ -38,17 +95,36 @@ const filtered = computed(() => {
   return projects.filter((p) => {
     const matchesQuery =
       !query ||
-      (p.title + " " + p.subtitle + " " + p.tags.join(" "))
+      (p.title
+        + " "
+        + p.subtitle
+        + " "
+        + p.tags.join(" ")
+        + " "
+        + (p.modelTypes || []).join(" ")
+        + " "
+        + (p.languages || []).join(" ")
+        + " "
+        + p.stack.join(" "))
         .toLowerCase()
         .includes(query);
 
-    const matchesTag = tag.value === "All" || p.tags.includes(tag.value);
-    return matchesQuery && matchesTag;
+    const matchesModelType = modelType.value === "All" || (p.modelTypes || []).includes(modelType.value);
+    const matchesLanguage = language.value === "All" || (p.languages || []).includes(language.value);
+
+    return matchesQuery && matchesModelType && matchesLanguage;
   });
 });
 </script>
 
 <style scoped>
+.projectsWide {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1360px, calc(100vw - 40px));
+}
+
 .head {
   display: flex;
   align-items: center;
@@ -61,9 +137,20 @@ const filtered = computed(() => {
   min-width: min(320px, 100%);
 }
 
+.filterGroup {
+  margin-top: 12px;
+}
+
+.filterLabel {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-weight: 800;
+  font-size: 13px;
+}
+
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 14px;
   margin-top: 14px;
 }
@@ -72,7 +159,7 @@ const filtered = computed(() => {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  margin: 12px 0 2px;
+  margin: 0;
 }
 
 /* simple chip button */
@@ -95,9 +182,19 @@ const filtered = computed(() => {
 }
 
 .chip.active {
-  color: color-mix(in srgb, white 90%, var(--bg));
-  border-color: transparent;
-  background: linear-gradient(110deg, var(--text), color-mix(in srgb, var(--text) 72%, var(--accent)));
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--accent) 52%, var(--border));
+  background: color-mix(in srgb, var(--accent) 26%, var(--bg-elev));
   box-shadow: 0 14px 24px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.moreChip {
+  border-style: dashed;
+}
+
+@media (max-width: 760px) {
+  .projectsWide {
+    width: calc(100vw - 24px);
+  }
 }
 </style>

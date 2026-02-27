@@ -2,15 +2,17 @@
 
 :root {
   /* Colors */
-  --bg: #f8f8f4;
+  --bg: #f5f6ef;
   --bg-elev: #ffffff;
-  --text: #171816;
-  --muted: #5e625a;
-  --border: rgba(23, 24, 22, 0.14);
+  --text: #1c1e1a;
+  --muted: #5f655a;
+  --border: rgba(28, 30, 26, 0.14);
   --card: rgba(255, 255, 255, 0.82);
   --accent: #3f6d4f;
-  --accent-soft: rgba(63, 109, 79, 0.14);
-  --shadow: 0 16px 38px rgba(20, 26, 20, 0.1);
+  --accent-2: #3f7cb8;
+  --accent-soft: rgba(63, 109, 79, 0.16);
+  --shadow: 0 16px 38px rgba(20, 26, 20, 0.09);
+  --noise-opacity: 0.36;
   --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.11'/%3E%3C/svg%3E");
 
   /* Layout + spacing */
@@ -31,15 +33,17 @@
 }
 
 html[data-theme="dark"] {
-  --bg: #111414;
-  --bg-elev: #161b19;
-  --text: #eef3ed;
-  --muted: #b2bab0;
-  --border: rgba(238, 243, 237, 0.16);
-  --card: rgba(22, 27, 25, 0.8);
-  --accent: #7cc190;
-  --accent-soft: rgba(124, 193, 144, 0.16);
-  --shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  --bg: #1d2328;
+  --bg-elev: #242d31;
+  --text: #edf3f7;
+  --muted: #b6c1c8;
+  --border: rgba(237, 243, 247, 0.16);
+  --card: rgba(36, 45, 49, 0.78);
+  --accent: #79c6a0;
+  --accent-2: #7ca9f0;
+  --accent-soft: rgba(121, 198, 160, 0.18);
+  --shadow: 0 18px 42px rgba(8, 13, 16, 0.28);
+  --noise-opacity: 0.22;
 }
 
 * { box-sizing: border-box; }
@@ -53,8 +57,9 @@ body,
 body {
   margin: 0;
   background:
-    radial-gradient(circle at 15% 10%, var(--accent-soft), transparent 42%),
-    radial-gradient(circle at 85% 0%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 36%),
+    radial-gradient(circle at 14% 8%, color-mix(in srgb, var(--accent) 24%, transparent), transparent 44%),
+    radial-gradient(circle at 86% 6%, color-mix(in srgb, var(--accent-2) 24%, transparent), transparent 42%),
+    radial-gradient(circle at 50% 120%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 48%),
     linear-gradient(180deg, color-mix(in srgb, var(--bg-elev) 82%, var(--bg)), var(--bg));
   color: var(--text);
   font-family: "Plus Jakarta Sans", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
@@ -69,7 +74,7 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background-image: var(--noise);
-  opacity: 0.45;
+  opacity: var(--noise-opacity);
 }
 
 a { color: inherit; }
@@ -94,6 +99,27 @@ h3 {
 .sectionTitle {
   margin: 0 0 var(--space-3);
   letter-spacing: -0.02em;
+  font-size: clamp(22px, 2.2vw, 30px);
+  line-height: 1.12;
+  font-weight: 800;
+}
+
+/* Decorative section separator for major content blocks */
+.breakSection {
+  position: relative;
+  padding-top: 20px;
+}
+
+.breakSection::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: min(360px, 55%);
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2), transparent);
+  opacity: 0.68;
 }
 
 /* ---- Buttons (use everywhere) ---- */
@@ -124,11 +150,32 @@ h3 {
     filter 160ms ease;
 }
 
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: -1px auto -1px -35%;
+  width: 28%;
+  transform: skewX(-16deg) translateX(-180%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, white 42%, transparent),
+    transparent
+  );
+  opacity: 0;
+}
+
 .btn:hover {
   transform: translateY(-2px);
   border-color: color-mix(in srgb, var(--accent) 36%, var(--border));
   box-shadow: 0 12px 24px color-mix(in srgb, var(--accent) 22%, transparent);
   filter: saturate(1.05);
+}
+
+.btn:hover::after {
+  opacity: 1;
+  transform: skewX(-16deg) translateX(430%);
+  transition: transform 520ms ease, opacity 220ms ease;
 }
 
 .btn:active {
@@ -156,6 +203,12 @@ h3 {
   border-radius: var(--r-lg);
   padding: var(--space-3);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.05);
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.card:hover {
+  border-color: color-mix(in srgb, var(--accent) 28%, var(--border));
+  box-shadow: 0 14px 28px color-mix(in srgb, var(--accent) 14%, transparent);
 }
 
 /* ---- Inputs ---- */
@@ -171,4 +224,10 @@ h3 {
 .input:focus-visible {
   outline: 3px solid color-mix(in srgb, var(--accent) 36%, transparent);
   outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn::after {
+    display: none;
+  }
 }
