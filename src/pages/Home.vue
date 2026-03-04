@@ -332,7 +332,12 @@ function visualStyle(slug) {
 
 @media (max-width: 900px) {
   .hero { grid-template-columns: 1fr; }
-  .right { order: -1; place-items: start; }
+  .right {
+    order: -1;
+    place-items: center;
+    justify-self: center;
+    width: 100%;
+  }
   .heroOrb { display: none; }
 }
 
@@ -425,6 +430,7 @@ h1 {
   position: relative;
   width: 240px;
   height: 240px;
+  margin-inline: auto;
   border-radius: 999px;
   z-index: 1;
 
@@ -759,6 +765,14 @@ h1 {
 }
 
 @media (max-width: 760px) {
+  .hero {
+    justify-items: center;
+  }
+
+  .right {
+    justify-items: center;
+  }
+
   .trustRow {
     grid-template-columns: 1fr;
   }

@@ -27,7 +27,6 @@
 
     <form class="card contactForm" @submit.prevent="sendViaEmail">
       <h3>Send a Message</h3>
-      <p>This opens your email client with your message pre-filled.</p>
 
       <label class="field">
         <span>Name</span>
@@ -108,10 +107,6 @@ p {
   width: 18px;
   height: 18px;
   stroke: currentColor;
-}
-
-.contactForm p {
-  margin-bottom: 12px;
 }
 
 .field {

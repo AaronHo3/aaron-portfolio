@@ -15,7 +15,7 @@
     <footer class="siteFooter">
       <div class="container footerInner">
         <div class="footerBrand">
-          <span class="footerMark" aria-hidden="true">AH</span>
+          <img class="footerMark" :src="logoHref" alt="Aaron Ho logo" />
           <div>
             <strong>Aaron Ho - AI/ML for biotech and healthcare</strong>
             <p class="footerEdu">
@@ -52,6 +52,7 @@ import ThemeToggle from "./components/ThemeToggle.vue";
 
 const route = useRoute();
 const resumeHref = `${import.meta.env.BASE_URL}Resume_Aaron_Ho.pdf`;
+const logoHref = `${import.meta.env.BASE_URL}logo.png`;
 const mainRef = ref(null);
 const scrollProgress = ref(0);
 const showTop = ref(false);
@@ -247,16 +248,13 @@ main.container {
 }
 
 .footerMark {
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   border-radius: 9px;
-  display: grid;
-  place-items: center;
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: 0.06em;
-  color: color-mix(in srgb, white 90%, var(--bg));
-  background: linear-gradient(140deg, var(--text), color-mix(in srgb, var(--text) 68%, var(--accent)));
+  object-fit: cover;
+  border: 1px solid color-mix(in srgb, var(--text) 18%, var(--border));
+  background: color-mix(in srgb, var(--bg-elev) 92%, black);
+  box-shadow: 0 10px 20px color-mix(in srgb, black 42%, transparent);
 }
 
 .footerBrand strong {

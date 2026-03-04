@@ -1,5 +1,5 @@
 <template>
-  <section class="section projectsWide">
+  <section class="section">
     <div class="head">
       <h2 class="sectionTitle">Projects</h2>
       <input v-model="q" class="input" placeholder="Search…" />
@@ -10,22 +10,13 @@
       <div class="chips">
         <button class="chip" :class="{ active: modelType === 'All' }" @click="modelType = 'All'">All</button>
         <button
-          v-for="m in visibleModelTypes"
+          v-for="m in modelTypes"
           :key="m"
           class="chip"
           :class="{ active: modelType === m }"
           @click="modelType = m"
         >
           {{ m }}
-        </button>
-        <button
-          v-if="modelTypes.length > MODEL_TYPE_PREVIEW_COUNT"
-          class="chip moreChip"
-          type="button"
-          :aria-expanded="showMoreModelTypes ? 'true' : 'false'"
-          @click="showMoreModelTypes = !showMoreModelTypes"
-        >
-          {{ showMoreModelTypes ? "Less" : "More" }}
         </button>
       </div>
     </div>
@@ -60,8 +51,6 @@ import ProjectCard from "../components/ProjectCard.vue";
 const q = ref("");
 const modelType = ref("All");
 const language = ref("All");
-const showMoreModelTypes = ref(false);
-const MODEL_TYPE_PREVIEW_COUNT = 4;
 
 const modelTypes = computed(() => {
   const s = new Set();
@@ -73,20 +62,6 @@ const languages = computed(() => {
   const s = new Set();
   for (const p of projects) for (const l of p.languages || []) s.add(l);
   return Array.from(s).sort();
-});
-
-const visibleModelTypes = computed(() => {
-  if (showMoreModelTypes.value) return modelTypes.value;
-
-  const preview = modelTypes.value.slice(0, MODEL_TYPE_PREVIEW_COUNT);
-  if (
-    modelType.value !== "All"
-    && !preview.includes(modelType.value)
-    && modelTypes.value.includes(modelType.value)
-  ) {
-    return [...preview, modelType.value];
-  }
-  return preview;
 });
 
 const filtered = computed(() => {
@@ -118,13 +93,6 @@ const filtered = computed(() => {
 </script>
 
 <style scoped>
-.projectsWide {
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(1360px, calc(100vw - 40px));
-}
-
 .head {
   display: flex;
   align-items: center;
@@ -186,15 +154,5 @@ const filtered = computed(() => {
   border-color: color-mix(in srgb, var(--accent) 52%, var(--border));
   background: color-mix(in srgb, var(--accent) 26%, var(--bg-elev));
   box-shadow: 0 14px 24px color-mix(in srgb, var(--accent) 18%, transparent);
-}
-
-.moreChip {
-  border-style: dashed;
-}
-
-@media (max-width: 760px) {
-  .projectsWide {
-    width: calc(100vw - 24px);
-  }
 }
 </style>

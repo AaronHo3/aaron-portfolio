@@ -3,7 +3,7 @@
     <div class="container navContainer">
       <div class="navInner">
         <RouterLink class="brand" to="/">
-          <span class="brandMark" aria-hidden="true">AH</span>
+          <img class="brandMark" :src="logoHref" alt="Aaron Ho logo" />
           <span class="brandText">
             <strong>Aaron Ho</strong>
             <small>Home</small>
@@ -34,6 +34,7 @@
 import { onBeforeUnmount, onMounted, ref } from "vue";
 
 const resumeHref = `${import.meta.env.BASE_URL}Resume_Aaron_Ho.pdf`;
+const logoHref = `${import.meta.env.BASE_URL}logo.png`;
 const scrolled = ref(false);
 const collapsed = ref(false);
 let lastY = 0;
@@ -97,17 +98,17 @@ onBeforeUnmount(() => {
 
 /* Override container padding for nav only */
 .navContainer {
-  padding: 12px 20px;
+  padding: calc(12px + var(--safe-top)) 20px 12px;
   transition: padding 220ms ease;
 }
 
 .nav.compact .navContainer {
-  padding-top: 10px;
+  padding-top: calc(10px + var(--safe-top));
   padding-bottom: 10px;
 }
 
 .nav.collapsed .navContainer {
-  padding-top: 8px;
+  padding-top: calc(8px + var(--safe-top));
   padding-bottom: 8px;
 }
 
@@ -142,17 +143,13 @@ onBeforeUnmount(() => {
 }
 
 .brandMark {
-  width: 34px;
-  height: 34px;
+  width: 42px;
+  height: 42px;
   border-radius: 10px;
-  display: grid;
-  place-items: center;
-  font-size: 11px;
-  font-weight: 900;
-  letter-spacing: 0.06em;
-  color: color-mix(in srgb, white 90%, var(--bg));
-  background: linear-gradient(140deg, var(--text), color-mix(in srgb, var(--text) 68%, var(--accent)));
-  box-shadow: 0 10px 20px color-mix(in srgb, var(--accent) 16%, transparent);
+  object-fit: cover;
+  border: 1px solid color-mix(in srgb, var(--text) 18%, var(--border));
+  background: color-mix(in srgb, var(--bg-elev) 92%, black);
+  box-shadow: 0 10px 20px color-mix(in srgb, black 42%, transparent);
 }
 
 .brandText {
@@ -181,6 +178,7 @@ onBeforeUnmount(() => {
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  min-height: 40px;
   transition: opacity 180ms ease, transform 180ms ease, width 180ms ease;
 }
 
@@ -255,11 +253,32 @@ onBeforeUnmount(() => {
 }
 
 @media (max-width: 780px) {
+  .navContainer {
+    padding-top: calc(10px + var(--safe-top));
+    padding-bottom: 10px;
+  }
+
+  .links {
+    gap: 6px;
+    padding: 2px 0;
+    min-height: 38px;
+  }
+
+  .navLink {
+    padding: 4px 8px;
+    font-size: 13px;
+  }
+
+  .links .btn {
+    font-size: 13px;
+    padding-top: 9px;
+    padding-bottom: 9px;
+  }
+
   .brandMark {
-    width: 30px;
-    height: 30px;
+    width: 34px;
+    height: 34px;
     border-radius: 9px;
-    font-size: 10px;
   }
 
   .brandText strong {
@@ -268,6 +287,26 @@ onBeforeUnmount(() => {
 
   .brandText small {
     display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .navInner {
+    gap: 8px;
+  }
+
+  .links {
+    gap: 4px;
+  }
+
+  .navLink {
+    padding: 4px 7px;
+    font-size: 12px;
+  }
+
+  .links .btn {
+    padding: 8px 10px;
+    font-size: 12px;
   }
 }
 </style>
