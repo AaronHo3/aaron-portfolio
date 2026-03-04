@@ -83,4 +83,31 @@ export const projects = [
       "Converted vanilla D3 prototypes into reusable Vue components with clean project architecture.",
     ],
   },
+  {
+    slug: "mens-2023-vnl-dashboard",
+    title: "Men's 2023 Volleyball Nations League Analytical Dashboard",
+    subtitle: "Interactive team and player performance analysis",
+    tags: ["Sports Analytics", "Visualization", "Streamlit"],
+    modelTypes: ["Sports Analytics", "Interactive Dashboard", "Exploratory Analysis"],
+    languages: ["Python"],
+    stack: ["Streamlit", "Pandas", "Plotly", "Python"],
+    metrics: [
+      "Win/Loss trends",
+      "Attack efficiency",
+      "Serve and block production",
+      "Team comparison rankings",
+    ],
+    links: {
+      github: "https://github.com/AaronHo3",
+      dashboard: "https://vnlmen2023sportsdashboard-yqbyypuok5ovmdrfrlrhy7.streamlit.app/",
+      demo: "",
+      report: "",
+    },
+    summary:
+      "Built an interactive Streamlit analytics dashboard for the 2023 Men's Volleyball Nations League to compare team and player performance across core match stats.",
+    bullets: [
+      "Added filters and cross-team comparisons to quickly explore performance differences and trends.",
+      "Designed visuals that surface offensive, defensive, and serving metrics in a single overview workflow.",
+    ],
+  },
 ];

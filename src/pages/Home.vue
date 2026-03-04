@@ -120,7 +120,7 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { Activity, BrainCircuit, ChartScatter, ScanSearch } from "lucide-vue-next";
+import { Activity, BrainCircuit, ChartScatter, ScanSearch, Volleyball } from "lucide-vue-next";
 import profileSrc from "../assets/profile.jpg";
 import { projects } from "../data/projects";
 import HeroOrb3D from "../components/HeroOrb3D.vue";
@@ -233,6 +233,7 @@ const iconBySlug = {
   "luna16-nodule-segmentation": ScanSearch,
   "imagined-handwriting-decoding": Activity,
   "gapminder-dashboard": ChartScatter,
+  "mens-2023-vnl-dashboard": Volleyball,
 };
 
 const labelBySlug = {
@@ -240,6 +241,7 @@ const labelBySlug = {
   "luna16-nodule-segmentation": "CT segmentation visual",
   "imagined-handwriting-decoding": "Neural decoding visual",
   "gapminder-dashboard": "Dashboard interaction visual",
+  "mens-2023-vnl-dashboard": "Volleyball analytics visual",
 };
 
 const barsBySlug = {
@@ -247,13 +249,17 @@ const barsBySlug = {
   "luna16-nodule-segmentation": ["93%", "84%", "78%"],
   "imagined-handwriting-decoding": ["74%", "90%", "82%"],
   "gapminder-dashboard": ["64%", "86%", "92%"],
+  "mens-2023-vnl-dashboard": ["91%", "76%", "87%"],
 };
 const toneByTag = {
   "Machine Learning": "#4d8b62",
   "Deep Learning": "#3567ac",
   "Data Viz": "#a65f2a",
+  Visualization: "#a65f2a",
   "Healthcare": "#6b53ab",
   "Computer Vision": "#267c80",
+  "Sports Analytics": "#0a7b83",
+  Streamlit: "#b3472b",
 };
 
 function projectIcon(slug) {

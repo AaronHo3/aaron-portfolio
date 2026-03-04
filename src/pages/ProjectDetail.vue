@@ -9,7 +9,15 @@
       <div class="actions">
         <RouterLink class="btn" to="/projects">← Back</RouterLink>
         <a v-if="project.links.github" class="btn" :href="project.links.github" target="_blank" rel="noreferrer">GitHub</a>
-        <a v-if="project.links.demo" class="btn" :href="project.links.demo" target="_blank" rel="noreferrer">Demo</a>
+        <a
+          v-if="project.links.dashboard || project.links.demo"
+          class="btn"
+          :href="project.links.dashboard || project.links.demo"
+          target="_blank"
+          rel="noreferrer"
+        >
+          View Dashboard
+        </a>
         <a v-if="project.links.report" class="btn" :href="project.links.report" target="_blank" rel="noreferrer">Report</a>
       </div>
     </div>
@@ -19,13 +27,35 @@
         <h2 class="h2">Overview</h2>
         <p class="p">{{ project.summary }}</p>
 
+        <div v-if="project.links.dashboard || project.links.demo" class="externalLink">
+          <p class="linkLabel">Live Project Link</p>
+          <a
+            class="btn"
+            :href="project.links.dashboard || project.links.demo"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Open Dashboard
+          </a>
+        </div>
+
         <ul class="list">
           <li v-for="b in project.bullets" :key="b">{{ b }}</li>
         </ul>
       </div>
 
       <div class="card">
-        <h2 class="h2">Tech</h2>
+        <h2 class="h2">Tech Categories</h2>
+        <div class="pillRow">
+          <span v-for="t in project.modelTypes || []" :key="t" class="pill">{{ t }}</span>
+        </div>
+
+        <h2 class="h2" style="margin-top: 16px;">Languages</h2>
+        <div class="pillRow">
+          <span v-for="l in project.languages || []" :key="l" class="pill">{{ l }}</span>
+        </div>
+
+        <h2 class="h2" style="margin-top: 16px;">Tools</h2>
         <div class="pillRow">
           <span v-for="s in project.stack" :key="s" class="pill">{{ s }}</span>
         </div>
@@ -114,6 +144,17 @@ const project = computed(() => {
   margin: 12px 0 0;
   color: var(--muted);
   line-height: 1.65;
+}
+
+.externalLink {
+  margin-top: 14px;
+}
+
+.linkLabel {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 800;
 }
 
 .pillRow {

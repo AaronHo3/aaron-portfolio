@@ -1,11 +1,12 @@
 <template>
   <RouterLink class="card linkCard" :to="`/projects/${props.project.slug}`" :style="{ '--tone': tone }">
     <div class="visual">
-      <component :is="projectIcon(props.project.slug)" class="visualIcon" />
-      <div class="visualBars" aria-hidden="true">
-        <span :style="{ width: miniBarWidths(props.project.slug)[0] }"></span>
-        <span :style="{ width: miniBarWidths(props.project.slug)[1] }"></span>
-        <span :style="{ width: miniBarWidths(props.project.slug)[2] }"></span>
+      <div class="visualMark">
+        <component :is="projectIcon(props.project.slug)" class="visualIcon" />
+      </div>
+      <div class="visualCopy">
+        <p class="visualLabel">{{ visualLabel(props.project.slug) }}</p>
+        <p class="visualMeta">{{ props.project.tags?.[0] || "Project" }}</p>
       </div>
     </div>
 
@@ -24,7 +25,7 @@
 
 <script setup>
 import { computed } from "vue";
-import { Activity, BrainCircuit, ChartScatter, ScanSearch } from "lucide-vue-next";
+import { Activity, BrainCircuit, ChartScatter, ScanSearch, Volleyball } from "lucide-vue-next";
 
 const props = defineProps({
   project: { type: Object, required: true },
@@ -34,8 +35,11 @@ const toneByTag = {
   "Machine Learning": "#4d8b62",
   "Deep Learning": "#3567ac",
   "Data Viz": "#a65f2a",
+  Visualization: "#a65f2a",
   "Healthcare": "#6b53ab",
   "Computer Vision": "#267c80",
+  "Sports Analytics": "#0a7b83",
+  Streamlit: "#b3472b",
 };
 
 const tone = computed(() => {
@@ -48,21 +52,23 @@ const iconBySlug = {
   "luna16-nodule-segmentation": ScanSearch,
   "imagined-handwriting-decoding": Activity,
   "gapminder-dashboard": ChartScatter,
+  "mens-2023-vnl-dashboard": Volleyball,
 };
 
-const barsBySlug = {
-  "eeg-seizure-classification": ["84%", "74%", "92%"],
-  "luna16-nodule-segmentation": ["90%", "82%", "76%"],
-  "imagined-handwriting-decoding": ["72%", "88%", "80%"],
-  "gapminder-dashboard": ["62%", "85%", "90%"],
+const labelBySlug = {
+  "eeg-seizure-classification": "EEG ML pipeline",
+  "luna16-nodule-segmentation": "CT segmentation model",
+  "imagined-handwriting-decoding": "Neural decoding models",
+  "gapminder-dashboard": "Interactive global trends",
+  "mens-2023-vnl-dashboard": "Volleyball analytics hub",
 };
 
 function projectIcon(slug) {
   return iconBySlug[slug] || ChartScatter;
 }
 
-function miniBarWidths(slug) {
-  return barsBySlug[slug] || ["74%", "68%", "86%"];
+function visualLabel(slug) {
+  return labelBySlug[slug] || "Interactive project";
 }
 </script>
 
@@ -111,35 +117,48 @@ function miniBarWidths(slug) {
 .visual {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   padding: 10px;
   border-radius: var(--r-md);
-  border: 1px dashed color-mix(in srgb, var(--tone) 38%, var(--border));
+  border: 1px solid color-mix(in srgb, var(--tone) 32%, var(--border));
   background: color-mix(in srgb, var(--tone) 12%, transparent);
   margin-bottom: 12px;
 }
 
-.visualIcon {
-  width: 42px;
-  height: 42px;
-  padding: 9px;
-  border-radius: 11px;
-  color: color-mix(in srgb, white 90%, var(--bg));
-  background: linear-gradient(140deg, var(--tone), color-mix(in srgb, var(--tone) 62%, black));
-}
-
-.visualBars {
-  flex: 1;
+.visualMark {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
   display: grid;
-  gap: 6px;
+  place-items: center;
+  border-radius: 12px;
+  background: linear-gradient(140deg, var(--tone), color-mix(in srgb, var(--tone) 62%, black));
+  box-shadow: 0 10px 20px color-mix(in srgb, var(--tone) 28%, transparent);
 }
 
-.visualBars span {
-  display: block;
-  height: 5px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--tone) 82%, white), color-mix(in srgb, var(--tone) 82%, black));
-  opacity: 0.9;
+.visualIcon {
+  width: 24px;
+  height: 24px;
+  color: color-mix(in srgb, white 90%, var(--bg));
+}
+
+.visualCopy {
+  min-width: 0;
+}
+
+.visualLabel {
+  margin: 0;
+  font-weight: 850;
+  color: var(--text);
+  font-size: 13px;
+  letter-spacing: -0.01em;
+}
+
+.visualMeta {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .top {
