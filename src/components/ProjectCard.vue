@@ -32,14 +32,12 @@ const props = defineProps({
 });
 
 const toneByTag = {
-  "Machine Learning": "#4d8b62",
-  "Deep Learning": "#3567ac",
-  "Data Viz": "#a65f2a",
-  Visualization: "#a65f2a",
-  "Healthcare": "#6b53ab",
-  "Computer Vision": "#267c80",
+  "Healthcare AI": "#3567ac",
+  "Medical Imaging": "#267c80",
+  Neuroscience: "#6b53ab",
   "Sports Analytics": "#0a7b83",
-  Streamlit: "#b3472b",
+  "Data Visualization / Dashboards": "#b3472b",
+  Miscellaneous: "#7a7f87",
 };
 
 const tone = computed(() => {

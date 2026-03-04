@@ -6,7 +6,7 @@
     </div>
 
     <div class="filterGroup">
-      <p class="filterLabel">Model Type</p>
+      <p class="filterLabel">Project Category</p>
       <div class="chips">
         <button class="chip" :class="{ active: modelType === 'All' }" @click="modelType = 'All'">All</button>
         <button
@@ -51,12 +51,16 @@ import ProjectCard from "../components/ProjectCard.vue";
 const q = ref("");
 const modelType = ref("All");
 const language = ref("All");
+const allowedModelTypes = [
+  "Healthcare AI",
+  "Medical Imaging",
+  "Neuroscience",
+  "Sports Analytics",
+  "Data Visualization / Dashboards",
+  "Miscellaneous",
+];
 
-const modelTypes = computed(() => {
-  const s = new Set();
-  for (const p of projects) for (const m of p.modelTypes || []) s.add(m);
-  return Array.from(s).sort();
-});
+const modelTypes = computed(() => allowedModelTypes);
 
 const languages = computed(() => {
   const s = new Set();
@@ -107,6 +111,7 @@ const filtered = computed(() => {
 
 .filterGroup {
   margin-top: 12px;
+  width: 100%;
 }
 
 .filterLabel {
@@ -128,6 +133,7 @@ const filtered = computed(() => {
   gap: 10px;
   flex-wrap: wrap;
   margin: 0;
+  width: 100%;
 }
 
 /* simple chip button */
