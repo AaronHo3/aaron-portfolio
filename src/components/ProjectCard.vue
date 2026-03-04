@@ -25,19 +25,19 @@
 
 <script setup>
 import { computed } from "vue";
-import { Activity, BrainCircuit, ChartScatter, Dribbble, ScanSearch, Volleyball } from "lucide-vue-next";
+import { Activity, BrainCircuit, ChartScatter, Dribbble, Heart, ScanSearch, Volleyball } from "lucide-vue-next";
 
 const props = defineProps({
   project: { type: Object, required: true },
 });
 
 const toneByTag = {
-  "Healthcare AI": "#3567ac",
-  "Medical Imaging": "#267c80",
-  Neuroscience: "#6b53ab",
-  "Sports Analytics": "#0a7b83",
-  "Data Visualization / Dashboards": "#b3472b",
-  Miscellaneous: "#7a7f87",
+  "Healthcare AI": "#38bdf8",
+  "Medical Imaging": "#6366f1",
+  Neuroscience: "#818cf8",
+  "Sports Analytics": "#0ea5e9",
+  "Data Visualization / Dashboards": "#22d3ee",
+  Miscellaneous: "#64748b",
 };
 
 const tone = computed(() => {
@@ -52,6 +52,7 @@ const iconBySlug = {
   "gapminder-dashboard": ChartScatter,
   "mens-2023-vnl-dashboard": Volleyball,
   "nba-statistics-dashboard": Dribbble,
+  "uci-heart-disease-ml": Heart,
 };
 
 const labelBySlug = {
@@ -61,6 +62,7 @@ const labelBySlug = {
   "gapminder-dashboard": "Interactive global trends",
   "mens-2023-vnl-dashboard": "Volleyball analytics hub",
   "nba-statistics-dashboard": "NBA stats dashboard",
+  "uci-heart-disease-ml": "Cardiac risk modeling",
 };
 
 function projectIcon(slug) {
@@ -132,14 +134,18 @@ function visualLabel(slug) {
   display: grid;
   place-items: center;
   border-radius: 12px;
-  background: linear-gradient(140deg, var(--tone), color-mix(in srgb, var(--tone) 62%, black));
+  background: linear-gradient(
+    140deg,
+    color-mix(in srgb, var(--accent) 78%, var(--tone)),
+    color-mix(in srgb, var(--accent-2) 82%, var(--tone))
+  );
   box-shadow: 0 10px 20px color-mix(in srgb, var(--tone) 28%, transparent);
 }
 
 .visualIcon {
   width: 24px;
   height: 24px;
-  color: color-mix(in srgb, white 90%, var(--bg));
+  color: color-mix(in srgb, #0f172a 78%, white);
 }
 
 .visualCopy {

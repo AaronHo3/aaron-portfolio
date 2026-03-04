@@ -120,7 +120,7 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { Activity, BrainCircuit, ChartScatter, Dribbble, ScanSearch, Volleyball } from "lucide-vue-next";
+import { Activity, BrainCircuit, ChartScatter, Dribbble, Heart, ScanSearch, Volleyball } from "lucide-vue-next";
 import profileSrc from "../assets/profile.jpg";
 import { projects } from "../data/projects";
 import HeroOrb3D from "../components/HeroOrb3D.vue";
@@ -235,6 +235,7 @@ const iconBySlug = {
   "gapminder-dashboard": ChartScatter,
   "mens-2023-vnl-dashboard": Volleyball,
   "nba-statistics-dashboard": Dribbble,
+  "uci-heart-disease-ml": Heart,
 };
 
 const labelBySlug = {
@@ -244,6 +245,7 @@ const labelBySlug = {
   "gapminder-dashboard": "Dashboard interaction visual",
   "mens-2023-vnl-dashboard": "Volleyball analytics visual",
   "nba-statistics-dashboard": "NBA analytics visual",
+  "uci-heart-disease-ml": "Cardiac risk modeling visual",
 };
 
 const barsBySlug = {
@@ -253,14 +255,15 @@ const barsBySlug = {
   "gapminder-dashboard": ["64%", "86%", "92%"],
   "mens-2023-vnl-dashboard": ["91%", "76%", "87%"],
   "nba-statistics-dashboard": ["89%", "81%", "93%"],
+  "uci-heart-disease-ml": ["92%", "84%", "88%"],
 };
 const toneByTag = {
-  "Healthcare AI": "#3567ac",
-  "Medical Imaging": "#267c80",
-  Neuroscience: "#6b53ab",
-  "Sports Analytics": "#0a7b83",
-  "Data Visualization / Dashboards": "#b3472b",
-  Miscellaneous: "#7a7f87",
+  "Healthcare AI": "#38bdf8",
+  "Medical Imaging": "#6366f1",
+  Neuroscience: "#818cf8",
+  "Sports Analytics": "#0ea5e9",
+  "Data Visualization / Dashboards": "#22d3ee",
+  Miscellaneous: "#64748b",
 };
 
 function projectIcon(slug) {
@@ -630,8 +633,12 @@ h1 {
   height: 42px;
   padding: 9px;
   border-radius: 11px;
-  color: color-mix(in srgb, white 90%, var(--bg));
-  background: linear-gradient(140deg, var(--tone), color-mix(in srgb, var(--tone) 62%, black));
+  color: color-mix(in srgb, #0f172a 78%, white);
+  background: linear-gradient(
+    140deg,
+    color-mix(in srgb, var(--accent) 78%, var(--tone)),
+    color-mix(in srgb, var(--accent-2) 82%, var(--tone))
+  );
   transform: translateZ(16px);
 }
 
