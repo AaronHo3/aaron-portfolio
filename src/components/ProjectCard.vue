@@ -25,7 +25,7 @@
 
 <script setup>
 import { computed } from "vue";
-import { Activity, BrainCircuit, ChartScatter, ScanSearch, Volleyball } from "lucide-vue-next";
+import { Activity, BrainCircuit, ChartScatter, Dribbble, ScanSearch, Volleyball } from "lucide-vue-next";
 
 const props = defineProps({
   project: { type: Object, required: true },
@@ -53,6 +53,7 @@ const iconBySlug = {
   "imagined-handwriting-decoding": Activity,
   "gapminder-dashboard": ChartScatter,
   "mens-2023-vnl-dashboard": Volleyball,
+  "nba-statistics-dashboard": Dribbble,
 };
 
 const labelBySlug = {
@@ -61,6 +62,7 @@ const labelBySlug = {
   "imagined-handwriting-decoding": "Neural decoding models",
   "gapminder-dashboard": "Interactive global trends",
   "mens-2023-vnl-dashboard": "Volleyball analytics hub",
+  "nba-statistics-dashboard": "NBA stats dashboard",
 };
 
 function projectIcon(slug) {

@@ -120,7 +120,7 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { Activity, BrainCircuit, ChartScatter, ScanSearch, Volleyball } from "lucide-vue-next";
+import { Activity, BrainCircuit, ChartScatter, Dribbble, ScanSearch, Volleyball } from "lucide-vue-next";
 import profileSrc from "../assets/profile.jpg";
 import { projects } from "../data/projects";
 import HeroOrb3D from "../components/HeroOrb3D.vue";
@@ -234,6 +234,7 @@ const iconBySlug = {
   "imagined-handwriting-decoding": Activity,
   "gapminder-dashboard": ChartScatter,
   "mens-2023-vnl-dashboard": Volleyball,
+  "nba-statistics-dashboard": Dribbble,
 };
 
 const labelBySlug = {
@@ -242,6 +243,7 @@ const labelBySlug = {
   "imagined-handwriting-decoding": "Neural decoding visual",
   "gapminder-dashboard": "Dashboard interaction visual",
   "mens-2023-vnl-dashboard": "Volleyball analytics visual",
+  "nba-statistics-dashboard": "NBA analytics visual",
 };
 
 const barsBySlug = {
@@ -250,6 +252,7 @@ const barsBySlug = {
   "imagined-handwriting-decoding": ["74%", "90%", "82%"],
   "gapminder-dashboard": ["64%", "86%", "92%"],
   "mens-2023-vnl-dashboard": ["91%", "76%", "87%"],
+  "nba-statistics-dashboard": ["89%", "81%", "93%"],
 };
 const toneByTag = {
   "Machine Learning": "#4d8b62",

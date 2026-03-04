@@ -110,4 +110,31 @@ export const projects = [
       "Designed visuals that surface offensive, defensive, and serving metrics in a single overview workflow.",
     ],
   },
+  {
+    slug: "nba-statistics-dashboard",
+    title: "NBA Statistics Analytical Dashboard",
+    subtitle: "Player role prediction, era comparisons, and team evolution tracking",
+    tags: ["Sports Analytics", "Visualization", "Streamlit"],
+    modelTypes: ["Sports Analytics", "Interactive Dashboard", "Exploratory Analysis"],
+    languages: ["Python"],
+    stack: ["Streamlit", "Pandas", "Plotly", "Python"],
+    metrics: [
+      "Player stat percentiles",
+      "Position prediction accuracy",
+      "Cross-era statistical comparisons",
+      "Franchise/team evolution trends",
+    ],
+    links: {
+      github: "https://github.com/AaronHo3",
+      dashboard: "https://nbastatistics-zkezxylgqwponqvm5bg677.streamlit.app/",
+      demo: "",
+      report: "",
+    },
+    summary:
+      "Developed a multi-module NBA analytics platform that combines descriptive dashboards with predictive modeling, including a player position predictor, percentile-based player profiling, era-to-era comparison views, and team evolution analysis over time.",
+    bullets: [
+      "Implemented a player position prediction workflow and integrated model outputs directly into interactive exploration pages.",
+      "Built percentile rank views for player stats, side-by-side historical era comparisons, and longitudinal team trend panels to show how play styles and performance shifted.",
+    ],
+  },
 ];
