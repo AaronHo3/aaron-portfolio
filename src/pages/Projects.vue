@@ -94,6 +94,7 @@ const filtered = computed(() => {
     return matchesQuery && matchesModelType && matchesLanguage;
   });
 });
+
 </script>
 
 <style scoped>

@@ -1,344 +1,490 @@
 <template>
-  <section class="section about">
-    <div class="intro card">
-      <h1>About</h1>
-      <p>
-        I'm interested in building systems that turn data into useful understanding. My work sits at the intersection
-        of machine learning, engineering, and healthcare.
-      </p>
-    </div>
-
-    <section class="timeline" aria-label="About timeline">
-      <article
-        v-for="point in points"
-        :key="point.id"
-        class="card timelineNode"
-        tabindex="0"
-        :style="{ '--detail-max': point.id === '03' ? '760px' : '280px' }"
-      >
-        <div class="nodeHead">
-          <span class="nodeNum">{{ point.id }}</span>
-          <h2>{{ point.title }}</h2>
+  <section class="section aboutPage">
+    <div class="bento">
+      <article class="card card-hero">
+        <div class="hero-eyebrow">About me</div>
+        <h1 class="hero-name">Aaron<br /><em>Ho.</em></h1>
+        <p class="hero-role">AI Engineer · ML &amp; Analytics</p>
+        <p class="hero-bio">
+          I build systems that turn data into useful understanding. I care about strong technical execution, clear
+          communication, and problems worth solving.
+        </p>
+        <div class="heroMedia">
+          <div class="heroPhotoPlaceholder">Add photo in About Me box</div>
         </div>
+        <div class="hero-decoration" aria-hidden="true"></div>
+      </article>
 
-        <div class="nodePreview">
-          <figure class="miniShot">
-            <img v-if="point.image" :src="point.image" :alt="point.imageAlt" />
-            <div v-else class="miniPlaceholder">Add image</div>
-          </figure>
-
-          <div class="previewCopy">
-            <p>{{ point.preview }}</p>
-          </div>
+      <article class="card card-status card-green">
+        <div class="status-indicator">
+          <div class="dot"></div>
+          <span class="status-label">Currently available</span>
         </div>
+        <div class="status-detail">Open to full-time roles &amp; collaborations</div>
+      </article>
 
-        <div class="nodeDetail">
-          <p v-for="line in point.body" :key="line">{{ line }}</p>
+      <article class="card card-approach">
+        <div class="card-label">The Way I Work</div>
+        <div class="card-title">Curious by default. Methodical by habit.</div>
+        <p class="card-body">
+          I slow down before I speed up: understanding the problem fully before reaching for a solution. I break
+          complexity into pieces and build from there.
+        </p>
+      </article>
 
-          <div v-if="point.id === '03'" class="photoGrid">
-            <figure class="photoSlot">
-              <img :src="profileSrc" alt="Aaron working on a project" />
-              <figcaption>A day in my element.</figcaption>
-            </figure>
-            <figure class="photoSlot">
-              <div class="placeholder">Add photo</div>
-              <figcaption>Hobby, trip, or new challenge.</figcaption>
-            </figure>
-            <figure class="photoSlot">
-              <div class="placeholder">Add photo</div>
-              <figcaption>Community or team moment.</figcaption>
-            </figure>
-          </div>
+      <article class="card card-values card-warm">
+        <div class="card-label">What I Value</div>
+        <div class="card-title">Principles that guide the work.</div>
+        <div class="value-tags">
+          <span class="value-tag">Ownership</span>
+          <span class="value-tag">Clarity</span>
+          <span class="value-tag">Craft</span>
+          <span class="value-tag">Honesty</span>
+          <span class="value-tag">Curiosity</span>
+          <span class="value-tag">Growth</span>
         </div>
       </article>
-    </section>
 
-    <p class="closing">Thanks for reading. If this resonates, I'd love to connect.</p>
+      <article class="card card-photo card-photo-main">
+        <div class="card-label">Photo</div>
+        <img :src="profileSrc" alt="Aaron Ho portrait" />
+      </article>
+
+      <article class="card card-fivetonine card-dark">
+        <div class="card-label">My "5-9"</div>
+        <div class="card-title">Beyond the screen.</div>
+        <p class="card-body">
+          Outside work, I stay sharp by staying active, exploring new ideas, and spending time with people who
+          challenge me to keep growing.
+        </p>
+      </article>
+
+      <article class="card card-quote card-accent">
+        <div class="card-label">A guiding thought</div>
+        <p class="big-quote">"Motivation forgives mistakes, hesitation charges interest."</p>
+        <p class="quote-attr">A personal favourite</p>
+      </article>
+
+      <article class="card card-photo card-photo-placeholder">
+        <div class="card-label">Add a moment</div>
+        <div class="photoPlaceholder">Drop in a second photo</div>
+      </article>
+
+    </div>
   </section>
 </template>
 
 <script setup>
 import profileSrc from "../assets/profile.jpg";
-
-const points = [
-  {
-    id: "01",
-    title: "How I Think",
-    preview: "First-principles problem solving with practical execution.",
-    body: [
-      "I start with first principles before reaching for tools.",
-      "Understanding the structure of the problem usually matters more than the specific model being used.",
-    ],
-    image: profileSrc,
-    imageAlt: "Aaron planning project work",
-  },
-  {
-    id: "02",
-    title: "How I Work",
-    preview: "Clear communication, ownership, and reliable collaboration.",
-    body: [
-      "I value reliability, ownership, and direct communication.",
-      "My goal is to make work easy for teams to trust, understand, and build on.",
-    ],
-    image: null,
-    imageAlt: "",
-  },
-  {
-    id: "03",
-    title: "Life Outside Work",
-    preview: "The interests and people that keep me energized and curious.",
-    body: [
-      "Behind every project is a person who is curious about the world in more ways than one.",
-      "When I'm not working on machine learning models or biomedical projects, I try to stay active, explore new ideas, and spend time with people who challenge me to grow.",
-      "This is a small window into the things that keep me energized outside of work.",
-    ],
-    image: null,
-    imageAlt: "",
-  },
-  {
-    id: "04",
-    title: "What I Value",
-    preview: "Clarity, curiosity, and useful systems that improve over time.",
-    body: [
-      "Clear communication over jargon.",
-      "Curiosity, humility, and continuous learning.",
-      "Building useful things, then improving them with feedback.",
-    ],
-    image: null,
-    imageAlt: "",
-  },
-];
 </script>
 
 <style scoped>
-.about {
+.aboutPage {
+  margin-top: 14px;
+  --page-bg: color-mix(in srgb, var(--bg) 94%, var(--bg-elev));
+  --card-base: color-mix(in srgb, var(--card) 92%, var(--bg-elev));
+  --card-ice: color-mix(in srgb, var(--accent) 16%, var(--card));
+  --card-mist: color-mix(in srgb, var(--accent-2) 12%, var(--card));
+  --card-soft: color-mix(in srgb, var(--accent) 10%, var(--bg));
+  --card-dark: color-mix(in srgb, var(--bg) 84%, #060b16);
+  --card-accent: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--accent-2) 40%, #12223f),
+    color-mix(in srgb, var(--accent) 34%, #0a162b)
+  );
+  --text-ink: var(--text);
+  --text-muted: var(--muted);
+  --accent-main: var(--accent);
+  --accent-soft: color-mix(in srgb, var(--accent) 18%, var(--bg-elev));
+  --border-soft: color-mix(in srgb, var(--border) 70%, var(--accent) 30%);
+}
+
+.bento {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: var(--page-bg);
+  border: 1px solid color-mix(in srgb, var(--border-soft) 86%, var(--bg-elev));
+  border-radius: 22px;
+  padding: 18px;
   display: grid;
-  gap: 12px;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 18px;
 }
 
-.intro {
-  padding: 12px 14px;
+.card {
+  background: var(--card-base);
+  border-radius: 20px;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  font-family: "Figtree", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text-ink);
 }
 
-h1 {
-  margin: 0 0 8px;
-  font-size: clamp(24px, 3.1vw, 34px);
-  letter-spacing: -0.03em;
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 60px color-mix(in srgb, var(--accent-main) 22%, transparent);
 }
 
-.intro p {
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.62;
+.card-dark {
+  background: var(--card-dark);
+  color: color-mix(in srgb, var(--text-ink) 92%, white);
+}
+
+.card-accent {
+  background: var(--card-accent);
+  color: color-mix(in srgb, var(--text-ink) 88%, white);
+}
+
+.card-warm {
+  background: var(--card-soft);
+}
+
+.card-green {
+  background: var(--card-ice);
+}
+
+.card-hero {
+  background: var(--card-mist);
+  padding-right: 320px;
+}
+
+.card-approach {
+  background: var(--card-base);
+}
+
+.card-values {
+  background: var(--card-soft);
+}
+
+.card-hero {
+  grid-column: 1 / span 7;
+  grid-row: 1 / span 2;
+}
+
+.card-status {
+  grid-column: 8 / span 5;
+  grid-row: 1;
+}
+
+.card-approach {
+  grid-column: 8 / span 5;
+  grid-row: 2;
+}
+
+.card-values {
+  grid-column: 1 / span 4;
+  grid-row: 3;
+}
+
+.card-quote {
+  grid-column: 1 / span 6;
+  grid-row: 4;
+}
+
+.card-fivetonine {
+  grid-column: 9 / span 4;
+  grid-row: 3;
+}
+
+.card-photo-main {
+  grid-column: 5 / span 4;
+  grid-row: 3;
+  padding: 14px;
+}
+
+.card-photo-placeholder {
+  grid-column: 7 / span 6;
+  grid-row: 4;
+}
+
+.hero-eyebrow {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent-main);
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.hero-name {
+  font-family: "Fraunces", Georgia, "Times New Roman", serif;
+  font-size: 64px;
+  line-height: 1;
+  letter-spacing: -2px;
+  margin-bottom: 16px;
+}
+
+.hero-name em {
+  font-style: normal;
+  color: var(--accent-main);
+}
+
+.hero-role {
   font-size: 15px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+  font-weight: 300;
 }
 
-.timeline {
-  position: relative;
+.hero-bio {
+  font-size: 15px;
+  line-height: 1.75;
+  color: color-mix(in srgb, var(--text-ink) 80%, var(--text-muted));
+  max-width: 420px;
+}
+
+.heroMedia {
+  width: 190px;
+  position: absolute;
+  top: 50%;
+  right: 34px;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
+.heroPhotoPlaceholder {
+  min-height: 270px;
+  aspect-ratio: 3 / 5;
+  border-radius: 12px;
+  border: 1px dashed color-mix(in srgb, var(--accent-main) 42%, var(--border-soft));
+  background: color-mix(in srgb, var(--accent-main) 12%, var(--card-base));
   display: grid;
+  place-items: center;
+  text-align: center;
+  color: color-mix(in srgb, var(--text-ink) 76%, var(--text-muted));
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 10px;
+}
+
+.hero-decoration {
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 40px solid var(--accent-soft);
+  opacity: 0.6;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
   gap: 10px;
-  padding-left: 18px;
+  margin-bottom: 12px;
 }
 
-.timeline::before {
-  content: "";
-  position: absolute;
-  left: 7px;
-  top: 6px;
-  bottom: 6px;
-  width: 2px;
-  background: linear-gradient(var(--accent), color-mix(in srgb, var(--accent-2) 66%, var(--accent)));
-  opacity: 0.5;
-}
-
-.timelineNode {
-  position: relative;
-  padding: 11px 12px;
-  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
-}
-
-.timelineNode::before {
-  content: "";
-  position: absolute;
-  left: -14px;
-  top: 20px;
+.dot {
   width: 8px;
   height: 8px;
-  border-radius: 999px;
-  background: linear-gradient(140deg, var(--accent), var(--accent-2));
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 16%, transparent);
+  border-radius: 50%;
+  background: var(--accent-main);
+  animation: pulse 2s ease-in-out infinite;
 }
 
-.timelineNode:hover,
-.timelineNode:focus-within {
-  transform: translateY(-2px);
-  border-color: color-mix(in srgb, var(--accent) 34%, var(--border));
-  box-shadow: 0 16px 28px color-mix(in srgb, var(--accent) 13%, transparent);
+@keyframes pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-main) 40%, transparent); }
+  50% { opacity: 0.8; box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent-main) 0%, transparent); }
 }
 
-.timelineNode:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--accent) 40%, transparent);
-  outline-offset: 2px;
+.status-label {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  color: color-mix(in srgb, var(--text-ink) 88%, var(--text-muted));
 }
 
-.nodeHead {
+.status-detail {
+  font-size: 22px;
+  font-family: "Fraunces", Georgia, "Times New Roman", serif;
+  line-height: 1.3;
+}
+
+.card-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.card-dark .card-label {
+  color: color-mix(in srgb, var(--text-muted) 75%, #9ca3af);
+}
+
+.card-accent .card-label {
+  color: color-mix(in srgb, var(--text-ink) 56%, #b5c8ee);
+}
+
+.card-title {
+  font-family: "Fraunces", Georgia, "Times New Roman", serif;
+  font-size: 26px;
+  line-height: 1.2;
+  margin-bottom: 14px;
+  letter-spacing: -0.5px;
+}
+
+.card-dark .card-title {
+  color: color-mix(in srgb, var(--text-ink) 92%, white);
+}
+
+.card-accent .card-title {
+  color: color-mix(in srgb, var(--text-ink) 92%, white);
+}
+
+.card-body {
+  font-size: 13px;
+  line-height: 1.7;
+  color: color-mix(in srgb, var(--text-ink) 72%, var(--text-muted));
+}
+
+.card-dark .card-body {
+  color: color-mix(in srgb, var(--text-muted) 88%, #b9c5d9);
+}
+
+.card-accent .card-body {
+  color: color-mix(in srgb, var(--text-ink) 76%, #b8c9e5);
+}
+
+.card-quote {
   display: flex;
-  align-items: baseline;
-  gap: 10px;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
 }
 
-.nodeNum {
-  font-family: "Sora", "Plus Jakarta Sans", system-ui, sans-serif;
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  color: var(--muted);
+.card-quote .card-label,
+.card-quote .quote-attr {
+  text-align: center;
 }
 
-h2 {
-  margin: 0;
-  letter-spacing: -0.02em;
-  font-size: clamp(17px, 2.2vw, 19px);
-}
-
-.nodePreview {
-  margin-top: 10px;
-  display: grid;
-  grid-template-columns: 74px minmax(0, 1fr);
-  gap: 10px;
-  align-items: center;
-}
-
-.miniShot {
-  margin: 0;
-}
-
-.miniShot img,
-.miniPlaceholder {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-}
-
-.miniShot img {
-  object-fit: cover;
-}
-
-.miniPlaceholder {
-  display: grid;
-  place-items: center;
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 800;
-  background: color-mix(in srgb, var(--card) 82%, var(--bg-elev));
-  border-style: dashed;
-}
-
-.previewCopy p {
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.56;
-  font-size: 14px;
-}
-
-.nodeDetail {
-  margin-top: 10px;
-  max-height: none;
-  opacity: 1;
-  overflow: visible;
-  transform: none;
-}
-
-.nodeDetail p {
-  margin: 8px 0 0;
-  color: var(--muted);
-  line-height: 1.58;
-  font-size: 14px;
-}
-
-.photoGrid {
-  margin-top: 10px;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+.value-tags {
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
+  margin-top: 16px;
 }
 
-.photoSlot {
-  margin: 0;
+.value-tag {
+  padding: 5px 12px;
+  background: color-mix(in srgb, var(--accent-main) 18%, var(--card-base));
+  color: color-mix(in srgb, var(--accent-main) 72%, var(--text-ink));
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 500;
 }
 
-.photoSlot img,
-.placeholder {
+.big-quote {
+  font-family: "Fraunces", Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-size: clamp(24px, 2.35vw, 34px);
+  line-height: 1.34;
+  color: color-mix(in srgb, var(--text-ink) 90%, white);
+  margin: 8px 0 16px;
+}
+
+.quote-attr {
+  font-size: 11px;
+  color: color-mix(in srgb, #a7bbdd 74%, var(--text-ink));
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.card-photo {
+  background: color-mix(in srgb, var(--accent-main) 9%, var(--card-base));
+}
+
+.card-photo img {
   width: 100%;
-  aspect-ratio: 4 / 3;
-  border-radius: 14px;
-  border: 1px solid var(--border);
-}
-
-.photoSlot img {
+  height: 100%;
+  min-height: 260px;
+  max-height: 340px;
   object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--border-soft) 88%, var(--bg-elev));
 }
 
-.placeholder {
+.photoPlaceholder {
+  min-height: 260px;
+  border-radius: 14px;
+  border: 1px dashed color-mix(in srgb, var(--accent-main) 40%, var(--border-soft));
+  background: color-mix(in srgb, var(--accent-main) 10%, var(--card-base));
   display: grid;
   place-items: center;
-  color: var(--muted);
-  font-weight: 800;
-  background: color-mix(in srgb, var(--card) 82%, var(--bg-elev));
-  border-style: dashed;
+  text-align: center;
+  color: color-mix(in srgb, var(--text-ink) 74%, var(--text-muted));
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 14px;
 }
 
-figcaption {
-  margin-top: 6px;
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.closing {
-  margin: 0;
-  color: var(--muted);
-  font-weight: 700;
-  font-size: 14px;
-}
-
-@media (max-width: 900px) {
-  .nodePreview {
-    grid-template-columns: 64px 1fr;
-    align-items: start;
+@media (max-width: 1100px) {
+  .bento {
+    grid-template-columns: repeat(6, 1fr);
   }
 
-  .photoGrid {
+  .card-hero {
+    grid-column: span 6;
+    grid-row: span 2;
+  }
+
+  .card-status,
+  .card-approach {
+    grid-column: span 6;
+    grid-row: auto;
+  }
+
+  .card-values,
+  .card-quote,
+  .card-fivetonine,
+  .card-photo-main,
+  .card-photo-placeholder {
+    grid-column: span 3;
+    grid-row: auto;
+  }
+}
+
+@media (max-width: 820px) {
+  .bento {
     grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 560px) {
-  .timeline {
-    padding-left: 14px;
+    padding: 10px;
+    gap: 12px;
   }
 
-  .timeline::before {
-    left: 5px;
+  .card-status,
+  .card-approach,
+  .card-values,
+  .card-quote,
+  .card-fivetonine,
+  .card-photo-main,
+  .card-photo-placeholder {
+    grid-column: 1;
+    grid-row: auto;
   }
 
-  .timelineNode::before {
-    left: -11px;
-    top: 18px;
-    width: 7px;
-    height: 7px;
+  .card {
+    padding: 24px;
   }
 
-  .nodePreview {
-    grid-template-columns: 56px 1fr;
-    gap: 8px;
+  .hero-name {
+    font-size: 52px;
   }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  .timelineNode {
-    transition: none !important;
+  .heroMedia {
+    position: static;
+    width: auto;
+    transform: none;
+    margin-top: 16px;
+  }
+
+  .card-hero {
+    padding-right: 24px;
   }
 }
 </style>

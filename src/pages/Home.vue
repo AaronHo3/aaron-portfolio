@@ -422,7 +422,7 @@ h1 {
 
 .trustStat strong {
   display: block;
-  font-family: "Sora", "Plus Jakarta Sans", system-ui, sans-serif;
+  font-family: "Fraunces", Georgia, "Times New Roman", serif;
   letter-spacing: -0.02em;
   font-size: 13px;
 }
