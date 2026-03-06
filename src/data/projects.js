@@ -2,7 +2,7 @@ export const projects = [
   {
     slug: "eeg-seizure-classification",
     title: "EEG Seizure Classification (CHB-MIT)",
-    subtitle: "Ensemble ML + ROC/AUC evaluation",
+    subtitle: "Ensemble ML + ROC/AUC evaluation · Currently in active development",
     tags: ["Healthcare AI", "Neuroscience"],
     modelTypes: ["Healthcare AI", "Neuroscience"],
     languages: ["Python"],
@@ -24,6 +24,7 @@ export const projects = [
     slug: "luna16-nodule-segmentation",
     title: "Lung Nodule Segmentation + Classification (LUNA16)",
     subtitle: "U-Net patches + ResNet50 classifier",
+    underConstruction: true,
     tags: ["Healthcare AI", "Medical Imaging"],
     modelTypes: ["Healthcare AI", "Medical Imaging"],
     languages: ["Python"],
@@ -44,7 +45,7 @@ export const projects = [
   {
     slug: "chest-cancer-efficientnet-deit-smallvit",
     title: "Chest Cancer Classification (EfficientNet + DeiT + SmallViT)",
-    subtitle: "Comparative deep learning pipeline for chest image diagnosis",
+    subtitle: "Comparative deep learning pipeline for chest image diagnosis · Currently in active development",
     tags: ["Healthcare AI", "Medical Imaging"],
     modelTypes: ["Healthcare AI", "Medical Imaging"],
     languages: ["Python"],
@@ -66,6 +67,7 @@ export const projects = [
     slug: "imagined-handwriting-decoding",
     title: "Neural Decoding (Imagined Handwriting)",
     subtitle: "Poisson HMM vs RCNN sequence decoder",
+    underConstruction: true,
     tags: ["Neuroscience", "Healthcare AI"],
     modelTypes: ["Neuroscience", "Healthcare AI"],
     languages: ["Python"],
@@ -86,7 +88,7 @@ export const projects = [
   {
     slug: "gapminder-dashboard",
     title: "Interactive Gapminder Dashboard (Vue + D3)",
-    subtitle: "Linked interactions + filtering",
+    subtitle: "Linked interactions + filtering · Currently in active development",
     tags: ["Data Visualization / Dashboards", "Miscellaneous"],
     modelTypes: ["Data Visualization / Dashboards", "Miscellaneous"],
     languages: ["JavaScript"],

@@ -4,20 +4,13 @@
     <section class="hero">
       <div class="left">
         <h1 class="title" :class="{ in: mounted }">
-          I’m <span class="accent">Aaron</span> — at <span class="accent">Sanofi</span>, I build AI-driven bioreactor
-          digital twin simulations.
+          I’m <span class="accent">Aaron</span> — Building <span class="accent">AI</span> for <span class="accent">Healthcare</span>
         </h1>
 
         <p class="sub" :class="{ in: mounted }">
-          I build projects in EEG classification, CT imaging, neural decoding, and digital twins. I focus on clear, explainable models and practical dashboards.
+          Currently working at Sanofi on AI-driven bioreactor digital twins while building machine learning projects using biomedical data.
         </p>
 
-        <div ref="trustRowRef" class="trustRow" :class="{ in: mounted }">
-          <div v-for="(s, i) in animatedStats" :key="s.label" class="trustStat" :style="{ '--sd': `${i * 70}ms` }">
-            <strong>{{ s.value }}{{ s.suffix }}</strong>
-            <span>{{ s.label }}</span>
-          </div>
-        </div>
       </div>
 
       <div class="right">
@@ -50,39 +43,39 @@
       </div>
 
       <div class="grid">
-        <RouterLink
+        <component
+          :is="featuredCardComponent(p)"
           v-for="(p, i) in featured"
           :key="p.slug"
           class="card featuredCard"
-          :class="[{ in: mounted }, `d${i}`]"
-          :to="`/projects/${p.slug}`"
+          :class="[{ in: mounted }, `d${i}`, { locked: p.underConstruction }]"
+          v-bind="featuredCardProps(p)"
           :style="{ '--tone': projectTone(p) }"
-          @mousemove="onCardMove($event, p.slug)"
-          @mouseleave="onCardLeave(p.slug)"
+          @mousemove="onFeaturedMove($event, p)"
+          @mouseleave="onFeaturedLeave(p)"
         >
           <div class="visual" :style="visualStyle(p.slug)">
-            <div class="visualInner" aria-hidden="true">
+            <div class="visualInner">
               <component :is="projectIcon(p.slug)" class="visualIcon" />
-              <div class="miniBars">
-                <span :style="{ width: miniBarWidths(p.slug)[0] }"></span>
-                <span :style="{ width: miniBarWidths(p.slug)[1] }"></span>
-                <span :style="{ width: miniBarWidths(p.slug)[2] }"></span>
+              <div class="visualCopy">
+                <p class="visualLabel">{{ projectVisualLabel(p.slug) }}</p>
+                <p class="visualMeta">{{ p.tags?.[0] || "Project" }}</p>
               </div>
             </div>
-            <p class="visualLabel">{{ projectVisualLabel(p.slug) }}</p>
           </div>
 
           <div class="cardTop">
             <h3 class="cardTitle">{{ p.title }}</h3>
-            <span class="hint">View</span>
+            <span class="hint">{{ p.underConstruction ? "Soon" : "View" }}</span>
           </div>
 
           <p class="cardSub">{{ p.subtitle }}</p>
+          <p v-if="p.underConstruction" class="underNote">Hard-hat zone: under construction</p>
 
           <div class="tags">
             <span v-for="t in p.tags" :key="t" class="tag">{{ t }}</span>
           </div>
-        </RouterLink>
+        </component>
       </div>
 
     </section>
@@ -119,34 +112,27 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { Activity, BrainCircuit, ChartScatter, Dribbble, Heart, ScanSearch, Volleyball } from "lucide-vue-next";
+import { RouterLink } from "vue-router";
 import profileSrc from "../assets/profile.jpg";
 import { projects } from "../data/projects";
 import HeroOrb3D from "../components/HeroOrb3D.vue";
 
 const mounted = ref(false);
-const trustRowRef = ref(null);
-const animatedStats = ref([]);
 const visualTilt = ref({});
-let statsObserver;
 
-/* choose featured projects (first 3 for now) */
-const featured = computed(() => projects.slice(0, 3));
-const uniqueStackCount = computed(() => {
-  const stack = new Set();
-  for (const p of projects) for (const s of p.stack || []) stack.add(s);
-  return stack.size;
-});
-const domainCount = computed(() => {
-  const domains = new Set(projects.map((p) => p.tags?.[0]).filter(Boolean));
-  return domains.size;
-});
-const statTargets = computed(() => ([
-  { label: "Projects built", value: projects.length, suffix: "+" },
-  { label: "Tools in stack", value: uniqueStackCount.value, suffix: "+" },
-  { label: "Domains explored", value: domainCount.value, suffix: "" },
-]));
+/* featured project order */
+const featuredSlugs = [
+  "eeg-seizure-classification",
+  "uci-heart-disease-ml",
+  "chest-cancer-efficientnet-deit-smallvit",
+];
+const featured = computed(() =>
+  featuredSlugs
+    .map((slug) => projects.find((p) => p.slug === slug))
+    .filter(Boolean)
+);
 
 /* tilt state */
 const rx = ref(0);
@@ -157,15 +143,9 @@ const tiltStyle = computed(() => ({
 }));
 
 onMounted(() => {
-  animatedStats.value = statTargets.value.map((s) => ({ ...s, value: 0 }));
   requestAnimationFrame(() => {
     mounted.value = true;
   });
-  setupStatObserver();
-});
-
-onBeforeUnmount(() => {
-  statsObserver?.disconnect();
 });
 
 function onMove(e) {
@@ -186,48 +166,6 @@ function onLeave() {
   ry.value = 0;
 }
 
-function animateValue(from, to, onUpdate, duration = 900) {
-  const start = performance.now();
-  const tick = (now) => {
-    const p = Math.min(1, (now - start) / duration);
-    const eased = 1 - Math.pow(1 - p, 3);
-    const next = Math.round(from + (to - from) * eased);
-    onUpdate(next);
-    if (p < 1) requestAnimationFrame(tick);
-  };
-  requestAnimationFrame(tick);
-}
-
-function runStatAnimation() {
-  animatedStats.value = statTargets.value.map((s) => ({ ...s, value: 0 }));
-  for (let i = 0; i < statTargets.value.length; i += 1) {
-    const target = statTargets.value[i];
-    animateValue(0, target.value, (n) => {
-      animatedStats.value[i] = { ...target, value: n };
-    }, 860 + i * 80);
-  }
-}
-
-function setupStatObserver() {
-  if (!trustRowRef.value) return;
-  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
-    animatedStats.value = statTargets.value.map((s) => ({ ...s }));
-    return;
-  }
-
-  statsObserver = new IntersectionObserver(
-    (entries) => {
-      const entry = entries[0];
-      if (!entry?.isIntersecting) return;
-      runStatAnimation();
-      statsObserver?.disconnect();
-    },
-    { threshold: 0.35 },
-  );
-
-  statsObserver.observe(trustRowRef.value);
-}
-
 const iconBySlug = {
   "eeg-seizure-classification": BrainCircuit,
   "luna16-nodule-segmentation": ScanSearch,
@@ -240,26 +178,16 @@ const iconBySlug = {
 };
 
 const labelBySlug = {
-  "eeg-seizure-classification": "Signal classification visual",
-  "luna16-nodule-segmentation": "CT segmentation visual",
-  "chest-cancer-efficientnet-deit-smallvit": "Chest imaging model visual",
-  "imagined-handwriting-decoding": "Neural decoding visual",
-  "gapminder-dashboard": "Dashboard interaction visual",
-  "mens-2023-vnl-dashboard": "Volleyball analytics visual",
-  "nba-statistics-dashboard": "NBA analytics visual",
-  "uci-heart-disease-ml": "Cardiac risk modeling visual",
+  "eeg-seizure-classification": "EEG ML pipeline",
+  "luna16-nodule-segmentation": "CT segmentation model",
+  "chest-cancer-efficientnet-deit-smallvit": "Chest imaging models",
+  "imagined-handwriting-decoding": "Neural decoding models",
+  "gapminder-dashboard": "Interactive global trends",
+  "mens-2023-vnl-dashboard": "Volleyball analytics hub",
+  "nba-statistics-dashboard": "NBA stats dashboard",
+  "uci-heart-disease-ml": "Cardiac risk modeling",
 };
 
-const barsBySlug = {
-  "eeg-seizure-classification": ["88%", "72%", "94%"],
-  "luna16-nodule-segmentation": ["93%", "84%", "78%"],
-  "chest-cancer-efficientnet-deit-smallvit": ["90%", "79%", "86%"],
-  "imagined-handwriting-decoding": ["74%", "90%", "82%"],
-  "gapminder-dashboard": ["64%", "86%", "92%"],
-  "mens-2023-vnl-dashboard": ["91%", "76%", "87%"],
-  "nba-statistics-dashboard": ["89%", "81%", "93%"],
-  "uci-heart-disease-ml": ["92%", "84%", "88%"],
-};
 const toneByTag = {
   "Healthcare AI": "#38bdf8",
   "Medical Imaging": "#6366f1",
@@ -275,10 +203,6 @@ function projectIcon(slug) {
 
 function projectVisualLabel(slug) {
   return labelBySlug[slug] || "Project visual";
-}
-
-function miniBarWidths(slug) {
-  return barsBySlug[slug] || ["76%", "70%", "88%"];
 }
 
 function projectTone(project) {
@@ -302,6 +226,24 @@ function onCardLeave(slug) {
   visualTilt.value[slug] = { x: 0, y: 0 };
 }
 
+function featuredCardComponent(project) {
+  return project.underConstruction ? "article" : RouterLink;
+}
+
+function featuredCardProps(project) {
+  return project.underConstruction ? {} : { to: `/projects/${project.slug}` };
+}
+
+function onFeaturedMove(e, project) {
+  if (project.underConstruction) return;
+  onCardMove(e, project.slug);
+}
+
+function onFeaturedLeave(project) {
+  if (project.underConstruction) return;
+  onCardLeave(project.slug);
+}
+
 function visualStyle(slug) {
   const t = visualTilt.value[slug] || { x: 0, y: 0 };
   return {
@@ -318,6 +260,10 @@ function visualStyle(slug) {
   gap: 24px;
   align-items: center;
   margin-top: 10px;
+}
+
+.hero + .section {
+  margin-top: clamp(16px, 2.2vw, 24px);
 }
 
 .left {
@@ -356,8 +302,7 @@ function visualStyle(slug) {
 
 /* ---- STAGGERED TEXT ENTRANCE ---- */
 .title,
-.sub,
-.trustRow {
+.sub {
   opacity: 0;
   transform: translateY(8px);
   filter: blur(6px);
@@ -369,11 +314,9 @@ function visualStyle(slug) {
 
 .title.in { transition-delay: 100ms; }
 .sub.in { transition-delay: 180ms; }
-.trustRow.in { transition-delay: 260ms; }
 
 .title.in,
-.sub.in,
-.trustRow.in {
+.sub.in {
   opacity: 1;
   transform: translateY(0);
   filter: blur(0);
@@ -400,42 +343,6 @@ h1 {
   font-size: 18px;
   color: var(--muted);
   line-height: 1.5;
-}
-
-.trustRow {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-  margin-top: 18px;
-}
-
-.trustStat {
-  padding: 10px 12px;
-  border-radius: var(--r-md);
-  border: 1px solid color-mix(in srgb, var(--accent) 20%, var(--border));
-  background: color-mix(in srgb, var(--accent-soft) 46%, var(--card));
-  transition: transform 260ms ease, box-shadow 260ms ease;
-  transition-delay: var(--sd, 0ms);
-}
-
-.trustStat:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 22px color-mix(in srgb, var(--accent) 16%, transparent);
-}
-
-.trustStat strong {
-  display: block;
-  font-family: "Fraunces", Georgia, "Times New Roman", serif;
-  letter-spacing: -0.02em;
-  font-size: 13px;
-}
-
-.trustStat span {
-  display: block;
-  margin-top: 4px;
-  font-size: 12px;
-  color: var(--muted);
-  font-weight: 700;
 }
 
 /* ---- PROFILE PICTURE TILT + ENTRANCE ---- */
@@ -595,6 +502,16 @@ h1 {
   transform: translateY(-4px);
 }
 
+.featuredCard.locked {
+  cursor: not-allowed;
+  border-style: dashed;
+}
+
+.featuredCard.locked:hover {
+  transform: none;
+  box-shadow: 0 10px 20px color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
 .featuredCard::before {
   content: "";
   position: absolute;
@@ -645,22 +562,20 @@ h1 {
   transform: translateZ(16px);
 }
 
-.miniBars {
-  flex: 1;
-  display: grid;
-  gap: 6px;
-}
-
-.miniBars span {
-  display: block;
-  height: 5px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 72%, white), color-mix(in srgb, var(--accent-2) 68%, var(--accent)));
-  opacity: 0.9;
+.visualCopy {
+  min-width: 0;
 }
 
 .visualLabel {
-  margin: 8px 0 0;
+  margin: 0;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 850;
+  letter-spacing: -0.01em;
+}
+
+.visualMeta {
+  margin: 4px 0 0;
   color: var(--muted);
   font-size: 12px;
   font-weight: 700;
@@ -689,6 +604,19 @@ h1 {
   margin: 10px 0 0;
   color: var(--muted);
   line-height: 1.5;
+}
+
+.underNote {
+  margin: 8px 0 0;
+  display: inline-flex;
+  border-radius: var(--r-pill);
+  border: 1px dashed color-mix(in srgb, var(--accent) 52%, var(--border));
+  background: color-mix(in srgb, var(--accent-soft) 58%, transparent);
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--text);
 }
 
 .tags {
@@ -769,7 +697,7 @@ h1 {
 
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .title, .sub, .trustRow, .tilt, .featuredCard {
+  .title, .sub, .tilt, .featuredCard {
     transition: none !important;
     animation: none !important;
     opacity: 1 !important;
@@ -788,10 +716,6 @@ h1 {
 
   .right {
     justify-items: center;
-  }
-
-  .trustRow {
-    grid-template-columns: 1fr;
   }
 
   .allProjectsBtn {

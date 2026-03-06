@@ -1,5 +1,11 @@
 <template>
-  <RouterLink class="card linkCard" :to="`/projects/${props.project.slug}`" :style="{ '--tone': tone }">
+  <component
+    :is="cardComponent"
+    class="card linkCard"
+    :class="{ locked: isUnderConstruction }"
+    v-bind="cardProps"
+    :style="{ '--tone': tone }"
+  >
     <div class="visual">
       <div class="visualMark">
         <component :is="projectIcon(props.project.slug)" class="visualIcon" />
@@ -10,9 +16,11 @@
       </div>
     </div>
 
+    <p v-if="isUnderConstruction" class="construction">Hard-hat zone: under construction</p>
+
     <div class="top">
       <h3>{{ props.project.title }}</h3>
-      <span class="chev">View</span>
+      <span class="chev">{{ isUnderConstruction ? "Soon" : "View" }}</span>
     </div>
 
     <p class="muted">{{ props.project.subtitle }}</p>
@@ -20,11 +28,12 @@
     <div class="tags">
       <span v-for="t in props.project.tags" :key="t" class="tag">{{ t }}</span>
     </div>
-  </RouterLink>
+  </component>
 </template>
 
 <script setup>
 import { computed } from "vue";
+import { RouterLink } from "vue-router";
 import { Activity, BrainCircuit, ChartScatter, Dribbble, Heart, ScanSearch, Volleyball } from "lucide-vue-next";
 
 const props = defineProps({
@@ -44,6 +53,11 @@ const tone = computed(() => {
   const match = props.project.tags.find((t) => toneByTag[t]);
   return match ? toneByTag[match] : "var(--accent)";
 });
+const isUnderConstruction = computed(() => Boolean(props.project.underConstruction));
+const cardComponent = computed(() => (isUnderConstruction.value ? "article" : RouterLink));
+const cardProps = computed(() =>
+  isUnderConstruction.value ? {} : { to: `/projects/${props.project.slug}` }
+);
 
 const iconBySlug = {
   "eeg-seizure-classification": BrainCircuit,
@@ -85,6 +99,11 @@ function visualLabel(slug) {
   transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, background 160ms ease;
 }
 
+.linkCard.locked {
+  cursor: not-allowed;
+  border-style: dashed;
+}
+
 .linkCard::before {
   content: "";
   position: absolute;
@@ -112,6 +131,11 @@ function visualLabel(slug) {
   border-color: color-mix(in srgb, var(--tone) 42%, var(--border));
   box-shadow: 0 16px 30px color-mix(in srgb, var(--tone) 20%, transparent);
   background: color-mix(in srgb, var(--card) 88%, var(--tone) 4%);
+}
+
+.linkCard.locked:hover {
+  transform: none;
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--tone) 18%, transparent);
 }
 
 .linkCard:hover::after {
@@ -152,6 +176,20 @@ function visualLabel(slug) {
 
 .visualCopy {
   min-width: 0;
+}
+
+.construction {
+  margin: 2px 0 0;
+  display: inline-flex;
+  width: fit-content;
+  border-radius: var(--r-pill);
+  border: 1px dashed color-mix(in srgb, var(--tone) 52%, var(--border));
+  background: color-mix(in srgb, var(--tone) 14%, transparent);
+  color: var(--text);
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
 }
 
 .visualLabel {
