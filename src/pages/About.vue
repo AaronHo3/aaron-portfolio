@@ -4,13 +4,14 @@
       <article class="card card-hero">
         <div class="hero-eyebrow">About me</div>
         <h1 class="hero-name">Aaron<br /><em>Ho.</em></h1>
-        <p class="hero-role">AI Engineer · ML &amp; Analytics</p>
+        <p class="hero-role">Dog Lover · Travel Enthusiast</p>
         <p class="hero-bio">
           I build systems that turn data into useful understanding. I care about strong technical execution, clear
           communication, and problems worth solving.
         </p>
         <div class="heroMedia">
-          <div class="heroPhotoPlaceholder">Add photo in About Me box</div>
+          <img class="heroPhoto" :src="osakaCastlePhoto" alt="Aaron smiling by Osaka Castle steps" />
+          <p class="heroPhotoCaption">Osaka Castle Dec 2025</p>
         </div>
         <div class="hero-decoration" aria-hidden="true"></div>
       </article>
@@ -24,12 +25,14 @@
       </article>
 
       <article class="card card-approach">
-        <div class="card-label">The Way I Work</div>
-        <div class="card-title">Curious by default. Methodical by habit.</div>
-        <p class="card-body">
-          I slow down before I speed up: understanding the problem fully before reaching for a solution. I break
-          complexity into pieces and build from there.
-        </p>
+        <div class="card-label">Currently Exploring</div>
+        <div class="card-title explore-title">Focus areas right now.</div>
+        <ul class="explore-list">
+          <li>Personalized/Precision Medicine</li>
+          <li>Digital Twins</li>
+          <li>Disease Diagnosis and Prognostics</li>
+          <li>AI-Assisted Robotic Surgery</li>
+        </ul>
       </article>
 
       <article class="card card-values card-warm">
@@ -47,15 +50,17 @@
 
       <article class="card card-photo card-photo-main">
         <div class="card-label">Photo</div>
-        <img :src="profileSrc" alt="Aaron Ho portrait" />
+        <img class="photoMainImg" :src="momoPhoto" alt="Momo the dog" />
+        <p class="photoCaption">Momo</p>
       </article>
 
       <article class="card card-fivetonine card-dark">
         <div class="card-label">My "5-9"</div>
         <div class="card-title">Beyond the screen.</div>
         <p class="card-body">
-          Outside work, I stay sharp by staying active, exploring new ideas, and spending time with people who
-          challenge me to keep growing.
+          Away from the computer, I recharge through volleyball, time outdoors, and training in the gym. I’m always
+          on the lookout for new music and new experiences, and I value spending time with people who challenge me to
+          grow and broaden my perspective.
         </p>
       </article>
 
@@ -75,7 +80,8 @@
 </template>
 
 <script setup>
-import profileSrc from "../assets/profile.jpg";
+import momoPhoto from "../assets/momo.png";
+import osakaCastlePhoto from "../assets/osaka-castle-steps.png";
 </script>
 
 <style scoped>
@@ -147,11 +153,14 @@ import profileSrc from "../assets/profile.jpg";
 
 .card-hero {
   background: var(--card-mist);
-  padding-right: 320px;
+  padding-right: 400px;
 }
 
 .card-approach {
-  background: var(--card-base);
+  background:
+    radial-gradient(circle at 92% 12%, color-mix(in srgb, var(--accent-main) 20%, transparent), transparent 38%),
+    color-mix(in srgb, var(--card-base) 94%, var(--card-ice));
+  border: 1px solid color-mix(in srgb, var(--accent-main) 22%, var(--border-soft));
 }
 
 .card-values {
@@ -236,29 +245,33 @@ import profileSrc from "../assets/profile.jpg";
 }
 
 .heroMedia {
-  width: 190px;
+  width: 260px;
   position: absolute;
   top: 50%;
-  right: 34px;
+  right: 28px;
   transform: translateY(-50%);
   z-index: 2;
 }
 
-.heroPhotoPlaceholder {
-  min-height: 270px;
-  aspect-ratio: 3 / 5;
+.heroPhoto {
+  width: 100%;
+  min-height: 360px;
+  aspect-ratio: 4 / 5;
   border-radius: 12px;
-  border: 1px dashed color-mix(in srgb, var(--accent-main) 42%, var(--border-soft));
+  object-fit: cover;
+  border: 1px solid color-mix(in srgb, var(--accent-main) 34%, var(--border-soft));
   background: color-mix(in srgb, var(--accent-main) 12%, var(--card-base));
-  display: grid;
-  place-items: center;
+  box-shadow: 0 18px 30px color-mix(in srgb, var(--accent-main) 20%, transparent);
+}
+
+.heroPhotoCaption {
+  margin: 8px 4px 0;
   text-align: center;
-  color: color-mix(in srgb, var(--text-ink) 76%, var(--text-muted));
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  padding: 10px;
+  color: color-mix(in srgb, var(--text-muted) 84%, var(--text-ink));
 }
 
 .hero-decoration {
@@ -306,7 +319,7 @@ import profileSrc from "../assets/profile.jpg";
 }
 
 .card-label {
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--text-muted);
@@ -324,7 +337,7 @@ import profileSrc from "../assets/profile.jpg";
 
 .card-title {
   font-family: "Fraunces", Georgia, "Times New Roman", serif;
-  font-size: 26px;
+  font-size: 30px;
   line-height: 1.2;
   margin-bottom: 14px;
   letter-spacing: -0.5px;
@@ -342,6 +355,43 @@ import profileSrc from "../assets/profile.jpg";
   font-size: 13px;
   line-height: 1.7;
   color: color-mix(in srgb, var(--text-ink) 72%, var(--text-muted));
+}
+
+.explore-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.explore-title {
+  margin-bottom: 16px;
+}
+
+.explore-list li {
+  position: relative;
+  padding: 10px 12px 10px 34px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--accent-main) 26%, var(--border-soft));
+  background: color-mix(in srgb, var(--accent-main) 9%, var(--card-base));
+  color: color-mix(in srgb, var(--text-ink) 86%, var(--text-muted));
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.explore-list li::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  transform: translateY(-50%);
+  background: linear-gradient(145deg, var(--accent-main), var(--accent-2));
+  box-shadow: 0 0 14px color-mix(in srgb, var(--accent-main) 35%, transparent);
 }
 
 .card-dark .card-body {
@@ -367,17 +417,18 @@ import profileSrc from "../assets/profile.jpg";
 .value-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 16px;
+  gap: 12px;
+  margin-top: 18px;
 }
 
 .value-tag {
-  padding: 5px 12px;
+  padding: 9px 16px;
   background: color-mix(in srgb, var(--accent-main) 18%, var(--card-base));
   color: color-mix(in srgb, var(--accent-main) 72%, var(--text-ink));
   border-radius: 100px;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1;
 }
 
 .big-quote {
@@ -408,6 +459,32 @@ import profileSrc from "../assets/profile.jpg";
   object-fit: cover;
   border-radius: 14px;
   border: 1px solid color-mix(in srgb, var(--border-soft) 88%, var(--bg-elev));
+}
+
+.card-photo-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.photoMainImg {
+  min-height: 0;
+  max-height: none;
+  aspect-ratio: 4 / 5;
+  object-fit: contain;
+  object-position: center;
+  padding: 12px;
+  background: color-mix(in srgb, var(--card-base) 92%, var(--bg-elev));
+  transform: none;
+}
+
+.photoCaption {
+  margin: 10px 4px 0;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--text-muted) 84%, var(--text-ink));
 }
 
 .photoPlaceholder {
@@ -478,7 +555,7 @@ import profileSrc from "../assets/profile.jpg";
 
   .heroMedia {
     position: static;
-    width: auto;
+    width: min(280px, 100%);
     transform: none;
     margin-top: 16px;
   }

@@ -31,6 +31,7 @@
           <a href="https://github.com/AaronHo3" target="_blank" rel="noreferrer">GitHub</a>
           <a :href="resumeHref" target="_blank" rel="noreferrer">Resume</a>
         </nav>
+        <p class="buildStamp" :title="buildIso">Build: {{ buildDisplay }}</p>
       </div>
     </footer>
 
@@ -53,6 +54,11 @@ import ThemeToggle from "./components/ThemeToggle.vue";
 const route = useRoute();
 const resumeHref = `${import.meta.env.BASE_URL}Resume_Aaron_Ho.pdf`;
 const logoHref = `${import.meta.env.BASE_URL}logo.png`;
+const buildIso = __BUILD_TIME__;
+const buildDisplay = new Date(buildIso).toLocaleString(undefined, {
+  dateStyle: "medium",
+  timeStyle: "short",
+});
 const mainRef = ref(null);
 const scrollProgress = ref(0);
 const showTop = ref(false);
@@ -273,6 +279,15 @@ main.container {
   font-size: 12px;
   font-weight: 700;
   opacity: 0.92;
+}
+
+.buildStamp {
+  margin: 10px 0 0;
+  width: 100%;
+  color: color-mix(in srgb, var(--muted) 92%, var(--text));
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
 }
 
 .footerLinks {
