@@ -79,11 +79,8 @@
       </article>
 
       <article class="card card-photo card-photo-placeholder">
-        <div class="card-label">Hard-hat area</div>
-        <div class="photoPlaceholder">
-          <strong>Under construction</strong>
-          <span>Photo section coming soon</span>
-        </div>
+        <img class="photoAltImg" :src="sequoiaPhoto" alt="Sequoia National Park" />
+        <p class="photoCaption">Sequoia National Park June 2025</p>
       </article>
 
     </div>
@@ -93,6 +90,7 @@
 <script setup>
 import momoPhoto from "../assets/momo.png";
 import osakaCastlePhoto from "../assets/osaka-castle-steps.png";
+import sequoiaPhoto from "../assets/sequoia-national-park.jpg";
 </script>
 
 <style scoped>
@@ -506,6 +504,12 @@ import osakaCastlePhoto from "../assets/osaka-castle-steps.png";
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: color-mix(in srgb, var(--text-muted) 84%, var(--text-ink));
+}
+
+.photoAltImg {
+  object-position: center;
+  transform: scale(1.07);
+  transform-origin: center;
 }
 
 .photoPlaceholder {
