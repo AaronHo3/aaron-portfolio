@@ -2,18 +2,26 @@
   <section class="section aboutPage">
     <div class="bento">
       <article class="card card-hero">
-        <div class="hero-eyebrow">About me</div>
-        <h1 class="hero-name">Aaron<br /><em>Ho.</em></h1>
-        <p class="hero-role">Dog Lover · Travel Enthusiast</p>
-        <p class="hero-bio">
-          I build systems that turn data into useful understanding. I care about strong technical execution, clear
-          communication, and problems worth solving.
-        </p>
-        <div class="heroMedia">
-          <img class="heroPhoto" :src="osakaCastlePhoto" alt="Aaron smiling by Osaka Castle steps" />
-          <p class="heroPhotoCaption">Osaka Castle Dec 2025</p>
+        <div class="heroTop">
+          <div class="heroCopy">
+            <div class="hero-eyebrow">About me</div>
+            <h1 class="hero-name">Aaron<br /><em>Ho.</em></h1>
+            <p class="hero-role">Dog Lover · Curious by nature</p>
+            <p class="hero-bio hero-bio-lead">
+              I’ve always been drawn to understanding how things work, especially complex systems and challenging
+              problems. I enjoy breaking ideas down, learning from different perspectives, and building things that can
+              make a real impact.
+            </p>
+          </div>
+          <div class="heroMedia">
+            <img class="heroPhoto" :src="osakaCastlePhoto" alt="Aaron smiling by Osaka Castle steps" />
+            <p class="heroPhotoCaption">Osaka Castle Dec 2025</p>
+          </div>
         </div>
-        <div class="hero-decoration" aria-hidden="true"></div>
+        <p class="hero-bio hero-bio-full">
+          Curiosity, thoughtful problem-solving, and continuous growth are values I try to carry with me in
+          everything I do.
+        </p>
       </article>
 
       <article class="card card-status card-green">
@@ -49,7 +57,7 @@
       </article>
 
       <article class="card card-photo card-photo-main">
-        <div class="card-label">Photo</div>
+        <div class="card-label">What I Love</div>
         <img class="photoMainImg" :src="momoPhoto" alt="Momo the dog" />
         <p class="photoCaption">Momo</p>
       </article>
@@ -71,8 +79,11 @@
       </article>
 
       <article class="card card-photo card-photo-placeholder">
-        <div class="card-label">Add a moment</div>
-        <div class="photoPlaceholder">Drop in a second photo</div>
+        <div class="card-label">Hard-hat area</div>
+        <div class="photoPlaceholder">
+          <strong>Under construction</strong>
+          <span>Photo section coming soon</span>
+        </div>
       </article>
 
     </div>
@@ -153,7 +164,21 @@ import osakaCastlePhoto from "../assets/osaka-castle-steps.png";
 
 .card-hero {
   background: var(--card-mist);
-  padding-right: 400px;
+  padding: 30px 30px 28px;
+}
+
+.heroTop {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 250px;
+  column-gap: 18px;
+  align-items: start;
+}
+
+.heroCopy {
+  min-width: 0;
+  position: relative;
+  z-index: 2;
+  top: 0;
 }
 
 .card-approach {
@@ -213,7 +238,7 @@ import osakaCastlePhoto from "../assets/osaka-castle-steps.png";
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--accent-main);
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   font-weight: 500;
 }
 
@@ -222,7 +247,7 @@ import osakaCastlePhoto from "../assets/osaka-castle-steps.png";
   font-size: 64px;
   line-height: 1;
   letter-spacing: -2px;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 }
 
 .hero-name em {
@@ -233,7 +258,7 @@ import osakaCastlePhoto from "../assets/osaka-castle-steps.png";
 .hero-role {
   font-size: 15px;
   color: var(--text-muted);
-  margin-bottom: 32px;
+  margin-bottom: 12px;
   font-weight: 300;
 }
 
@@ -241,21 +266,28 @@ import osakaCastlePhoto from "../assets/osaka-castle-steps.png";
   font-size: 15px;
   line-height: 1.75;
   color: color-mix(in srgb, var(--text-ink) 80%, var(--text-muted));
-  max-width: 420px;
+  max-width: 64ch;
+}
+
+.hero-bio-lead {
+  margin-bottom: 0;
+}
+
+.hero-bio-full {
+  max-width: 72ch;
+  margin-top: 10px;
 }
 
 .heroMedia {
-  width: 260px;
-  position: absolute;
-  top: 50%;
-  right: 28px;
-  transform: translateY(-50%);
+  width: 250px;
+  position: relative;
+  margin: 46px 0 0;
   z-index: 2;
 }
 
 .heroPhoto {
   width: 100%;
-  min-height: 360px;
+  min-height: 320px;
   aspect-ratio: 4 / 5;
   border-radius: 12px;
   object-fit: cover;
@@ -272,17 +304,6 @@ import osakaCastlePhoto from "../assets/osaka-castle-steps.png";
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: color-mix(in srgb, var(--text-muted) 84%, var(--text-ink));
-}
-
-.hero-decoration {
-  position: absolute;
-  bottom: -20px;
-  right: -20px;
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  border: 40px solid var(--accent-soft);
-  opacity: 0.6;
 }
 
 .status-indicator {
@@ -499,6 +520,18 @@ import osakaCastlePhoto from "../assets/osaka-castle-steps.png";
   font-weight: 600;
   letter-spacing: 0.02em;
   padding: 14px;
+  gap: 8px;
+}
+
+.photoPlaceholder strong {
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.photoPlaceholder span {
+  font-size: 12px;
+  color: color-mix(in srgb, var(--text-ink) 68%, var(--text-muted));
 }
 
 @media (max-width: 1100px) {
@@ -554,10 +587,21 @@ import osakaCastlePhoto from "../assets/osaka-castle-steps.png";
   }
 
   .heroMedia {
-    position: static;
     width: min(280px, 100%);
-    transform: none;
-    margin-top: 16px;
+    margin: 0;
+  }
+
+  .heroTop {
+    grid-template-columns: 1fr;
+    row-gap: 10px;
+  }
+
+  .heroCopy {
+    max-width: 100%;
+  }
+
+  .heroMedia {
+    position: static;
   }
 
   .card-hero {
