@@ -231,6 +231,7 @@ function setupStatObserver() {
 const iconBySlug = {
   "eeg-seizure-classification": BrainCircuit,
   "luna16-nodule-segmentation": ScanSearch,
+  "chest-cancer-efficientnet-deit-smallvit": ScanSearch,
   "imagined-handwriting-decoding": Activity,
   "gapminder-dashboard": ChartScatter,
   "mens-2023-vnl-dashboard": Volleyball,
@@ -241,6 +242,7 @@ const iconBySlug = {
 const labelBySlug = {
   "eeg-seizure-classification": "Signal classification visual",
   "luna16-nodule-segmentation": "CT segmentation visual",
+  "chest-cancer-efficientnet-deit-smallvit": "Chest imaging model visual",
   "imagined-handwriting-decoding": "Neural decoding visual",
   "gapminder-dashboard": "Dashboard interaction visual",
   "mens-2023-vnl-dashboard": "Volleyball analytics visual",
@@ -251,6 +253,7 @@ const labelBySlug = {
 const barsBySlug = {
   "eeg-seizure-classification": ["88%", "72%", "94%"],
   "luna16-nodule-segmentation": ["93%", "84%", "78%"],
+  "chest-cancer-efficientnet-deit-smallvit": ["90%", "79%", "86%"],
   "imagined-handwriting-decoding": ["74%", "90%", "82%"],
   "gapminder-dashboard": ["64%", "86%", "92%"],
   "mens-2023-vnl-dashboard": ["91%", "76%", "87%"],

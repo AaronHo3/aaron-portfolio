@@ -9,7 +9,7 @@ export const projects = [
     stack: ["Python", "scikit-learn", "NumPy"],
     metrics: ["AUC: TBD", "F1: TBD"],
     links: {
-      github: "https://github.com/AaronHo3",
+      github: "https://github.com/AaronHo3/eeg_seizure_classification",
       demo: "",
       report: "",
     },
@@ -39,6 +39,27 @@ export const projects = [
     bullets: [
       "Trained U-Net on 128×128 patches centered on nodules with augmentation and Dice+BCE loss.",
       "Prepared segmentation outputs for downstream classification using 224×224 ResNet-compatible crops.",
+    ],
+  },
+  {
+    slug: "chest-cancer-efficientnet-deit-smallvit",
+    title: "Chest Cancer Classification (EfficientNet + DeiT + SmallViT)",
+    subtitle: "Comparative deep learning pipeline for chest image diagnosis",
+    tags: ["Healthcare AI", "Medical Imaging"],
+    modelTypes: ["Healthcare AI", "Medical Imaging"],
+    languages: ["Python"],
+    stack: ["Python", "PyTorch", "EfficientNet", "DeiT", "SmallViT"],
+    metrics: ["Accuracy: TBD", "F1: TBD", "ROC-AUC: TBD"],
+    links: {
+      github: "https://github.com/AaronHo3/chest_cancer_efficientnet_DeiT_smallViT",
+      demo: "",
+      report: "",
+    },
+    summary:
+      "Built a chest cancer image classification project that benchmarks CNN and transformer-based models in a single reproducible training and evaluation workflow.",
+    bullets: [
+      "Compared EfficientNet, DeiT, and SmallViT architectures for chest cancer classification performance.",
+      "Structured the codebase for consistent preprocessing, training, and evaluation across multiple model families.",
     ],
   },
   {

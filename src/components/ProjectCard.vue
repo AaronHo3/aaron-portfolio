@@ -48,6 +48,7 @@ const tone = computed(() => {
 const iconBySlug = {
   "eeg-seizure-classification": BrainCircuit,
   "luna16-nodule-segmentation": ScanSearch,
+  "chest-cancer-efficientnet-deit-smallvit": ScanSearch,
   "imagined-handwriting-decoding": Activity,
   "gapminder-dashboard": ChartScatter,
   "mens-2023-vnl-dashboard": Volleyball,
@@ -58,6 +59,7 @@ const iconBySlug = {
 const labelBySlug = {
   "eeg-seizure-classification": "EEG ML pipeline",
   "luna16-nodule-segmentation": "CT segmentation model",
+  "chest-cancer-efficientnet-deit-smallvit": "Chest imaging models",
   "imagined-handwriting-decoding": "Neural decoding models",
   "gapminder-dashboard": "Interactive global trends",
   "mens-2023-vnl-dashboard": "Volleyball analytics hub",
