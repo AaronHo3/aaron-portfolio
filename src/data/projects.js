@@ -1,8 +1,46 @@
 export const projects = [
   {
+    slug: "gutsense-crc-screening",
+    title: "GutSense | Continuous CRC Screening Platform",
+    subtitle:
+      "8-biomarker neural net + IRIS vector RAG + Claude AI narratives | 3rd Place, MIT Grand Hack (InterSystems Challenge)",
+    tags: ["Healthcare AI", "Hackathon"],
+    modelTypes: ["Healthcare AI", "Hackathon"],
+    languages: ["Python", "TypeScript"],
+    stack: [
+      "React",
+      "FastAPI",
+      "SQLAlchemy",
+      "InterSystems IRIS",
+      "Claude API",
+      "scikit-learn",
+      "SQLite",
+      "Tailwind CSS",
+    ],
+    metrics: [
+      "8-biomarker neural net risk engine (13-input MLP)",
+      "IRIS vector RAG via cosine similarity on FHIR embeddings",
+      "Claude AI patient + physician narratives with tool use",
+      "3rd Place, InterSystems Challenge @ MIT Grand Hack 2026",
+    ],
+    links: {
+      github: "https://github.com/AaronHo3/GutSense",
+      demo: "",
+      report: "",
+    },
+    summary:
+      "Built an end-to-end colorectal cancer early-detection platform where a toilet-mounted biosensor passively streams 8 stool biomarkers to a neural network risk scoring engine. InterSystems IRIS ingests each patient's EHR and medical history to power a vector RAG pipeline, delivering contextually personalized AI-generated clinical narratives and referral letters via the Claude API.",
+    bullets: [
+      "Designed an 8-biomarker neural network risk engine (sigmoid feature engineering + 13-input MLP) scoring CRC risk 0-100 from hemoglobin FIT, calprotectin, MMP-9, MPO, MMP-8, fibrinogen, haptoglobin, and PGRP-S.",
+      "Leveraged InterSystems IRIS as the health data backbone to store FHIR-formatted patient observations and run cosine-similarity vector search, surfacing the 3 most similar historical cases to enrich Claude's clinical reasoning with real patient context.",
+      "Researched and designed the toilet-mounted biosensor hardware architecture, outlining sensor layout, biomarker data flow, and clinical integration pathways for passive at-home screening.",
+    ],
+  },
+  {
     slug: "eeg-seizure-classification",
     title: "EEG Seizure Classification (CHB-MIT)",
-    subtitle: "Ensemble ML + ROC/AUC evaluation · Currently in active development",
+    subtitle:
+      "Ensemble ML + ROC/AUC evaluation · Currently in active development",
     tags: ["Healthcare AI", "Neuroscience"],
     modelTypes: ["Healthcare AI", "Neuroscience"],
     languages: ["Python"],
@@ -45,14 +83,16 @@ export const projects = [
   {
     slug: "chest-cancer-efficientnet-deit-smallvit",
     title: "Chest Cancer Classification (EfficientNet + DeiT + SmallViT)",
-    subtitle: "Comparative deep learning pipeline for chest image diagnosis · Currently in active development",
+    subtitle:
+      "Comparative deep learning pipeline for chest image diagnosis · Currently in active development",
     tags: ["Healthcare AI", "Medical Imaging"],
     modelTypes: ["Healthcare AI", "Medical Imaging"],
     languages: ["Python"],
     stack: ["Python", "PyTorch", "EfficientNet", "DeiT", "SmallViT"],
     metrics: ["Accuracy: TBD", "F1: TBD", "ROC-AUC: TBD"],
     links: {
-      github: "https://github.com/AaronHo3/chest_cancer_efficientnet_DeiT_smallViT",
+      github:
+        "https://github.com/AaronHo3/chest_cancer_efficientnet_DeiT_smallViT",
       demo: "",
       report: "",
     },
@@ -88,7 +128,8 @@ export const projects = [
   {
     slug: "gapminder-dashboard",
     title: "Interactive Gapminder Dashboard (Vue + D3)",
-    subtitle: "Linked interactions + filtering · Currently in active development",
+    subtitle:
+      "Linked interactions + filtering · Currently in active development",
     tags: ["Data Visualization / Dashboards", "Miscellaneous"],
     modelTypes: ["Data Visualization / Dashboards", "Miscellaneous"],
     languages: ["JavaScript"],
@@ -122,7 +163,8 @@ export const projects = [
     ],
     links: {
       github: "https://github.com/AaronHo3",
-      dashboard: "https://vnlmen2023sportsdashboard-yqbyypuok5ovmdrfrlrhy7.streamlit.app/",
+      dashboard:
+        "https://vnlmen2023sportsdashboard-yqbyypuok5ovmdrfrlrhy7.streamlit.app/",
       demo: "",
       report: "",
     },
@@ -136,7 +178,8 @@ export const projects = [
   {
     slug: "nba-statistics-dashboard",
     title: "NBA Statistics Analytical Dashboard",
-    subtitle: "Player role prediction, era comparisons, and team evolution tracking",
+    subtitle:
+      "Player role prediction, era comparisons, and team evolution tracking",
     tags: ["Sports Analytics", "Data Visualization / Dashboards"],
     modelTypes: ["Sports Analytics", "Data Visualization / Dashboards"],
     languages: ["Python"],
@@ -149,7 +192,8 @@ export const projects = [
     ],
     links: {
       github: "https://github.com/AaronHo3",
-      dashboard: "https://nbastatistics-zkezxylgqwponqvm5bg677.streamlit.app/",
+      dashboard:
+        "https://nbastatistics-zkezxylgqwponqvm5bg677.streamlit.app/",
       demo: "",
       report: "",
     },
