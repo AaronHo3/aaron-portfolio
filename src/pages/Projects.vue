@@ -110,7 +110,7 @@ import ProjectCard from "../components/ProjectCard.vue";
 const q = ref("");
 const modelType = ref("All");
 const language = ref("All");
-const viewMode = ref("stack");
+const viewMode = ref("grid");
 
 const allowedModelTypes = [
   "Healthcare AI",

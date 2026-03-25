@@ -106,22 +106,29 @@ export const projects = [
   {
     slug: "imagined-handwriting-decoding",
     title: "Neural Decoding (Imagined Handwriting)",
-    subtitle: "Poisson HMM vs RCNN sequence decoder",
+    subtitle:
+      "Conformer + RCNN + GRU + CTC decoders with Gaussian/Poisson HMM alignment on Willett et al. intracortical data",
     tags: ["Neuroscience", "Healthcare AI"],
     modelTypes: ["Neuroscience", "Healthcare AI"],
     languages: ["Python"],
-    stack: ["Python", "PyTorch", "State-space models"],
-    metrics: ["Trajectory fidelity: TBD"],
+    stack: ["Python", "PyTorch", "scikit-learn", "NumPy", "SciPy"],
+    metrics: [
+      "Best CER: 55.86% (Conformer, multi-session)",
+      "Best single-session CER: 65.97% (RCNN)",
+      "4 decoder architectures benchmarked",
+      "3 alignment strategies compared",
+    ],
     links: {
       github: "https://github.com/AaronHo3/neural_decoding_imagined_handwriting",
       demo: "",
       report: "",
     },
     summary:
-      "Benchmarked probabilistic and deep sequence models to decode intended handwriting from intracortical spiking activity.",
+      "Systematic comparison of four neural sequence decoders (GRU, RCNN, Conformer, CTC) across three HMM alignment strategies for brain-to-text communication from intracortical recordings, building on Willett et al. (Nature 2021).",
     bullets: [
-      "Modeled spike counts with a Poisson HMM and compared against an RCNN sequence decoder.",
-      "Evaluated decoding quality with trajectory-based metrics and qualitative reconstructions.",
+      "Benchmarked GRU, RCNN, Conformer, and CTC decoders on 192-channel intracortical neural recordings, showing architecture ranking reverses with data scale — RCNN leads with 89 sentences but Conformer wins with 574 sentences (55.86% CER).",
+      "Implemented Gaussian and novel Poisson HMM forced alignment with hard and soft probability targets, demonstrating that alignment quality dominates decoding performance (17+ pp gap between Gaussian and Poisson HMM).",
+      "Showed multi-session training across 10 recording sessions yields a 10.1 pp CER improvement, and soft probability labels boost frame accuracy by 1.8–5.0 pp at zero additional cost.",
     ],
   },
   {
