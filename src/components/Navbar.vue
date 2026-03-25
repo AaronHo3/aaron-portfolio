@@ -33,7 +33,7 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref } from "vue";
 
-const resumeHref = `${import.meta.env.BASE_URL}Resume_Aaron_Ho.pdf`;
+const resumeHref = `${import.meta.env.BASE_URL}AH_Resume.pdf`;
 const logoHref = `${import.meta.env.BASE_URL}logo.png`;
 const scrolled = ref(false);
 const collapsed = ref(false);

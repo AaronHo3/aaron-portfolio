@@ -4,19 +4,43 @@
     <section class="hero">
       <div class="left">
         <h1 class="title" :class="{ in: mounted }">
-          I'm <span class="accent">Aaron</span> — Building <span class="accent">AI</span> for
-          <span class="accent">Healthcare</span>
+          I'm
+          <TextShimmer
+            as="span"
+            class="shimmerAccent"
+            :duration="1.8"
+            :spread="2"
+            text="Aaron"
+          >Aaron</TextShimmer>
+          — Building
+          <TextShimmer
+            as="span"
+            class="shimmerAccent"
+            :duration="2.2"
+            :spread="2"
+            text="AI"
+          >AI</TextShimmer>
+          for
+          <TextShimmer
+            as="span"
+            class="shimmerAccent"
+            :duration="2"
+            :spread="2"
+            text="Healthcare"
+          >Healthcare</TextShimmer>
         </h1>
         <p class="sub" :class="{ in: mounted }">
           Currently working at Sanofi on AI-driven bioreactor digital twins while building
-          machine learning projects using biomedical data.
+          <span class="cyclingWrap">
+            <Transition name="wordCycle" mode="out-in">
+              <span class="cyclingWord" :key="currentWord">{{ currentWord }}</span>
+            </Transition>
+          </span>
+          projects using biomedical data.
         </p>
       </div>
 
       <div class="right">
-        <div class="heroOrb" aria-hidden="true">
-          <HeroOrb3D />
-        </div>
         <!-- Tilt wrapper -->
         <div
           class="tilt"
@@ -73,6 +97,7 @@
       </div>
     </section>
 
+    <!-- EDUCATION -->
     <section class="section educationSection breakSection">
       <div class="featuredHead">
         <h2 class="sectionTitle">Education</h2>
@@ -106,7 +131,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import {
   Activity,
   BrainCircuit,
@@ -120,12 +145,19 @@ import {
 import { RouterLink } from "vue-router";
 import profileSrc from "../assets/profile.jpg";
 import { projects } from "../data/projects";
-import HeroOrb3D from "../components/HeroOrb3D.vue";
+import TextShimmer from "../components/TextShimmer.vue";
+
 
 const mounted = ref(false);
 const visualTilt = ref({});
 
-/* featured project order — GutSense replaces EEG seizure classification */
+/* ---- Animated cycling words ---- */
+const cyclingWords = ["machine learning", "deep learning", "neural network", "computer vision", "NLP"];
+const wordIndex = ref(0);
+const currentWord = computed(() => cyclingWords[wordIndex.value]);
+let wordTimer;
+
+/* featured project order */
 const featuredSlugs = [
   "gutsense-crc-screening",
   "uci-heart-disease-ml",
@@ -151,6 +183,14 @@ onMounted(() => {
   requestAnimationFrame(() => {
     mounted.value = true;
   });
+
+  wordTimer = setInterval(() => {
+    wordIndex.value = (wordIndex.value + 1) % cyclingWords.length;
+  }, 2200);
+});
+
+onBeforeUnmount(() => {
+  if (wordTimer) clearInterval(wordTimer);
 });
 
 function onMove(e) {
@@ -261,34 +301,28 @@ function visualStyle(slug) {
 <style scoped>
 /* ---- HERO LAYOUT ---- */
 .hero {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 24px;
   align-items: center;
   margin-top: 10px;
+  min-height: 340px;
 }
 .hero + .section {
   margin-top: clamp(16px, 2.2vw, 24px);
 }
 .left {
   max-width: 760px;
+  position: relative;
+  z-index: 1;
 }
 .right {
   display: grid;
   place-items: center;
   position: relative;
   min-height: 320px;
-}
-.heroOrb {
-  position: absolute;
-  width: 360px;
-  height: 360px;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.9;
+  z-index: 1;
 }
 @media (max-width: 900px) {
   .hero {
@@ -300,9 +334,49 @@ function visualStyle(slug) {
     justify-self: center;
     width: 100%;
   }
-  .heroOrb {
-    display: none;
-  }
+}
+
+/* ---- SHIMMER ACCENT TEXT ---- */
+.shimmerAccent {
+  --shimmer-base: var(--accent);
+  --shimmer-highlight: #ffffff;
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  font-family: inherit;
+}
+
+/* ---- ANIMATED CYCLING WORDS ---- */
+.cyclingWrap {
+  display: inline-block;
+  position: relative;
+  min-width: 160px;
+  text-align: left;
+}
+
+.cyclingWord {
+  display: inline-block;
+  font-weight: 700;
+  background: linear-gradient(110deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.wordCycle-enter-active {
+  transition: opacity 320ms ease, transform 380ms cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+.wordCycle-leave-active {
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+.wordCycle-enter-from {
+  opacity: 0;
+  transform: translateY(18px);
+}
+.wordCycle-leave-to {
+  opacity: 0;
+  transform: translateY(-18px);
 }
 
 /* ---- STAGGERED TEXT ENTRANCE ---- */
@@ -332,12 +406,6 @@ h1 {
   font-size: clamp(34px, 4.4vw, 52px);
   letter-spacing: -0.03em;
   line-height: 1.08;
-}
-.accent {
-  background: linear-gradient(110deg, var(--text), var(--accent));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
 }
 .sub {
   margin: 0;
@@ -611,12 +679,15 @@ h1 {
   font-size: 12px;
   color: var(--muted);
 }
+
+/* ---- EDUCATION — DISPLAY CARDS ---- */
 .educationSection {
   margin-top: 18px;
 }
 .allProjectsBtn {
   min-width: 180px;
 }
+
 .eduGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -666,7 +737,8 @@ h1 {
   .title,
   .sub,
   .tilt,
-  .featuredCard {
+  .featuredCard,
+  .displayCard {
     transition: none !important;
     animation: none !important;
     opacity: 1 !important;
@@ -684,6 +756,10 @@ h1 {
   }
   .visual {
     transform: none !important;
+  }
+  .wordCycle-enter-active,
+  .wordCycle-leave-active {
+    transition: none !important;
   }
 }
 @media (max-width: 760px) {
