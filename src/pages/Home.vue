@@ -94,13 +94,20 @@
         </RouterLink>
       </div>
 
-      <!-- Secondary featured grid -->
-      <div class="grid secondaryGrid">
+    </section>
+
+    <!-- IN THE LAB -->
+    <section class="section labSection breakSection">
+      <div class="featuredHead">
+        <h2 class="sectionTitle">In the Lab</h2>
+      </div>
+      <p class="labIntro">Active research projects currently in development.</p>
+      <div class="grid labGrid">
         <component
           :is="featuredCardComponent(p)"
-          v-for="(p, i) in secondary"
+          v-for="(p, i) in lab"
           :key="p.slug"
-          class="card featuredCard"
+          class="card featuredCard labCard"
           :class="[{ in: mounted }, `d${i}`, { locked: p.underConstruction }]"
           v-bind="featuredCardProps(p)"
           :style="{ '--tone': projectTone(p) }"
@@ -122,14 +129,13 @@
                 <p class="visualMeta">{{ p.tags?.[0] || "Project" }}</p>
               </div>
             </div>
-            <span v-if="hasLive(p)" class="liveBadge">Live</span>
+            <span class="wipBadge">In progress</span>
           </div>
           <div class="cardTop">
             <h3 class="cardTitle">{{ p.title }}</h3>
             <span class="hint">{{ p.underConstruction ? "Soon" : "View" }}</span>
           </div>
           <p class="cardSub">{{ p.subtitle }}</p>
-          <p v-if="p.underConstruction" class="underNote">Hard-hat zone: under construction</p>
           <div class="tags">
             <span v-for="t in p.tags" :key="t" class="tag">{{ t }}</span>
           </div>
@@ -200,16 +206,16 @@ const flagshipSlugs = [
   "gutsense-crc-screening",
   "imagined-handwriting-decoding",
 ];
-const secondarySlugs = [
-  "uci-heart-disease-ml",
+const labSlugs = [
   "chest-cancer-efficientnet-deit-smallvit",
   "eeg-seizure-classification",
+  "luna16-nodule-segmentation",
 ];
 
 const bySlug = (slug) => projects.find((p) => p.slug === slug);
 
 const flagships = computed(() => flagshipSlugs.map(bySlug).filter(Boolean));
-const secondary = computed(() => secondarySlugs.map(bySlug).filter(Boolean));
+const lab = computed(() => labSlugs.map(bySlug).filter(Boolean));
 
 const flagshipEyebrow = {
   "gutsense-crc-screening": "Flagship · Award winner",
@@ -280,10 +286,6 @@ const toneByTag = {
   Hackathon:                         "#10b981",
   Miscellaneous:                     "#64748b",
 };
-
-function hasLive(project) {
-  return Boolean(project.links?.dashboard || project.links?.demo);
-}
 
 function projectIcon(slug) {
   return iconBySlug[slug] || ChartScatter;
@@ -680,7 +682,42 @@ h1 {
   font-weight: 700;
   line-height: 1.35;
 }
-.secondaryGrid { margin-top: 14px; }
+/* ---- IN THE LAB (work-in-progress strip) ---- */
+.labSection { margin-top: var(--space-5); }
+.labIntro {
+  margin: -2px 0 14px;
+  color: var(--muted);
+  font-size: 14px;
+  max-width: 60ch;
+}
+.labGrid { margin-top: 14px; }
+/* Lower visual emphasis than flagship work */
+.labCard::before { opacity: 0.3; }
+.labCard:hover::before { opacity: 0.6; }
+.wipBadge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: #3a2a05;
+  background: color-mix(in srgb, #f59e0b 86%, white);
+  box-shadow: 0 4px 12px color-mix(in srgb, #f59e0b 34%, transparent);
+}
+.wipBadge::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #3a2a05;
+}
 
 /* ---- FULL-BLEED FEATURED BAND ---- */
 .featuredBand {

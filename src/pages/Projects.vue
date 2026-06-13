@@ -128,28 +128,31 @@ const languages = computed(() => {
 const filtered = computed(() => {
   const query = q.value.trim().toLowerCase();
 
-  return projects.filter((p) => {
-    const matchesQuery =
-      !query ||
-      (p.title
-        + " "
-        + p.subtitle
-        + " "
-        + p.tags.join(" ")
-        + " "
-        + (p.modelTypes || []).join(" ")
-        + " "
-        + (p.languages || []).join(" ")
-        + " "
-        + p.stack.join(" "))
-        .toLowerCase()
-        .includes(query);
+  return projects
+    .filter((p) => {
+      const matchesQuery =
+        !query ||
+        (p.title
+          + " "
+          + p.subtitle
+          + " "
+          + p.tags.join(" ")
+          + " "
+          + (p.modelTypes || []).join(" ")
+          + " "
+          + (p.languages || []).join(" ")
+          + " "
+          + p.stack.join(" "))
+          .toLowerCase()
+          .includes(query);
 
-    const matchesModelType = modelType.value === "All" || (p.modelTypes || []).includes(modelType.value);
-    const matchesLanguage = language.value === "All" || (p.languages || []).includes(language.value);
+      const matchesModelType = modelType.value === "All" || (p.modelTypes || []).includes(modelType.value);
+      const matchesLanguage = language.value === "All" || (p.languages || []).includes(language.value);
 
-    return matchesQuery && matchesModelType && matchesLanguage;
-  });
+      return matchesQuery && matchesModelType && matchesLanguage;
+    })
+    // Finished work first, in-progress last (stable sort preserves order within groups)
+    .sort((a, b) => Number(Boolean(a.inProgress)) - Number(Boolean(b.inProgress)));
 });
 
 /* ---- Icon / tone helpers ---- */

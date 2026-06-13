@@ -9,6 +9,7 @@
  *
  *   image: string                            // preview screenshot, e.g. "/previews/gutsense.png"
  *                                            //   (drop files in public/previews/, served from site root)
+ *   inProgress: boolean                      // work-in-progress; shows an "In progress" badge + Lab strip
  *   headlineStats: [{ value, label }]        // big stat callouts at the top
  *   caseStudy: {
  *     problem:      string,                   // motivation: why this matters
@@ -95,8 +96,8 @@ export const projects = [
   {
     slug: "eeg-seizure-classification",
     title: "EEG Seizure Classification (CHB-MIT)",
-    subtitle:
-      "Ensemble ML + ROC/AUC evaluation · Currently in active development",
+    subtitle: "Ensemble ML + ROC/AUC evaluation",
+    inProgress: true,
     tags: ["Healthcare AI", "Neuroscience"],
     modelTypes: ["Healthcare AI", "Neuroscience"],
     languages: ["Python"],
@@ -119,6 +120,7 @@ export const projects = [
     title: "Lung Nodule Segmentation + Classification (LUNA16)",
     subtitle: "U-Net patches + ResNet50 classifier",
     underConstruction: true,
+    inProgress: true,
     tags: ["Healthcare AI", "Medical Imaging"],
     modelTypes: ["Healthcare AI", "Medical Imaging"],
     languages: ["Python"],
@@ -139,8 +141,8 @@ export const projects = [
   {
     slug: "chest-cancer-efficientnet-deit-smallvit",
     title: "Chest Cancer Classification (EfficientNet + DeiT + SmallViT)",
-    subtitle:
-      "Comparative deep learning pipeline for chest image diagnosis · Currently in active development",
+    subtitle: "Comparative deep learning pipeline for chest image diagnosis",
+    inProgress: true,
     tags: ["Healthcare AI", "Medical Imaging"],
     modelTypes: ["Healthcare AI", "Medical Imaging"],
     languages: ["Python"],

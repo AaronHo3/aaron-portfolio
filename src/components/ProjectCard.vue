@@ -16,6 +16,7 @@
         loading="lazy"
       />
       <span v-if="hasLive" class="liveBadge">Live</span>
+      <span v-else-if="props.project.inProgress" class="wipBadge">In progress</span>
 
       <div class="visualTop">
         <div class="visualMark">
@@ -222,6 +223,30 @@ function projectMeta(project) {
   border-radius: 999px;
   background: #04231c;
   animation: livePulse 1.8s ease-in-out infinite;
+}
+.wipBadge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: #3a2a05;
+  background: color-mix(in srgb, #f59e0b 86%, white);
+  box-shadow: 0 4px 12px color-mix(in srgb, #f59e0b 34%, transparent);
+}
+.wipBadge::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #3a2a05;
 }
 @keyframes livePulse {
   0%, 100% { opacity: 0.45; transform: scale(0.85); }
