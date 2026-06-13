@@ -3,7 +3,7 @@ import vue from "@vitejs/plugin-vue";
 
 export default defineConfig({
   plugins: [vue()],
-  base: "/aaron-portfolio/",
+  base: "/",
   define: {
     __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
   },
