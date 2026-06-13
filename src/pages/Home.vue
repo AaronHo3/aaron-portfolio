@@ -11,8 +11,7 @@
             :duration="1.8"
             :spread="2"
             text="Aaron"
-          >Aaron</TextShimmer>
-          — Building
+          >Aaron</TextShimmer>, Building
           <TextShimmer
             as="span"
             class="shimmerAccent"
@@ -63,10 +62,43 @@
         <h2 class="sectionTitle">Featured Projects</h2>
         <RouterLink class="btn allProjectsBtn" to="/projects">All projects →</RouterLink>
       </div>
-      <div class="grid">
+
+      <!-- Flagship spotlights -->
+      <div class="spotlights">
+        <RouterLink
+          v-for="(p, i) in flagships"
+          :key="p.slug"
+          class="card spotlight"
+          :class="[{ in: mounted }, `d${i}`]"
+          :to="`/projects/${p.slug}`"
+          :style="{ '--tone': projectTone(p) }"
+        >
+          <div class="spotMain">
+            <p class="eyebrow">
+              <component :is="projectIcon(p.slug)" class="eyebrowIcon" />
+              {{ flagshipEyebrow[p.slug] || "Flagship project" }}
+            </p>
+            <h3 class="spotTitle">{{ p.title }}</h3>
+            <p class="spotSub">{{ p.subtitle }}</p>
+            <div class="tags">
+              <span v-for="t in p.tags" :key="t" class="tag">{{ t }}</span>
+            </div>
+            <span class="spotCta">Read the case study →</span>
+          </div>
+          <div v-if="p.headlineStats?.length" class="spotStats">
+            <div v-for="s in p.headlineStats" :key="s.label" class="spotStat">
+              <span class="spotStatValue">{{ s.value }}</span>
+              <span class="spotStatLabel">{{ s.label }}</span>
+            </div>
+          </div>
+        </RouterLink>
+      </div>
+
+      <!-- Secondary featured grid -->
+      <div class="grid secondaryGrid">
         <component
           :is="featuredCardComponent(p)"
-          v-for="(p, i) in featured"
+          v-for="(p, i) in secondary"
           :key="p.slug"
           class="card featuredCard"
           :class="[{ in: mounted }, `d${i}`, { locked: p.underConstruction }]"
@@ -157,18 +189,26 @@ const wordIndex = ref(0);
 const currentWord = computed(() => cyclingWords[wordIndex.value]);
 let wordTimer;
 
-/* featured project order */
-const featuredSlugs = [
+/* Flagship spotlights (heroed) + secondary featured grid */
+const flagshipSlugs = [
   "gutsense-crc-screening",
+  "imagined-handwriting-decoding",
+];
+const secondarySlugs = [
   "uci-heart-disease-ml",
   "chest-cancer-efficientnet-deit-smallvit",
+  "eeg-seizure-classification",
 ];
 
-const featured = computed(() =>
-  featuredSlugs
-    .map((slug) => projects.find((p) => p.slug === slug))
-    .filter(Boolean)
-);
+const bySlug = (slug) => projects.find((p) => p.slug === slug);
+
+const flagships = computed(() => flagshipSlugs.map(bySlug).filter(Boolean));
+const secondary = computed(() => secondarySlugs.map(bySlug).filter(Boolean));
+
+const flagshipEyebrow = {
+  "gutsense-crc-screening": "Flagship · Award winner",
+  "imagined-handwriting-decoding": "Flagship · Research",
+};
 
 /* tilt state */
 const rx = ref(0);
@@ -516,6 +556,130 @@ h1 {
   }
 }
 
+/* ---- FLAGSHIP SPOTLIGHTS ---- */
+.spotlights {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 14px;
+}
+.spotlight {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 20px;
+  align-items: center;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-4);
+  opacity: 0;
+  transform: translateY(10px);
+  filter: blur(6px);
+  transition: opacity 520ms ease,
+    transform 520ms cubic-bezier(0.2, 0.9, 0.2, 1),
+    filter 520ms ease, box-shadow 200ms ease, border-color 200ms ease;
+}
+.spotlight.in {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+.spotlight.d0 { transition-delay: 240ms; }
+.spotlight.d1 { transition-delay: 320ms; }
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    120% 140% at 100% 0%,
+    color-mix(in srgb, var(--tone, var(--accent)) 16%, transparent),
+    transparent 60%
+  );
+  opacity: 0.9;
+}
+.spotlight:hover {
+  border-color: color-mix(in srgb, var(--accent) 38%, var(--border));
+  box-shadow: 0 20px 40px color-mix(in srgb, var(--accent) 20%, transparent);
+  transform: translateY(-4px);
+}
+@media (max-width: 760px) {
+  .spotlight { grid-template-columns: 1fr; }
+}
+.spotMain {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.eyebrowIcon { width: 16px; height: 16px; }
+.spotTitle {
+  margin: 0;
+  font-size: clamp(20px, 2.4vw, 27px);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.spotSub {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+  max-width: 52ch;
+}
+.spotlight .tags { margin-top: 14px; }
+.spotCta {
+  display: inline-block;
+  margin-top: 16px;
+  font-weight: 900;
+  font-size: 14px;
+  color: var(--accent);
+  transition: transform 160ms ease;
+}
+.spotlight:hover .spotCta { transform: translateX(4px); }
+.spotStats {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+  border-radius: var(--r-md);
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--border));
+  background: color-mix(in srgb, var(--bg-elev) 60%, transparent);
+}
+.spotStat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.spotStatValue {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 800;
+  font-size: clamp(24px, 2.6vw, 32px);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  background: linear-gradient(120deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.spotStatLabel {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.secondaryGrid { margin-top: 14px; }
+
 /* ---- FEATURED PROJECTS ---- */
 .featuredHead {
   display: flex;
@@ -680,7 +844,7 @@ h1 {
   color: var(--muted);
 }
 
-/* ---- EDUCATION — DISPLAY CARDS ---- */
+/* ---- EDUCATION DISPLAY CARDS ---- */
 .educationSection {
   margin-top: 18px;
 }
@@ -738,6 +902,7 @@ h1 {
   .sub,
   .tilt,
   .featuredCard,
+  .spotlight,
   .displayCard {
     transition: none !important;
     animation: none !important;
