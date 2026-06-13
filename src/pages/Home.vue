@@ -57,7 +57,7 @@
     </section>
 
     <!-- FEATURED PROJECTS -->
-    <section class="section breakSection">
+    <section class="section featuredBand">
       <div class="featuredHead">
         <h2 class="sectionTitle">Featured Projects</h2>
         <RouterLink class="btn allProjectsBtn" to="/projects">All projects →</RouterLink>
@@ -107,14 +107,22 @@
           @mousemove="onFeaturedMove($event, p)"
           @mouseleave="onFeaturedLeave(p)"
         >
-          <div class="visual" :style="visualStyle(p.slug)">
-            <div class="visualInner">
+          <div class="visual" :class="{ hasImage: p.image }" :style="visualStyle(p.slug)">
+            <img
+              v-if="p.image"
+              class="visualImg"
+              :src="p.image"
+              :alt="`${p.title} preview`"
+              loading="lazy"
+            />
+            <div v-else class="visualInner">
               <component :is="projectIcon(p.slug)" class="visualIcon" />
               <div class="visualCopy">
                 <p class="visualLabel">{{ projectVisualLabel(p.slug) }}</p>
                 <p class="visualMeta">{{ p.tags?.[0] || "Project" }}</p>
               </div>
             </div>
+            <span v-if="hasLive(p)" class="liveBadge">Live</span>
           </div>
           <div class="cardTop">
             <h3 class="cardTitle">{{ p.title }}</h3>
@@ -168,14 +176,12 @@ import {
   Activity,
   BrainCircuit,
   ChartScatter,
-  Dribbble,
   FlaskConical,
   Heart,
   ScanSearch,
-  Volleyball,
 } from "lucide-vue-next";
 import { RouterLink } from "vue-router";
-import profileSrc from "../assets/profile.jpg";
+import profileSrc from "../assets/profile.webp";
 import { projects } from "../data/projects";
 import TextShimmer from "../components/TextShimmer.vue";
 
@@ -255,9 +261,6 @@ const iconBySlug = {
   "luna16-nodule-segmentation":              ScanSearch,
   "chest-cancer-efficientnet-deit-smallvit": ScanSearch,
   "imagined-handwriting-decoding":           Activity,
-  "gapminder-dashboard":                     ChartScatter,
-  "mens-2023-vnl-dashboard":                 Volleyball,
-  "nba-statistics-dashboard":                Dribbble,
   "uci-heart-disease-ml":                    Heart,
 };
 
@@ -267,9 +270,6 @@ const labelBySlug = {
   "luna16-nodule-segmentation":              "CT segmentation model",
   "chest-cancer-efficientnet-deit-smallvit": "Chest imaging models",
   "imagined-handwriting-decoding":           "Neural decoding models",
-  "gapminder-dashboard":                     "Interactive global trends",
-  "mens-2023-vnl-dashboard":                 "Volleyball analytics hub",
-  "nba-statistics-dashboard":                "NBA stats dashboard",
   "uci-heart-disease-ml":                    "Cardiac risk modeling",
 };
 
@@ -277,11 +277,13 @@ const toneByTag = {
   "Healthcare AI":                   "#38bdf8",
   "Medical Imaging":                 "#6366f1",
   Neuroscience:                      "#818cf8",
-  "Sports Analytics":                "#0ea5e9",
-  "Data Visualization / Dashboards": "#22d3ee",
   Hackathon:                         "#10b981",
   Miscellaneous:                     "#64748b",
 };
+
+function hasLive(project) {
+  return Boolean(project.links?.dashboard || project.links?.demo);
+}
 
 function projectIcon(slug) {
   return iconBySlug[slug] || ChartScatter;
@@ -680,6 +682,22 @@ h1 {
 }
 .secondaryGrid { margin-top: 14px; }
 
+/* ---- FULL-BLEED FEATURED BAND ---- */
+.featuredBand {
+  position: relative;
+  margin-inline: calc(50% - 50vw);
+  padding-inline: calc(50vw - 50%);
+  padding-top: clamp(28px, 4vw, 56px);
+  padding-bottom: clamp(28px, 4vw, 56px);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent) 7%, transparent),
+    color-mix(in srgb, var(--accent-2) 6%, transparent)
+  );
+  border-top: 1px solid color-mix(in srgb, var(--accent) 18%, var(--border));
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 18%, var(--border));
+}
+
 /* ---- FEATURED PROJECTS ---- */
 .featuredHead {
   display: flex;
@@ -750,6 +768,7 @@ h1 {
   opacity: 0.92;
 }
 .visual {
+  position: relative;
   margin-bottom: 12px;
   padding: 10px;
   border-radius: var(--r-md);
@@ -757,6 +776,46 @@ h1 {
   background: color-mix(in srgb, var(--accent-soft) 54%, transparent);
   transform-style: preserve-3d;
   transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+.visual.hasImage {
+  padding: 0;
+  border-style: solid;
+  overflow: hidden;
+}
+.visualImg {
+  display: block;
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+.liveBadge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 8px;
+  border-radius: var(--r-pill);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: #04231c;
+  background: color-mix(in srgb, #10b981 88%, white);
+  box-shadow: 0 4px 12px color-mix(in srgb, #10b981 40%, transparent);
+}
+.liveBadge::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #04231c;
+  animation: livePulse 1.8s ease-in-out infinite;
+}
+@keyframes livePulse {
+  0%, 100% { opacity: 0.45; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.1); }
 }
 .featuredCard:hover .visual {
   border-color: color-mix(in srgb, var(--accent) 52%, var(--border));
@@ -912,7 +971,8 @@ h1 {
   }
   .aura,
   .orbit,
-  .orb {
+  .orb,
+  .liveBadge::before {
     animation: none !important;
     filter: none !important;
   }

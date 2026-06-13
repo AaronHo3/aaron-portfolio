@@ -7,6 +7,8 @@
  * Optional case-study fields (flagship projects). When present, ProjectDetail
  * renders a rich, paper-style write-up. Add these incrementally per project:
  *
+ *   image: string                            // preview screenshot, e.g. "/previews/gutsense.png"
+ *                                            //   (drop files in public/previews/, served from site root)
  *   headlineStats: [{ value, label }]        // big stat callouts at the top
  *   caseStudy: {
  *     problem:      string,                   // motivation: why this matters
@@ -223,85 +225,6 @@ export const projects = [
         "Move toward real-time decoding under closed-loop latency constraints.",
       ],
     },
-  },
-  {
-    slug: "gapminder-dashboard",
-    title: "Interactive Gapminder Dashboard (Vue + D3)",
-    subtitle:
-      "Linked interactions + filtering · Currently in active development",
-    tags: ["Data Visualization / Dashboards", "Miscellaneous"],
-    modelTypes: ["Data Visualization / Dashboards", "Miscellaneous"],
-    languages: ["JavaScript"],
-    stack: ["Vue 3", "D3.js", "Bootstrap"],
-    metrics: ["4 linked charts"],
-    links: {
-      github: "https://github.com/AaronHo3",
-      demo: "",
-      report: "",
-    },
-    summary:
-      "Built a multi-chart dashboard with coordinated views, search, sorting, and responsive layout using the Vue Composition API.",
-    bullets: [
-      "Implemented linked interactions between charts via props/events and shared dashboard state.",
-      "Converted vanilla D3 prototypes into reusable Vue components with clean project architecture.",
-    ],
-  },
-  {
-    slug: "mens-2023-vnl-dashboard",
-    title: "Men's 2023 Volleyball Nations League Analytical Dashboard",
-    subtitle: "Interactive team and player performance analysis",
-    tags: ["Sports Analytics", "Data Visualization / Dashboards"],
-    modelTypes: ["Sports Analytics", "Data Visualization / Dashboards"],
-    languages: ["Python"],
-    stack: ["Streamlit", "Pandas", "Plotly", "Python"],
-    metrics: [
-      "Win/Loss trends",
-      "Attack efficiency",
-      "Serve and block production",
-      "Team comparison rankings",
-    ],
-    links: {
-      github: "https://github.com/AaronHo3",
-      dashboard:
-        "https://vnlmen2023sportsdashboard-yqbyypuok5ovmdrfrlrhy7.streamlit.app/",
-      demo: "",
-      report: "",
-    },
-    summary:
-      "Built an interactive Streamlit analytics dashboard for the 2023 Men's Volleyball Nations League to compare team and player performance across core match stats.",
-    bullets: [
-      "Added filters and cross-team comparisons to quickly explore performance differences and trends.",
-      "Designed visuals that surface offensive, defensive, and serving metrics in a single overview workflow.",
-    ],
-  },
-  {
-    slug: "nba-statistics-dashboard",
-    title: "NBA Statistics Analytical Dashboard",
-    subtitle:
-      "Player role prediction, era comparisons, and team evolution tracking",
-    tags: ["Sports Analytics", "Data Visualization / Dashboards"],
-    modelTypes: ["Sports Analytics", "Data Visualization / Dashboards"],
-    languages: ["Python"],
-    stack: ["Streamlit", "Pandas", "Plotly", "Python"],
-    metrics: [
-      "Player stat percentiles",
-      "Position prediction accuracy",
-      "Cross-era statistical comparisons",
-      "Franchise/team evolution trends",
-    ],
-    links: {
-      github: "https://github.com/AaronHo3",
-      dashboard:
-        "https://nbastatistics-zkezxylgqwponqvm5bg677.streamlit.app/",
-      demo: "",
-      report: "",
-    },
-    summary:
-      "Developed a multi-module NBA analytics platform that combines descriptive dashboards with predictive modeling, including a player position predictor, percentile-based player profiling, era-to-era comparison views, and team evolution analysis over time.",
-    bullets: [
-      "Implemented a player position prediction workflow and integrated model outputs directly into interactive exploration pages.",
-      "Built percentile rank views for player stats, side-by-side historical era comparisons, and longitudinal team trend panels to show how play styles and performance shifted.",
-    ],
   },
   {
     slug: "uci-heart-disease-ml",

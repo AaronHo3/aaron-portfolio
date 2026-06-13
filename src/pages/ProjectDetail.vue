@@ -26,6 +26,11 @@
       </div>
     </div>
 
+    <!-- HERO SCREENSHOT (optional) -->
+    <figure v-if="project.image" class="heroShot">
+      <img :src="project.image" :alt="`${project.title} preview`" loading="lazy" />
+    </figure>
+
     <!-- HEADLINE STATS -->
     <div v-if="project.headlineStats?.length" class="statRow">
       <div v-for="s in project.headlineStats" :key="s.label" class="statCard">
@@ -237,6 +242,20 @@ const liveLabel = computed(() =>
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+/* ---- HERO SCREENSHOT ---- */
+.heroShot {
+  margin: 24px 0 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.heroShot img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 /* ---- HEADLINE STATS ---- */

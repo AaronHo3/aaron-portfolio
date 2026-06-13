@@ -96,13 +96,11 @@ import {
   Activity,
   BrainCircuit,
   ChartScatter,
-  Dribbble,
   FlaskConical,
   Heart,
   Layers,
   LayoutGrid,
   ScanSearch,
-  Volleyball,
 } from "lucide-vue-next";
 import { projects } from "../data/projects";
 import ProjectCard from "../components/ProjectCard.vue";
@@ -116,8 +114,6 @@ const allowedModelTypes = [
   "Healthcare AI",
   "Medical Imaging",
   "Neuroscience",
-  "Sports Analytics",
-  "Data Visualization / Dashboards",
   "Miscellaneous",
 ];
 
@@ -163,9 +159,6 @@ const iconBySlug = {
   "luna16-nodule-segmentation": ScanSearch,
   "chest-cancer-efficientnet-deit-smallvit": ScanSearch,
   "imagined-handwriting-decoding": Activity,
-  "gapminder-dashboard": ChartScatter,
-  "mens-2023-vnl-dashboard": Volleyball,
-  "nba-statistics-dashboard": Dribbble,
   "uci-heart-disease-ml": Heart,
 };
 
@@ -173,8 +166,6 @@ const toneByTag = {
   "Healthcare AI": "#38bdf8",
   "Medical Imaging": "#6366f1",
   Neuroscience: "#818cf8",
-  "Sports Analytics": "#0ea5e9",
-  "Data Visualization / Dashboards": "#22d3ee",
   Hackathon: "#10b981",
   Miscellaneous: "#64748b",
 };

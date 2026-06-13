@@ -88,9 +88,9 @@
 </template>
 
 <script setup>
-import momoPhoto from "../assets/momo.png";
-import osakaCastlePhoto from "../assets/osaka-castle-steps.png";
-import sequoiaPhoto from "../assets/sequoia-national-park.jpg";
+import momoPhoto from "../assets/momo.webp";
+import osakaCastlePhoto from "../assets/osaka-castle-steps.webp";
+import sequoiaPhoto from "../assets/sequoia-national-park.webp";
 </script>
 
 <style scoped>

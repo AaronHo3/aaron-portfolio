@@ -145,6 +145,10 @@ onBeforeUnmount(() => {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
+  /* Guard against 1px horizontal scroll from full-bleed (100vw) bands.
+     `clip` (not `hidden`) avoids creating a scroll container, so sticky
+     elements and the scroll-progress bar keep working. */
+  overflow-x: clip;
 }
 
 main.container {

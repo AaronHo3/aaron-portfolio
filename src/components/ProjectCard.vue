@@ -6,8 +6,16 @@
     v-bind="cardProps"
     :style="{ '--tone': tone }"
   >
-    <div class="visual">
+    <div class="visual" :class="{ hasImage: props.project.image }">
       <div class="visualTexture" aria-hidden="true"></div>
+      <img
+        v-if="props.project.image"
+        class="cardImg"
+        :src="props.project.image"
+        :alt="`${props.project.title} preview`"
+        loading="lazy"
+      />
+      <span v-if="hasLive" class="liveBadge">Live</span>
 
       <div class="visualTop">
         <div class="visualMark">
@@ -40,7 +48,7 @@
 <script setup>
 import { computed } from "vue";
 import { RouterLink } from "vue-router";
-import { Activity, BrainCircuit, ChartScatter, Dribbble, Heart, ScanSearch, Volleyball } from "lucide-vue-next";
+import { Activity, BrainCircuit, ChartScatter, Heart, ScanSearch } from "lucide-vue-next";
 
 const props = defineProps({
   project: { type: Object, required: true },
@@ -50,8 +58,6 @@ const toneByTag = {
   "Healthcare AI": "#38bdf8",
   "Medical Imaging": "#6366f1",
   Neuroscience: "#818cf8",
-  "Sports Analytics": "#0ea5e9",
-  "Data Visualization / Dashboards": "#22d3ee",
   Miscellaneous: "#64748b",
 };
 
@@ -60,6 +66,9 @@ const tone = computed(() => {
   return match ? toneByTag[match] : "var(--accent)";
 });
 const isUnderConstruction = computed(() => Boolean(props.project.underConstruction));
+const hasLive = computed(() =>
+  Boolean(props.project.links?.dashboard || props.project.links?.demo)
+);
 const cardComponent = computed(() => (isUnderConstruction.value ? "article" : RouterLink));
 const cardProps = computed(() =>
   isUnderConstruction.value ? {} : { to: `/projects/${props.project.slug}` }
@@ -70,9 +79,6 @@ const iconBySlug = {
   "luna16-nodule-segmentation": ScanSearch,
   "chest-cancer-efficientnet-deit-smallvit": ScanSearch,
   "imagined-handwriting-decoding": Activity,
-  "gapminder-dashboard": ChartScatter,
-  "mens-2023-vnl-dashboard": Volleyball,
-  "nba-statistics-dashboard": Dribbble,
   "uci-heart-disease-ml": Heart,
 };
 
@@ -81,9 +87,6 @@ const labelBySlug = {
   "luna16-nodule-segmentation": "CT segmentation model",
   "chest-cancer-efficientnet-deit-smallvit": "Chest imaging models",
   "imagined-handwriting-decoding": "Neural decoding models",
-  "gapminder-dashboard": "Interactive global trends",
-  "mens-2023-vnl-dashboard": "Volleyball analytics hub",
-  "nba-statistics-dashboard": "NBA stats dashboard",
   "uci-heart-disease-ml": "Cardiac risk modeling",
 };
 
@@ -172,6 +175,60 @@ function projectMeta(project) {
 .visualCopy {
   position: relative;
   z-index: 1;
+}
+
+/* Optional screenshot fills the visual; scrim keeps overlaid text readable */
+.cardImg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.visual.hasImage .visualTexture {
+  display: none;
+}
+.visual.hasImage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(180deg, rgba(2, 6, 23, 0.12), rgba(2, 6, 23, 0.8));
+}
+
+/* Live demo badge */
+.liveBadge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 8px;
+  border-radius: var(--r-pill);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: #04231c;
+  background: color-mix(in srgb, #10b981 88%, white);
+  box-shadow: 0 4px 12px color-mix(in srgb, #10b981 40%, transparent);
+}
+.liveBadge::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #04231c;
+  animation: livePulse 1.8s ease-in-out infinite;
+}
+@keyframes livePulse {
+  0%, 100% { opacity: 0.45; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .liveBadge::before { animation: none !important; }
 }
 
 .visualTexture {
