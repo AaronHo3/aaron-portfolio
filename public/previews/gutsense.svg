@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="Inter, 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0c1530"/>
+      <stop offset="1" stop-color="#0a1020"/>
+    </linearGradient>
+    <linearGradient id="acc" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#6366f1"/>
+    </linearGradient>
+    <radialGradient id="glowL" cx="10%" cy="6%" r="42%">
+      <stop offset="0" stop-color="#38bdf8" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#38bdf8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowR" cx="90%" cy="4%" r="42%">
+      <stop offset="0" stop-color="#6366f1" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#6366f1" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#02060f" flood-opacity="0.5"/>
+    </filter>
+    <marker id="arrow" markerWidth="14" markerHeight="14" refX="7" refY="6" orient="auto">
+      <path d="M0,0 L11,6 L0,12 Z" fill="#5aa9e6"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#glowL)"/>
+  <rect width="1600" height="900" fill="url(#glowR)"/>
+
+  <!-- Title -->
+  <text x="110" y="150" fill="#eaf1fb" font-size="54" font-weight="800" letter-spacing="-1.5">GutSense</text>
+  <text x="112" y="198" fill="#a8b6cc" font-size="27" font-weight="600">Continuous colorectal-cancer screening pipeline</text>
+
+  <!-- Connecting arrows -->
+  <g stroke="#5aa9e6" stroke-width="3" marker-end="url(#arrow)" opacity="0.9">
+    <line x1="418" y1="457" x2="460" y2="457"/>
+    <line x1="778" y1="457" x2="820" y2="457"/>
+    <line x1="1138" y1="457" x2="1180" y2="457"/>
+  </g>
+
+  <!-- ===== STAGE CARDS ===== -->
+  <!-- Card 1: Biosensor -->
+  <g filter="url(#soft)">
+    <rect x="110" y="340" width="300" height="234" rx="22" fill="#121d3c" stroke="#94a3b8" stroke-opacity="0.22"/>
+  </g>
+  <text x="132" y="378" fill="#5aa9e6" font-size="18" font-weight="800">01</text>
+  <circle cx="260" cy="408" r="36" fill="url(#acc)"/>
+  <g fill="#ffffff">
+    <circle cx="239" cy="401" r="3.4"/><circle cx="253" cy="401" r="3.4"/><circle cx="267" cy="401" r="3.4"/><circle cx="281" cy="401" r="3.4"/>
+    <circle cx="239" cy="415" r="3.4"/><circle cx="253" cy="415" r="3.4"/><circle cx="267" cy="415" r="3.4"/><circle cx="281" cy="415" r="3.4"/>
+  </g>
+  <text x="260" y="498" text-anchor="middle" fill="#eaf1fb" font-size="25" font-weight="800">Biosensor</text>
+  <text x="260" y="532" text-anchor="middle" fill="#9fb0c9" font-size="18" font-weight="600">8 stool biomarkers</text>
+
+  <!-- Card 2: Risk Engine -->
+  <g filter="url(#soft)">
+    <rect x="470" y="340" width="300" height="234" rx="22" fill="#121d3c" stroke="#94a3b8" stroke-opacity="0.22"/>
+  </g>
+  <text x="492" y="378" fill="#5aa9e6" font-size="18" font-weight="800">02</text>
+  <circle cx="620" cy="408" r="36" fill="url(#acc)"/>
+  <g stroke="#ffffff" stroke-opacity="0.5" stroke-width="1.4">
+    <line x1="603" y1="396" x2="620" y2="389"/><line x1="603" y1="396" x2="620" y2="408"/><line x1="603" y1="396" x2="620" y2="427"/>
+    <line x1="603" y1="420" x2="620" y2="389"/><line x1="603" y1="420" x2="620" y2="408"/><line x1="603" y1="420" x2="620" y2="427"/>
+    <line x1="620" y1="389" x2="637" y2="402"/><line x1="620" y1="408" x2="637" y2="402"/><line x1="620" y1="408" x2="637" y2="416"/><line x1="620" y1="427" x2="637" y2="416"/>
+  </g>
+  <g fill="#ffffff">
+    <circle cx="603" cy="396" r="3.6"/><circle cx="603" cy="420" r="3.6"/>
+    <circle cx="620" cy="389" r="3.6"/><circle cx="620" cy="408" r="3.6"/><circle cx="620" cy="427" r="3.6"/>
+    <circle cx="637" cy="402" r="3.6"/><circle cx="637" cy="416" r="3.6"/>
+  </g>
+  <text x="620" y="498" text-anchor="middle" fill="#eaf1fb" font-size="25" font-weight="800">Risk Engine</text>
+  <text x="620" y="532" text-anchor="middle" fill="#9fb0c9" font-size="18" font-weight="600">13-input neural net</text>
+
+  <!-- Card 3: Vector RAG -->
+  <g filter="url(#soft)">
+    <rect x="830" y="340" width="300" height="234" rx="22" fill="#121d3c" stroke="#94a3b8" stroke-opacity="0.22"/>
+  </g>
+  <text x="852" y="378" fill="#5aa9e6" font-size="18" font-weight="800">03</text>
+  <circle cx="980" cy="408" r="36" fill="url(#acc)"/>
+  <g fill="none" stroke="#ffffff" stroke-width="2.2">
+    <ellipse cx="975" cy="394" rx="17" ry="6" fill="#ffffff" fill-opacity="0.2"/>
+    <path d="M958,394 L958,418" /><path d="M992,394 L992,418"/>
+    <ellipse cx="975" cy="418" rx="17" ry="6" fill="#ffffff" fill-opacity="0.12"/>
+    <line x1="958" y1="406" x2="992" y2="406" stroke-opacity="0.6"/>
+  </g>
+  <circle cx="996" cy="424" r="8" fill="none" stroke="#ffffff" stroke-width="2.4"/>
+  <line x1="1002" y1="430" x2="1009" y2="437" stroke="#ffffff" stroke-width="2.6"/>
+  <text x="980" y="498" text-anchor="middle" fill="#eaf1fb" font-size="25" font-weight="800">Vector RAG</text>
+  <text x="980" y="532" text-anchor="middle" fill="#9fb0c9" font-size="18" font-weight="600">IRIS &#183; top-3 cases</text>
+
+  <!-- Card 4: AI Narratives -->
+  <g filter="url(#soft)">
+    <rect x="1190" y="340" width="300" height="234" rx="22" fill="#121d3c" stroke="#94a3b8" stroke-opacity="0.22"/>
+  </g>
+  <text x="1212" y="378" fill="#5aa9e6" font-size="18" font-weight="800">04</text>
+  <circle cx="1340" cy="408" r="36" fill="url(#acc)"/>
+  <g>
+    <rect x="1320" y="390" width="40" height="30" rx="8" fill="#ffffff" fill-opacity="0.16" stroke="#ffffff" stroke-width="2"/>
+    <path d="M1328,420 L1328,430 L1338,420 Z" fill="#ffffff" fill-opacity="0.16" stroke="#ffffff" stroke-width="2" stroke-linejoin="round"/>
+    <line x1="1328" y1="399" x2="1352" y2="399" stroke="#ffffff" stroke-width="2.4"/>
+    <line x1="1328" y1="407" x2="1352" y2="407" stroke="#ffffff" stroke-width="2.4"/>
+    <line x1="1328" y1="415" x2="1344" y2="415" stroke="#ffffff" stroke-width="2.4"/>
+  </g>
+  <text x="1340" y="498" text-anchor="middle" fill="#eaf1fb" font-size="25" font-weight="800">AI Narratives</text>
+  <text x="1340" y="532" text-anchor="middle" fill="#9fb0c9" font-size="18" font-weight="600">Claude tool use</text>
+
+  <!-- Footer flow caption -->
+  <text x="800" y="678" text-anchor="middle" fill="#7e8ea8" font-size="23" font-weight="600">Passive at-home sensing &#8594; personalized clinical guidance</text>
+</svg>

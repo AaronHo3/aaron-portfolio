@@ -59,6 +59,7 @@ export const projects = [
       "Leveraged InterSystems IRIS as the health data backbone to store FHIR-formatted patient observations and run cosine-similarity vector search, surfacing the 3 most similar historical cases to enrich Claude's clinical reasoning with real patient context.",
       "Researched and designed the toilet-mounted biosensor hardware architecture, outlining sensor layout, biomarker data flow, and clinical integration pathways for passive at-home screening.",
     ],
+    image: "/previews/gutsense.svg",
     headlineStats: [
       { value: "3rd", label: "Place · InterSystems Challenge, MIT Grand Hack 2026" },
       { value: "8", label: "Biomarkers in the neural-net risk engine" },
@@ -188,6 +189,7 @@ export const projects = [
       "Implemented Gaussian and novel Poisson HMM forced alignment with hard and soft probability targets, demonstrating that alignment quality dominates decoding performance (17+ pp gap between Gaussian and Poisson HMM).",
       "Showed multi-session training across 10 recording sessions yields a 10.1 pp CER improvement, and soft probability labels boost frame accuracy by 1.8–5.0 pp at zero additional cost.",
     ],
+    image: "/previews/neural-decoding.svg",
     headlineStats: [
       { value: "55.86%", label: "Best character error rate (Conformer, multi-session)" },
       { value: "4", label: "Decoder architectures benchmarked head-to-head" },
