@@ -97,7 +97,7 @@ function setupRevealObserver() {
   );
 
   const targets = mainRef.value.querySelectorAll(
-    ".card:not(.featuredCard):not(.linkCard):not(.storyStep), .sectionTitle, .section > h1, .section > h2",
+    ".card:not(.featuredCard):not(.linkCard):not(.storyStep), .sectionTitle, .section > h1, .section > h2, .statCard, .heroShot",
   );
   for (const el of targets) {
     el.classList.add("reveal");

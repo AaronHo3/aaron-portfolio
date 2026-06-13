@@ -11,7 +11,7 @@
             :duration="1.8"
             :spread="2"
             text="Aaron"
-          >Aaron</TextShimmer>, Building
+          >Aaron</TextShimmer>, building
           <TextShimmer
             as="span"
             class="shimmerAccent"
@@ -25,16 +25,11 @@
             class="shimmerAccent"
             :duration="2"
             :spread="2"
-            text="Healthcare"
-          >Healthcare</TextShimmer>
+            text="Biotech &amp; Healthcare"
+          >Biotech &amp; Healthcare</TextShimmer>
         </h1>
         <p class="sub" :class="{ in: mounted }">
           Currently working at Sanofi on AI-driven bioreactor digital twins while building
-          <span class="cyclingWrap">
-            <Transition name="wordCycle" mode="out-in">
-              <span class="cyclingWord" :key="currentWord">{{ currentWord }}</span>
-            </Transition>
-          </span>
           projects using biomedical data.
         </p>
       </div>
@@ -72,6 +67,8 @@
           :class="[{ in: mounted }, `d${i}`]"
           :to="`/projects/${p.slug}`"
           :style="{ '--tone': projectTone(p) }"
+          @pointermove="onSpotMove"
+          @pointerleave="onSpotLeave"
         >
           <div class="spotMain">
             <p class="eyebrow">
@@ -177,7 +174,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import {
   Activity,
   BrainCircuit,
@@ -194,12 +191,6 @@ import TextShimmer from "../components/TextShimmer.vue";
 
 const mounted = ref(false);
 const visualTilt = ref({});
-
-/* ---- Animated cycling words ---- */
-const cyclingWords = ["machine learning", "deep learning", "neural network", "computer vision", "NLP"];
-const wordIndex = ref(0);
-const currentWord = computed(() => cyclingWords[wordIndex.value]);
-let wordTimer;
 
 /* Flagship spotlights (heroed) + secondary featured grid */
 const flagshipSlugs = [
@@ -235,14 +226,6 @@ onMounted(() => {
   requestAnimationFrame(() => {
     mounted.value = true;
   });
-
-  wordTimer = setInterval(() => {
-    wordIndex.value = (wordIndex.value + 1) % cyclingWords.length;
-  }, 2200);
-});
-
-onBeforeUnmount(() => {
-  if (wordTimer) clearInterval(wordTimer);
 });
 
 function onMove(e) {
@@ -286,6 +269,21 @@ const toneByTag = {
   Hackathon:                         "#10b981",
   Miscellaneous:                     "#64748b",
 };
+
+/* Signature interaction: glow follows the cursor across flagship spotlights */
+function onSpotMove(e) {
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+  const el = e.currentTarget;
+  const r = el.getBoundingClientRect();
+  el.style.setProperty("--mx", `${((e.clientX - r.left) / r.width) * 100}%`);
+  el.style.setProperty("--my", `${((e.clientY - r.top) / r.height) * 100}%`);
+}
+
+function onSpotLeave(e) {
+  const el = e.currentTarget;
+  el.style.removeProperty("--mx");
+  el.style.removeProperty("--my");
+}
 
 function projectIcon(slug) {
   return iconBySlug[slug] || ChartScatter;
@@ -389,38 +387,6 @@ function visualStyle(slug) {
   line-height: inherit;
   letter-spacing: inherit;
   font-family: inherit;
-}
-
-/* ---- ANIMATED CYCLING WORDS ---- */
-.cyclingWrap {
-  display: inline-block;
-  position: relative;
-  min-width: 160px;
-  text-align: left;
-}
-
-.cyclingWord {
-  display: inline-block;
-  font-weight: 700;
-  background: linear-gradient(110deg, var(--accent), var(--accent-2));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.wordCycle-enter-active {
-  transition: opacity 320ms ease, transform 380ms cubic-bezier(0.2, 0.9, 0.2, 1);
-}
-.wordCycle-leave-active {
-  transition: opacity 200ms ease, transform 200ms ease;
-}
-.wordCycle-enter-from {
-  opacity: 0;
-  transform: translateY(18px);
-}
-.wordCycle-leave-to {
-  opacity: 0;
-  transform: translateY(-18px);
 }
 
 /* ---- STAGGERED TEXT ENTRANCE ---- */
@@ -601,6 +567,25 @@ h1 {
     transparent 60%
   );
   opacity: 0.9;
+}
+/* Signature: cursor-following glow (set via --mx/--my in onSpotMove) */
+.spotlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at var(--mx, 50%) var(--my, 0%),
+    color-mix(in srgb, var(--tone, var(--accent)) 26%, transparent),
+    transparent 46%
+  );
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+.spotlight:hover::after {
+  opacity: 0.85;
 }
 .spotlight:hover {
   border-color: color-mix(in srgb, var(--accent) 38%, var(--border));
@@ -1018,10 +1003,6 @@ h1 {
   }
   .visual {
     transform: none !important;
-  }
-  .wordCycle-enter-active,
-  .wordCycle-leave-active {
-    transition: none !important;
   }
 }
 @media (max-width: 760px) {
