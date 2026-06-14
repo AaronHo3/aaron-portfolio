@@ -59,7 +59,7 @@ export const projects = [
       "Leveraged InterSystems IRIS as the health data backbone to store FHIR-formatted patient observations and run cosine-similarity vector search, surfacing the 3 most similar historical cases to enrich Claude's clinical reasoning with real patient context.",
       "Researched and designed the toilet-mounted biosensor hardware architecture, outlining sensor layout, biomarker data flow, and clinical integration pathways for passive at-home screening.",
     ],
-    image: "/previews/gutsense.svg",
+    image: "/previews/gutsense-architecture.webp",
     headlineStats: [
       { value: "3rd", label: "Place · InterSystems Challenge, MIT Grand Hack 2026" },
       { value: "8", label: "Biomarkers in the neural-net risk engine" },
