@@ -95,6 +95,85 @@ export const projects = [
     },
   },
   {
+    slug: "score-the-story-live-scoring",
+    title: "Score the Story | Real-Time Speech-Driven Music Scoring",
+    subtitle:
+      "Live generative film scoring on DeepMind's Magenta RealTime 2 (MRT2) | prosody plus Whisper/Claude semantic style direction drive a continuously morphing score as a narrator speaks",
+    tags: ["Generative AI", "Audio AI"],
+    modelTypes: ["Generative AI"],
+    languages: ["Python"],
+    stack: [
+      "Python",
+      "Magenta RealTime 2",
+      "Claude API",
+      "Whisper",
+      "librosa",
+      "NumPy",
+      "MIDI / AU (DAW)",
+    ],
+    metrics: [
+      "Real-time voice-to-score, no pre-composed music",
+      "Dual control: prosody + LLM semantic style direction",
+      "MFCC speaker-signature identity layer",
+      "Valence/arousal style-space engine",
+    ],
+    links: {
+      github: "https://github.com/AaronHo3/score-the-story",
+      demo: "",
+      report: "",
+    },
+    summary:
+      "A real-time instrument where the human voice is the controller: as a narrator speaks, the system listens on two channels at once - prosody (how it is said) and semantics (what is said via Whisper + Claude) - and drives DeepMind's Magenta RealTime 2 autoregressive model to compose a continuously morphing score live, with no pre-composed music and no manual controls.",
+    bullets: [
+      "Built a real-time pipeline that extracts prosodic features (energy, pitch, speech rate, spectral brightness) from live narration and maps them, via running auto-gain normalization, to MRT2 controls: energy drives density/chaos, brightness drives a dark-to-bright prompt blend, and silence pulls the texture sparse.",
+      "Added a semantic layer where Whisper transcribes the narration and Claude reads the transcript to emit two scene style poles (a darker/tenser pole and a brighter/triumphant pole) that MRT2 embeds and morphs between, replacing brittle keyword maps with live language understanding.",
+      "Designed an MFCC-based speaker-signature layer that deterministically maps vocal timbre to palette, key, and tempo, so the same narrator yields a recognizable musical identity, plus a shared harmony module that keeps the live take and its rendered keepsake in tune.",
+    ],
+    image: "/previews/score-the-story.svg",
+    headlineStats: [
+      { value: "MRT2", label: "Built on DeepMind's Magenta RealTime 2 autoregressive model" },
+      { value: "2 channels", label: "Prosody (how it's said) + Whisper/Claude semantics (what's said)" },
+      { value: "Real-time", label: "Voice-to-score at 48 kHz, no pre-composed music" },
+    ],
+    caseStudy: {
+      problem:
+        "Scores for film, games, and storytelling are composed ahead of time, so live narration - theater, tabletop RPGs, audiobooks, improv - has no music that actually follows the moment. The reactive-music tools that do exist lean on brittle keyword maps that break the instant the wording changes. The open question: can music track both the meaning and the delivery of speech, in real time, without a human at a mixing board?",
+      approach:
+        "I built a real-time instrument where the voice is the controller, splitting the signal into two complementary channels. Prosody - how something is said - continuously drives musical texture and intensity, while a Whisper-to-Claude director reads the transcript and sets the semantic direction of the scene. DeepMind's Magenta RealTime 2 autoregressive model generates the audio live, morphing between style poles as the narrator speaks.",
+      architecture: [
+        "Capture the microphone stream and extract prosodic features every frame: energy, pitch, speech rate, and spectral brightness.",
+        "Normalize each feature with a running auto-gain baseline, then map them to MRT2 controls - energy to density/chaos, brightness to a dark-to-bright prompt blend, silence to a sparser texture - with smoothing so transitions feel musical, not twitchy.",
+        "In parallel, Whisper transcribes the narration and Claude emits two scene style descriptions (a darker/tenser pole and a brighter/triumphant pole), with no hardcoded keyword maps.",
+        "An MFCC speaker-signature layer fingerprints vocal timbre and deterministically sets palette, key, and tempo, giving each narrator a consistent musical identity.",
+        "MRT2 embeds both style poles and the voice blends continuously between them, rendering a 48 kHz score in real time via either the native magenta-rt engine or the MRT2 AU plugin driven over MIDI.",
+      ],
+      findings: [
+        "Separating how it's said (prosody) from what's said (semantics) is what makes the score feel intentional rather than reactive and jittery - each channel covers the other's blind spot.",
+        "Smoothing and running normalization matter more than the exact feature-to-parameter mapping: auto-gain keeps the instrument expressive across different speakers and rooms with no per-user calibration.",
+        "A deterministic timbre-to-identity mapping is enough to give each narrator a recognizable musical signature without training a learned speaker model.",
+      ],
+      results: [
+        { metric: "Generative core", value: "MRT2", note: "DeepMind Magenta RealTime 2 autoregressive model, 48 kHz" },
+        { metric: "Control channels", value: "Prosody + semantics", note: "Voice features alongside Whisper/Claude style poles" },
+        { metric: "Style space", value: "Valence/arousal", note: "N-pole blend the voice navigates continuously" },
+        { metric: "Identity", value: "MFCC signature", note: "Same voice maps to same palette, key, and tempo" },
+        { metric: "Backends", value: "Native + MIDI", note: "magenta-rt engine or MRT2 AU in a DAW" },
+      ],
+      limitations: [
+        "Evaluation is qualitative so far - no formal listening study or quantitative musicality metrics yet.",
+        "Real-time MRT2 generation is compute-heavy; latency and quality depend on local hardware (Apple Silicon MLX path).",
+        "Semantic direction via Whisper + Claude lags instantaneous prosody by a few seconds, so scene changes resolve gradually rather than instantly.",
+        "Single-narrator only - no multi-speaker diarization or polyphonic voice control.",
+      ],
+      future: [
+        "Run a structured listening study comparing prosody-only, semantics-only, and combined control.",
+        "Swap the MFCC fingerprint for learned speaker embeddings (ECAPA / resemblyzer) for a purer identity vector.",
+        "Cut latency with streaming transcription and predictive pre-fetch of the next style pole.",
+        "Extend to multi-speaker scoring for dialogue and ensemble narration.",
+      ],
+    },
+  },
+  {
     slug: "eeg-seizure-classification",
     title: "EEG Seizure Classification (CHB-MIT)",
     subtitle: "Ensemble ML + ROC/AUC evaluation",

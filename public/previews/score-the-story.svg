@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="Inter, 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <linearGradient id="bgS" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#160d2e"/>
+      <stop offset="1" stop-color="#0c0820"/>
+    </linearGradient>
+    <linearGradient id="accS" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#c084fc"/>
+      <stop offset="1" stop-color="#a855f7"/>
+    </linearGradient>
+    <radialGradient id="glowS1" cx="14%" cy="10%" r="46%">
+      <stop offset="0" stop-color="#a855f7" stop-opacity="0.26"/>
+      <stop offset="1" stop-color="#a855f7" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowS2" cx="86%" cy="90%" r="46%">
+      <stop offset="0" stop-color="#f472b6" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#f472b6" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softS" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#05030f" flood-opacity="0.55"/>
+    </filter>
+    <filter id="glowPillS" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#c084fc" flood-opacity="0.65"/>
+    </filter>
+    <marker id="arrowS" markerWidth="14" markerHeight="14" refX="7" refY="6" orient="auto">
+      <path d="M0,0 L11,6 L0,12 Z" fill="#c084fc"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bgS)"/>
+  <rect width="1600" height="900" fill="url(#glowS1)"/>
+  <rect width="1600" height="900" fill="url(#glowS2)"/>
+
+  <!-- Title -->
+  <text x="110" y="152" fill="#f4ecff" font-size="54" font-weight="800" letter-spacing="-1.5">Score the Story</text>
+  <text x="112" y="200" fill="#cbb9e8" font-size="27" font-weight="600">A narrator speaks &#8212; MRT2 composes the score in real time</text>
+
+  <!-- ===== ZONE A: live narration ===== -->
+  <g filter="url(#softS)">
+    <rect x="110" y="300" width="430" height="300" rx="22" fill="#1b1238" stroke="#a855f7" stroke-opacity="0.3"/>
+  </g>
+  <text x="134" y="338" fill="#cbb9e8" font-size="18" font-weight="700">Live narration</text>
+  <g fill="none" stroke="url(#accS)" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round">
+    <polyline points="138,450 162,420 182,470 202,388 222,492 244,360 262,470 286,408 306,486 326,372 346,470 368,418 388,478 410,396 430,486 452,366 470,470 494,414 514,476 520,450"/>
+  </g>
+  <text x="134" y="566" fill="#8b7caa" font-size="17" font-weight="600">microphone &#183; continuous audio</text>
+
+  <!-- arrow A -> B -->
+  <line x1="544" y1="450" x2="584" y2="450" stroke="#c084fc" stroke-width="3" marker-end="url(#arrowS)"/>
+
+  <!-- ===== ZONE B: dual analysis ===== -->
+  <!-- Prosody chip (how it's said) -->
+  <g filter="url(#softS)">
+    <rect x="598" y="312" width="404" height="118" rx="18" fill="#1c1440" stroke="#a855f7" stroke-opacity="0.34"/>
+  </g>
+  <text x="800" y="350" text-anchor="middle" fill="#e4d8fb" font-size="20" font-weight="800">Prosody &#8212; how it&#8217;s said</text>
+  <text x="800" y="384" text-anchor="middle" fill="#a99cc8" font-size="17" font-weight="600">energy &#183; pitch &#183; speech rate &#183; brightness</text>
+  <text x="800" y="410" text-anchor="middle" fill="#8b7caa" font-size="15" font-weight="600">running auto-gain &#8594; density, blend, drums</text>
+
+  <!-- Semantics chip (what's said) -->
+  <g filter="url(#softS)">
+    <rect x="598" y="470" width="404" height="118" rx="18" fill="#1c1440" stroke="#f472b6" stroke-opacity="0.34"/>
+  </g>
+  <text x="800" y="508" text-anchor="middle" fill="#e4d8fb" font-size="20" font-weight="800">Whisper &#8594; Claude &#8212; what&#8217;s said</text>
+  <text x="800" y="542" text-anchor="middle" fill="#a99cc8" font-size="17" font-weight="600">transcript &#8594; two scene style poles A / B</text>
+  <text x="800" y="568" text-anchor="middle" fill="#8b7caa" font-size="15" font-weight="600">no keyword maps &#183; any genre, any scene</text>
+
+  <!-- arrow B -> C -->
+  <line x1="1006" y1="450" x2="1046" y2="450" stroke="#c084fc" stroke-width="3" marker-end="url(#arrowS)"/>
+
+  <!-- ===== ZONE C: MRT2 live score ===== -->
+  <g filter="url(#softS)">
+    <rect x="1060" y="300" width="430" height="300" rx="22" fill="#1b1238" stroke="#f472b6" stroke-opacity="0.28"/>
+  </g>
+  <text x="1084" y="338" fill="#cbb9e8" font-size="18" font-weight="700">MRT2 live score</text>
+
+  <!-- MRT2 model pill -->
+  <g filter="url(#glowPillS)">
+    <rect x="1084" y="362" width="382" height="62" rx="16" fill="url(#accS)"/>
+  </g>
+  <text x="1275" y="401" text-anchor="middle" fill="#ffffff" font-size="21" font-weight="800">Magenta RealTime 2</text>
+
+  <!-- equalizer bars -->
+  <g fill="#d8b4fe">
+    <rect x="1100" y="486" width="16" height="58" rx="6"/>
+    <rect x="1128" y="466" width="16" height="78" rx="6"/>
+    <rect x="1156" y="500" width="16" height="44" rx="6"/>
+    <rect x="1184" y="452" width="16" height="92" rx="6"/>
+    <rect x="1212" y="490" width="16" height="54" rx="6"/>
+    <rect x="1240" y="470" width="16" height="74" rx="6"/>
+    <rect x="1268" y="504" width="16" height="40" rx="6" fill="#f0abfc"/>
+    <rect x="1296" y="460" width="16" height="84" rx="6" fill="#f0abfc"/>
+    <rect x="1324" y="494" width="16" height="50" rx="6" fill="#f0abfc"/>
+    <rect x="1352" y="476" width="16" height="68" rx="6" fill="#f0abfc"/>
+    <rect x="1380" y="500" width="16" height="44" rx="6" fill="#f472b6"/>
+    <rect x="1408" y="468" width="16" height="76" rx="6" fill="#f472b6"/>
+    <rect x="1436" y="488" width="16" height="56" rx="6" fill="#f472b6"/>
+  </g>
+  <text x="1084" y="582" fill="#8b7caa" font-size="16" font-weight="600">48 kHz &#183; autoregressive &#183; no pre-composed music</text>
+
+  <!-- Footer caption -->
+  <text x="800" y="678" text-anchor="middle" fill="#8b7caa" font-size="23" font-weight="600">Voice &#8594; prosody + semantic style direction &#8594; real-time generative score</text>
+</svg>

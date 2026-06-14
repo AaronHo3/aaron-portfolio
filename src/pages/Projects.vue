@@ -94,6 +94,7 @@ import { computed, ref } from "vue";
 import { RouterLink } from "vue-router";
 import {
   Activity,
+  AudioLines,
   BrainCircuit,
   ChartScatter,
   FlaskConical,
@@ -114,7 +115,7 @@ const allowedModelTypes = [
   "Healthcare AI",
   "Medical Imaging",
   "Neuroscience",
-  "Miscellaneous",
+  "Generative AI",
 ];
 
 const modelTypes = computed(() => allowedModelTypes);
@@ -163,12 +164,14 @@ const iconBySlug = {
   "chest-cancer-efficientnet-deit-smallvit": ScanSearch,
   "imagined-handwriting-decoding": Activity,
   "uci-heart-disease-ml": Heart,
+  "score-the-story-live-scoring": AudioLines,
 };
 
 const toneByTag = {
   "Healthcare AI": "#38bdf8",
   "Medical Imaging": "#6366f1",
   Neuroscience: "#818cf8",
+  "Generative AI": "#a855f7",
   Hackathon: "#10b981",
   Miscellaneous: "#64748b",
 };

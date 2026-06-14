@@ -177,6 +177,7 @@
 import { computed, onMounted, ref } from "vue";
 import {
   Activity,
+  AudioLines,
   BrainCircuit,
   ChartScatter,
   FlaskConical,
@@ -196,6 +197,7 @@ const visualTilt = ref({});
 const flagshipSlugs = [
   "gutsense-crc-screening",
   "imagined-handwriting-decoding",
+  "score-the-story-live-scoring",
 ];
 const labSlugs = [
   "chest-cancer-efficientnet-deit-smallvit",
@@ -211,6 +213,7 @@ const lab = computed(() => labSlugs.map(bySlug).filter(Boolean));
 const flagshipEyebrow = {
   "gutsense-crc-screening": "Flagship · Award winner",
   "imagined-handwriting-decoding": "Flagship · Research",
+  "score-the-story-live-scoring": "Flagship · Generative AI",
 };
 
 /* tilt state */
@@ -251,6 +254,7 @@ const iconBySlug = {
   "chest-cancer-efficientnet-deit-smallvit": ScanSearch,
   "imagined-handwriting-decoding":           Activity,
   "uci-heart-disease-ml":                    Heart,
+  "score-the-story-live-scoring":            AudioLines,
 };
 
 const labelBySlug = {
@@ -260,12 +264,14 @@ const labelBySlug = {
   "chest-cancer-efficientnet-deit-smallvit": "Chest imaging models",
   "imagined-handwriting-decoding":           "Neural decoding models",
   "uci-heart-disease-ml":                    "Cardiac risk modeling",
+  "score-the-story-live-scoring":            "Real-time music scoring",
 };
 
 const toneByTag = {
   "Healthcare AI":                   "#38bdf8",
   "Medical Imaging":                 "#6366f1",
   Neuroscience:                      "#818cf8",
+  "Generative AI":                   "#a855f7",
   Hackathon:                         "#10b981",
   Miscellaneous:                     "#64748b",
 };
@@ -556,6 +562,7 @@ h1 {
 }
 .spotlight.d0 { transition-delay: 240ms; }
 .spotlight.d1 { transition-delay: 320ms; }
+.spotlight.d2 { transition-delay: 400ms; }
 .spotlight::before {
   content: "";
   position: absolute;
