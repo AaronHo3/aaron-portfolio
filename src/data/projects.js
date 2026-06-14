@@ -99,7 +99,7 @@ export const projects = [
     title: "Score the Story | Real-Time Speech-Driven Music Scoring",
     subtitle:
       "Live generative film scoring on DeepMind's Magenta RealTime 2 (MRT2) | prosody plus Whisper/Claude semantic style direction drive a continuously morphing score as a narrator speaks",
-    tags: ["Generative AI", "Audio AI"],
+    tags: ["Generative AI", "Audio AI", "Hackathon"],
     modelTypes: ["Generative AI"],
     languages: ["Python"],
     stack: [
@@ -112,6 +112,7 @@ export const projects = [
       "MIDI / AU (DAW)",
     ],
     metrics: [
+      "Google DeepMind challenge submission, Music Technology Hackathon 2026",
       "Real-time voice-to-score, no pre-composed music",
       "Dual control: prosody + LLM semantic style direction",
       "MFCC speaker-signature identity layer",
@@ -123,7 +124,7 @@ export const projects = [
       report: "",
     },
     summary:
-      "A real-time instrument where the human voice is the controller: as a narrator speaks, the system listens on two channels at once - prosody (how it is said) and semantics (what is said via Whisper + Claude) - and drives DeepMind's Magenta RealTime 2 autoregressive model to compose a continuously morphing score live, with no pre-composed music and no manual controls.",
+      "A real-time instrument where the human voice is the controller: as a narrator speaks, the system listens on two channels at once - prosody (how it is said) and semantics (what is said via Whisper + Claude) - and drives DeepMind's Magenta RealTime 2 autoregressive model to compose a continuously morphing score live, with no pre-composed music and no manual controls. Built for the Google DeepMind challenge at the Music Technology Hackathon 2026.",
     bullets: [
       "Built a real-time pipeline that extracts prosodic features (energy, pitch, speech rate, spectral brightness) from live narration and maps them, via running auto-gain normalization, to MRT2 controls: energy drives density/chaos, brightness drives a dark-to-bright prompt blend, and silence pulls the texture sparse.",
       "Added a semantic layer where Whisper transcribes the narration and Claude reads the transcript to emit two scene style poles (a darker/tenser pole and a brighter/triumphant pole) that MRT2 embeds and morphs between, replacing brittle keyword maps with live language understanding.",
@@ -131,7 +132,7 @@ export const projects = [
     ],
     image: "/previews/score-the-story.svg",
     headlineStats: [
-      { value: "MRT2", label: "Built on DeepMind's Magenta RealTime 2 autoregressive model" },
+      { value: "DeepMind", label: "Built for the Google DeepMind challenge at the Music Technology Hackathon 2026" },
       { value: "2 channels", label: "Prosody (how it's said) + Whisper/Claude semantics (what's said)" },
       { value: "Real-time", label: "Voice-to-score at 48 kHz, no pre-composed music" },
     ],

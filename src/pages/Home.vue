@@ -213,7 +213,7 @@ const lab = computed(() => labSlugs.map(bySlug).filter(Boolean));
 const flagshipEyebrow = {
   "gutsense-crc-screening": "Flagship · Award winner",
   "imagined-handwriting-decoding": "Flagship · Research",
-  "score-the-story-live-scoring": "Flagship · Generative AI",
+  "score-the-story-live-scoring": "Flagship · DeepMind challenge",
 };
 
 /* tilt state */
