@@ -94,7 +94,7 @@
     </section>
 
     <!-- IN THE LAB -->
-    <section class="section labSection breakSection">
+    <section v-if="lab.length" class="section labSection breakSection">
       <div class="featuredHead">
         <h2 class="sectionTitle">In the Lab</h2>
       </div>
@@ -199,11 +199,7 @@ const flagshipSlugs = [
   "imagined-handwriting-decoding",
   "score-the-story-live-scoring",
 ];
-const labSlugs = [
-  "chest-cancer-efficientnet-deit-smallvit",
-  "eeg-seizure-classification",
-  "luna16-nodule-segmentation",
-];
+const labSlugs = [];
 
 const bySlug = (slug) => projects.find((p) => p.slug === slug);
 

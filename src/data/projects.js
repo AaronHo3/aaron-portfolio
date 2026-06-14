@@ -176,6 +176,7 @@ export const projects = [
   },
   {
     slug: "eeg-seizure-classification",
+    hidden: true,
     title: "EEG Seizure Classification (CHB-MIT)",
     subtitle: "Ensemble ML + ROC/AUC evaluation",
     inProgress: true,
@@ -198,6 +199,7 @@ export const projects = [
   },
   {
     slug: "luna16-nodule-segmentation",
+    hidden: true,
     title: "Lung Nodule Segmentation + Classification (LUNA16)",
     subtitle: "U-Net patches + ResNet50 classifier",
     underConstruction: true,
@@ -221,6 +223,7 @@ export const projects = [
   },
   {
     slug: "chest-cancer-efficientnet-deit-smallvit",
+    hidden: true,
     title: "Chest Cancer Classification (EfficientNet + DeiT + SmallViT)",
     subtitle: "Comparative deep learning pipeline for chest image diagnosis",
     inProgress: true,

@@ -113,7 +113,6 @@ const viewMode = ref("grid");
 
 const allowedModelTypes = [
   "Healthcare AI",
-  "Medical Imaging",
   "Neuroscience",
   "Generative AI",
 ];
@@ -150,7 +149,7 @@ const filtered = computed(() => {
       const matchesModelType = modelType.value === "All" || (p.modelTypes || []).includes(modelType.value);
       const matchesLanguage = language.value === "All" || (p.languages || []).includes(language.value);
 
-      return matchesQuery && matchesModelType && matchesLanguage;
+      return !p.hidden && matchesQuery && matchesModelType && matchesLanguage;
     })
     // Finished work first, in-progress last (stable sort preserves order within groups)
     .sort((a, b) => Number(Boolean(a.inProgress)) - Number(Boolean(b.inProgress)));
