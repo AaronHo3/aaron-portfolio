@@ -121,5 +121,5 @@
   <text x="1257" y="568" text-anchor="middle" fill="#e7ecff" font-size="21" font-weight="800">Pooled 0.88 &#8594; LOSO 0.79</text>
 
   <!-- Footer caption -->
-  <text x="800" y="672" text-anchor="middle" fill="#7e87ad" font-size="23" font-weight="600">Does the model hold up across hospitals &#8212; and help real decisions?</text>
+  <text x="800" y="672" text-anchor="middle" fill="#7e87ad" font-size="23" font-weight="600">Does the model hold up across hospitals, and help real decisions?</text>
 </svg>

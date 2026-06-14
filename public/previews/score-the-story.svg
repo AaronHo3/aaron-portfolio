@@ -33,7 +33,7 @@
 
   <!-- Title -->
   <text x="110" y="152" fill="#f4ecff" font-size="54" font-weight="800" letter-spacing="-1.5">Score the Story</text>
-  <text x="112" y="200" fill="#cbb9e8" font-size="27" font-weight="600">A narrator speaks &#8212; MRT2 composes the score in real time</text>
+  <text x="112" y="200" fill="#cbb9e8" font-size="27" font-weight="600">A narrator speaks. MRT2 composes the score in real time</text>
 
   <!-- ===== ZONE A: live narration ===== -->
   <g filter="url(#softS)">
@@ -53,7 +53,7 @@
   <g filter="url(#softS)">
     <rect x="598" y="312" width="404" height="118" rx="18" fill="#1c1440" stroke="#a855f7" stroke-opacity="0.34"/>
   </g>
-  <text x="800" y="350" text-anchor="middle" fill="#e4d8fb" font-size="20" font-weight="800">Prosody &#8212; how it&#8217;s said</text>
+  <text x="800" y="350" text-anchor="middle" fill="#e4d8fb" font-size="20" font-weight="800">Prosody: how it&#8217;s said</text>
   <text x="800" y="384" text-anchor="middle" fill="#a99cc8" font-size="17" font-weight="600">energy &#183; pitch &#183; speech rate &#183; brightness</text>
   <text x="800" y="410" text-anchor="middle" fill="#8b7caa" font-size="15" font-weight="600">running auto-gain &#8594; density, blend, drums</text>
 
@@ -61,7 +61,7 @@
   <g filter="url(#softS)">
     <rect x="598" y="470" width="404" height="118" rx="18" fill="#1c1440" stroke="#f472b6" stroke-opacity="0.34"/>
   </g>
-  <text x="800" y="508" text-anchor="middle" fill="#e4d8fb" font-size="20" font-weight="800">Whisper &#8594; Claude &#8212; what&#8217;s said</text>
+  <text x="800" y="508" text-anchor="middle" fill="#e4d8fb" font-size="20" font-weight="800">Whisper &#8594; Claude: what&#8217;s said</text>
   <text x="800" y="542" text-anchor="middle" fill="#a99cc8" font-size="17" font-weight="600">transcript &#8594; two scene style poles A / B</text>
   <text x="800" y="568" text-anchor="middle" fill="#8b7caa" font-size="15" font-weight="600">no keyword maps &#183; any genre, any scene</text>
 
