@@ -29,7 +29,7 @@
           >Biotech &amp; Healthcare</TextShimmer>
         </h1>
         <p class="sub" :class="{ in: mounted }">
-          Currently working at Sanofi on AI-driven bioreactor digital twins while building
+          Currently working at Sanofi on bioreactor digital twins while building
           projects using biomedical data.
         </p>
       </div>
