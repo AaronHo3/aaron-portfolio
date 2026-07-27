@@ -4,10 +4,6 @@
       <stop offset="0" stop-color="#0d1130"/>
       <stop offset="1" stop-color="#0a0e20"/>
     </linearGradient>
-    <linearGradient id="accV" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#818cf8"/>
-      <stop offset="1" stop-color="#6366f1"/>
-    </linearGradient>
     <radialGradient id="glowV1" cx="14%" cy="10%" r="46%">
       <stop offset="0" stop-color="#818cf8" stop-opacity="0.24"/>
       <stop offset="1" stop-color="#818cf8" stop-opacity="0"/>
@@ -19,12 +15,9 @@
     <filter id="softN" x="-30%" y="-30%" width="160%" height="160%">
       <feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#02040d" flood-opacity="0.55"/>
     </filter>
-    <filter id="glowPill" x="-40%" y="-40%" width="180%" height="180%">
-      <feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#818cf8" flood-opacity="0.65"/>
+    <filter id="glowLine" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="0" stdDeviation="7" flood-color="#fb7185" flood-opacity="0.55"/>
     </filter>
-    <marker id="arrowV" markerWidth="14" markerHeight="14" refX="7" refY="6" orient="auto">
-      <path d="M0,0 L11,6 L0,12 Z" fill="#8b93f5"/>
-    </marker>
   </defs>
 
   <rect width="1600" height="900" fill="url(#bgN)"/>
@@ -32,71 +25,102 @@
   <rect width="1600" height="900" fill="url(#glowV2)"/>
 
   <!-- Title -->
-  <text x="110" y="152" fill="#eaf1fb" font-size="54" font-weight="800" letter-spacing="-1.5">Neural Decoding</text>
-  <text x="112" y="200" fill="#aeb6d6" font-size="27" font-weight="600">Imagined handwriting, decoded to text</text>
+  <text x="100" y="128" fill="#eaf1fb" font-size="50" font-weight="800" letter-spacing="-1.5">Neural Decoding</text>
+  <text x="102" y="176" fill="#aeb6d6" font-size="26" font-weight="600">Brain-to-text decoders train on alignment labels nobody ever observed</text>
+  <text x="102" y="216" fill="#6f7ba8" font-size="21" font-weight="500">So which kind of labelling mistake actually costs accuracy?</text>
 
-  <!-- ===== ZONE A: neural signal ===== -->
+  <!-- ===== LEFT: the two ways forced alignment fails ===== -->
   <g filter="url(#softN)">
-    <rect x="110" y="300" width="510" height="300" rx="22" fill="#121738" stroke="#818cf8" stroke-opacity="0.3"/>
+    <rect x="100" y="272" width="690" height="372" rx="22" fill="#121738" stroke="#818cf8" stroke-opacity="0.28"/>
   </g>
-  <text x="134" y="338" fill="#aeb6d6" font-size="18" font-weight="700">192-channel neural signal</text>
-  <g fill="none" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round">
-    <polyline stroke="#38bdf8" stroke-opacity="0.9" points="138,372 168,368 196,374 220,350 244,376 280,370 312,373 344,356 378,375 410,369 442,374 476,352 512,374 548,371 584,374 600,370"/>
-    <polyline stroke="#818cf8" stroke-opacity="0.9" points="138,420 170,416 198,422 226,398 250,424 286,418 318,421 350,402 384,423 414,417 448,422 482,400 514,423 550,419 586,422 600,418"/>
-    <polyline stroke="#6366f1" stroke-opacity="0.9" points="138,468 166,470 194,460 224,472 252,450 288,471 320,464 352,473 386,452 418,472 450,466 484,473 516,454 552,472 588,468 600,471"/>
-    <polyline stroke="#22d3ee" stroke-opacity="0.8" points="138,516 172,512 200,518 228,500 254,519 290,514 322,517 354,502 388,518 416,513 450,518 484,501 516,518 552,515 588,518 600,514"/>
-    <polyline stroke="#a5b4fc" stroke-opacity="0.8" points="138,562 168,564 196,556 226,565 254,546 290,565 322,559 354,566 388,548 420,565 452,560 486,566 518,550 554,565 590,562 600,565"/>
+  <text x="132" y="314" fill="#c9d2ee" font-size="21" font-weight="700">Two ways forced alignment fails</text>
+
+  <text x="132" y="360" fill="#7d88b4" font-size="15" font-weight="600">REFERENCE LABELS</text>
+  <g>
+    <rect x="132" y="372" width="78" height="34" rx="5" fill="#818cf8"/>
+    <rect x="212" y="372" width="78" height="34" rx="5" fill="#22d3ee"/>
+    <rect x="292" y="372" width="78" height="34" rx="5" fill="#a78bfa"/>
+    <rect x="372" y="372" width="78" height="34" rx="5" fill="#38bdf8"/>
+    <rect x="452" y="372" width="78" height="34" rx="5" fill="#818cf8"/>
+    <rect x="532" y="372" width="78" height="34" rx="5" fill="#22d3ee"/>
+    <rect x="612" y="372" width="78" height="34" rx="5" fill="#a78bfa"/>
   </g>
 
-  <!-- arrow A -> B -->
-  <line x1="624" y1="450" x2="664" y2="450" stroke="#8b93f5" stroke-width="3" marker-end="url(#arrowV)"/>
+  <text x="132" y="452" fill="#7d88b4" font-size="15" font-weight="600">BOUNDARY JITTER  ·  right characters, wrong times</text>
+  <g>
+    <rect x="132" y="464" width="96" height="34" rx="5" fill="#818cf8"/>
+    <rect x="230" y="464" width="58" height="34" rx="5" fill="#22d3ee"/>
+    <rect x="290" y="464" width="92" height="34" rx="5" fill="#a78bfa"/>
+    <rect x="384" y="464" width="62" height="34" rx="5" fill="#38bdf8"/>
+    <rect x="448" y="464" width="88" height="34" rx="5" fill="#818cf8"/>
+    <rect x="538" y="464" width="64" height="34" rx="5" fill="#22d3ee"/>
+    <rect x="604" y="464" width="86" height="34" rx="5" fill="#a78bfa"/>
+  </g>
+  <text x="704" y="488" fill="#4ade80" font-size="18" font-weight="800">free</text>
 
-  <!-- ===== ZONE B: alignment + decoders ===== -->
-  <!-- HMM chip -->
+  <text x="132" y="544" fill="#7d88b4" font-size="15" font-weight="600">IDENTITY CORRUPTION  ·  right times, wrong characters</text>
+  <g>
+    <rect x="132" y="556" width="78" height="34" rx="5" fill="#818cf8"/>
+    <rect x="212" y="556" width="78" height="34" rx="5" fill="#fb7185"/>
+    <rect x="292" y="556" width="78" height="34" rx="5" fill="#a78bfa"/>
+    <rect x="372" y="556" width="78" height="34" rx="5" fill="#38bdf8"/>
+    <rect x="452" y="556" width="78" height="34" rx="5" fill="#fb7185"/>
+    <rect x="532" y="556" width="78" height="34" rx="5" fill="#22d3ee"/>
+    <rect x="612" y="556" width="78" height="34" rx="5" fill="#fb7185"/>
+  </g>
+  <text x="704" y="580" fill="#fb7185" font-size="18" font-weight="800">costly</text>
+
+  <text x="132" y="622" fill="#6f7ba8" font-size="16" font-weight="500">Injected in controlled amounts, then measured.</text>
+
+  <!-- ===== RIGHT: the dose-response result ===== -->
   <g filter="url(#softN)">
-    <rect x="678" y="312" width="326" height="58" rx="29" fill="#161c40" stroke="#818cf8" stroke-opacity="0.4"/>
+    <rect x="830" y="272" width="670" height="372" rx="22" fill="#121738" stroke="#22d3ee" stroke-opacity="0.24"/>
   </g>
-  <text x="841" y="348" text-anchor="middle" fill="#cdd3f2" font-size="20" font-weight="800">Poisson HMM alignment</text>
+  <text x="862" y="314" fill="#c9d2ee" font-size="21" font-weight="700">Decoding cost vs. label damage</text>
 
-  <!-- decoder pills (2x2); Conformer highlighted -->
-  <!-- GRU -->
-  <rect x="678" y="398" width="156" height="66" rx="16" fill="#141a3a" stroke="#818cf8" stroke-opacity="0.28"/>
-  <text x="756" y="438" text-anchor="middle" fill="#c7cdec" font-size="22" font-weight="800">GRU</text>
-  <!-- RCNN -->
-  <rect x="848" y="398" width="156" height="66" rx="16" fill="#141a3a" stroke="#818cf8" stroke-opacity="0.28"/>
-  <text x="926" y="438" text-anchor="middle" fill="#c7cdec" font-size="22" font-weight="800">RCNN</text>
-  <!-- Conformer (winner) -->
-  <g filter="url(#glowPill)">
-    <rect x="678" y="476" width="156" height="66" rx="16" fill="url(#accV)"/>
+  <line x1="900" y1="600" x2="1460" y2="600" stroke="#3a4470" stroke-width="2"/>
+  <line x1="900" y1="345" x2="900" y2="600" stroke="#3a4470" stroke-width="2"/>
+  <line x1="900" y1="565" x2="1460" y2="565" stroke="#4b5680" stroke-width="1.5" stroke-dasharray="5 6"/>
+  <text x="866" y="570" fill="#6f7ba8" font-size="14" font-weight="600">0</text>
+  <text x="848" y="360" fill="#6f7ba8" font-size="14" font-weight="600">+18</text>
+  <text x="836" y="626" fill="#6f7ba8" font-size="14" font-weight="600">0%</text>
+  <text x="1420" y="626" fill="#6f7ba8" font-size="14" font-weight="600">40%</text>
+  <text x="1024" y="650" fill="#7d88b4" font-size="15" font-weight="600">share of frame labels changed</text>
+  <text x="820" y="480" fill="#7d88b4" font-size="15" font-weight="600" transform="rotate(-90 820 480)">CER cost (pp)</text>
+
+  <polyline points="920,565 985,530 1050,507 1180,480 1440,351"
+            fill="none" stroke="#fb7185" stroke-width="4.5" stroke-linecap="round"
+            stroke-linejoin="round" filter="url(#glowLine)"/>
+  <g fill="#fb7185">
+    <circle cx="920" cy="565" r="6"/><circle cx="985" cy="530" r="6"/>
+    <circle cx="1050" cy="507" r="6"/><circle cx="1180" cy="480" r="6"/>
+    <circle cx="1440" cy="351" r="7"/>
   </g>
-  <text x="745" y="516" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="800">Conformer</text>
-  <text x="812" y="503" text-anchor="middle" fill="#fde68a" font-size="22" font-weight="800">&#9733;</text>
-  <!-- CTC -->
-  <rect x="848" y="476" width="156" height="66" rx="16" fill="#141a3a" stroke="#818cf8" stroke-opacity="0.28"/>
-  <text x="926" y="516" text-anchor="middle" fill="#c7cdec" font-size="22" font-weight="800">CTC</text>
+  <text x="1318" y="336" fill="#fb7185" font-size="17" font-weight="800">+17.1 pp</text>
 
-  <text x="841" y="582" text-anchor="middle" fill="#7e87ad" font-size="17" font-weight="600">4 decoders benchmarked</text>
+  <polyline points="920,565 972,578 1024,574 1141,574 1323,476"
+            fill="none" stroke="#22d3ee" stroke-width="4.5" stroke-linecap="round"
+            stroke-linejoin="round"/>
+  <g fill="#22d3ee">
+    <circle cx="920" cy="565" r="6"/><circle cx="972" cy="578" r="6"/>
+    <circle cx="1024" cy="574" r="6"/><circle cx="1141" cy="574" r="6"/>
+    <circle cx="1323" cy="476" r="7"/>
+  </g>
+  <text x="982" y="606" fill="#22d3ee" font-size="16" font-weight="700">flat to 17% of frames</text>
 
-  <!-- arrow B -> C -->
-  <line x1="1008" y1="450" x2="1048" y2="450" stroke="#8b93f5" stroke-width="3" marker-end="url(#arrowV)"/>
+  <g>
+    <rect x="1148" y="292" width="14" height="5" rx="2.5" fill="#fb7185"/>
+    <text x="1170" y="298" fill="#c9d2ee" font-size="15" font-weight="600">identity</text>
+    <rect x="1252" y="292" width="14" height="5" rx="2.5" fill="#22d3ee"/>
+    <text x="1274" y="298" fill="#c9d2ee" font-size="15" font-weight="600">timing</text>
+  </g>
 
-  <!-- ===== ZONE C: decoded output ===== -->
+  <!-- ===== BOTTOM: the finding ===== -->
   <g filter="url(#softN)">
-    <rect x="1062" y="300" width="428" height="300" rx="22" fill="#121738" stroke="#22d3ee" stroke-opacity="0.26"/>
+    <rect x="100" y="686" width="1400" height="118" rx="20" fill="#141a3d" stroke="#818cf8" stroke-opacity="0.22"/>
   </g>
-  <text x="1086" y="338" fill="#aeb6d6" font-size="18" font-weight="700">Decoded text</text>
-  <g font-family="'SFMono-Regular', Consolas, 'Liberation Mono', monospace" font-size="30" font-weight="700" fill="#e7ecff">
-    <text x="1086" y="392">i can&#160;<tspan fill="#7dd3fc">almost</tspan></text>
-    <text x="1086" y="436">write&#160;<tspan fill="#a5b4fc">again</tspan>&#160;<tspan fill="#818cf8">&#9608;</tspan></text>
-  </g>
-  <!-- result chip -->
-  <g filter="url(#softN)">
-    <rect x="1086" y="478" width="380" height="86" rx="18" fill="#10243a" stroke="#22d3ee" stroke-opacity="0.4"/>
-  </g>
-  <text x="1108" y="520" fill="#e7ecff" font-size="34" font-weight="800">55.86%</text>
-  <text x="1108" y="548" fill="#9fb0c9" font-size="17" font-weight="600">best CER &#183; Conformer, multi-session</text>
-  <text x="1300" y="516" fill="#7dd3fc" font-size="18" font-weight="800">CER</text>
+  <text x="140" y="738" fill="#eaf1fb" font-size="30" font-weight="800" letter-spacing="-0.6">A forced aligner does not need to be temporally precise. It needs to be identity-correct.</text>
+  <text x="140" y="778" fill="#8b95bd" font-size="19" font-weight="500">Identity errors cost 2.4x to 10.8x what timing errors cost  ·  pre-registered hypothesis refuted and inverted  ·  198 runs, 0 failures</text>
 
-  <!-- Footer caption -->
-  <text x="800" y="678" text-anchor="middle" fill="#7e87ad" font-size="23" font-weight="600">Intracortical signal &#8594; HMM alignment &#8594; sequence decoding</text>
+  <text x="100" y="856" fill="#5b6592" font-size="17" font-weight="500">Willett et al. (2021) intracortical handwriting data  ·  GRU, RCNN and Conformer decoders  ·  every number traced to a committed artifact</text>
 </svg>
