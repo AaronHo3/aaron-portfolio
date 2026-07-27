@@ -70,7 +70,7 @@
   <g filter="url(#softH)">
     <rect x="556" y="312" width="402" height="288" rx="22" fill="#101736" stroke="#818cf8" stroke-opacity="0.28"/>
   </g>
-  <text x="580" y="350" fill="#aeb6d6" font-size="18" font-weight="700">Calibrated models &#183; nested CV</text>
+  <text x="580" y="350" fill="#aeb6d6" font-size="18" font-weight="700">Three model families &#183; nested CV</text>
   <g>
     <rect x="580" y="368" width="354" height="46" rx="12" fill="#141a3a" stroke="#818cf8" stroke-opacity="0.3"/>
     <text x="600" y="398" fill="#c7cdec" font-size="18" font-weight="800">Logistic Regression</text>
@@ -118,7 +118,7 @@
   <g filter="url(#glowPillH)">
     <rect x="1048" y="540" width="418" height="44" rx="13" fill="#10243a" stroke="#22d3ee" stroke-opacity="0.4"/>
   </g>
-  <text x="1257" y="568" text-anchor="middle" fill="#e7ecff" font-size="21" font-weight="800">Pooled 0.88 &#8594; LOSO 0.79</text>
+  <text x="1257" y="568" text-anchor="middle" fill="#e7ecff" font-size="21" font-weight="800">Pooled 0.88 &#8594; held-out hospital 0.80</text>
 
   <!-- Footer caption -->
   <text x="800" y="672" text-anchor="middle" fill="#7e87ad" font-size="23" font-weight="600">Does the model hold up across hospitals, and help real decisions?</text>
