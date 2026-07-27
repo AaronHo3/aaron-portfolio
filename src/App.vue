@@ -19,8 +19,7 @@
           <div>
             <strong>Aaron Ho - AI/ML for biotech and healthcare</strong>
             <p class="footerEdu">
-              USC M.S. Biomedical Data Analytics • Fullstack Academy AI &amp; ML Bootcamp • Boston University
-              Biochemistry &amp; Molecular Biology (Honors)
+              USC M.S. Biomedical Data Analytics • Boston University Biochemistry &amp; Molecular Biology (Honors)
             </p>
           </div>
         </div>

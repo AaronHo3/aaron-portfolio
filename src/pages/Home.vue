@@ -29,8 +29,8 @@
           >Biotech &amp; Healthcare</TextShimmer>
         </h1>
         <p class="sub" :class="{ in: mounted }">
-          Currently working at Sanofi on bioreactor digital twins while building
-          projects using biomedical data.
+          Previously at Sanofi working on bioreactor digital twins. Now seeking
+          full-time roles while building projects using biomedical data.
         </p>
       </div>
 
@@ -150,14 +150,8 @@
           <p class="eduType">Graduate Degree</p>
           <h3>University of Southern California</h3>
           <p class="eduDegree">M.S. Biomedical Data Analytics</p>
-          <p class="eduMeta">Focus: AI-driven biomedical modeling and decision analytics</p>
-        </article>
-        <article class="card eduCard">
-          <p class="eduType">Bootcamp</p>
-          <h3>Fullstack Academy</h3>
-          <p class="eduDegree">Artificial Intelligence &amp; Machine Learning Bootcamp</p>
           <p class="eduMeta">
-            Applied ML workflows, model evaluation, and production-minded AI implementation
+            Graduated May 2026 · Focus: AI-driven biomedical modeling and decision analytics
           </p>
         </article>
         <article class="card eduCard">
