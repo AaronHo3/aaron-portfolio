@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="Inter, 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <linearGradient id="bgN" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d1130"/>
+      <stop offset="1" stop-color="#0a0e20"/>
+    </linearGradient>
+    <linearGradient id="accV" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#818cf8"/>
+      <stop offset="1" stop-color="#6366f1"/>
+    </linearGradient>
+    <radialGradient id="glowV1" cx="14%" cy="10%" r="46%">
+      <stop offset="0" stop-color="#818cf8" stop-opacity="0.24"/>
+      <stop offset="1" stop-color="#818cf8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowV2" cx="86%" cy="90%" r="46%">
+      <stop offset="0" stop-color="#22d3ee" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#22d3ee" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softN" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#02040d" flood-opacity="0.55"/>
+    </filter>
+    <filter id="glowPill" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#818cf8" flood-opacity="0.65"/>
+    </filter>
+    <marker id="arrowV" markerWidth="14" markerHeight="14" refX="7" refY="6" orient="auto">
+      <path d="M0,0 L11,6 L0,12 Z" fill="#8b93f5"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bgN)"/>
+  <rect width="1600" height="900" fill="url(#glowV1)"/>
+  <rect width="1600" height="900" fill="url(#glowV2)"/>
+
+  <!-- Title -->
+  <text x="110" y="152" fill="#eaf1fb" font-size="54" font-weight="800" letter-spacing="-1.5">Neural Decoding</text>
+  <text x="112" y="200" fill="#aeb6d6" font-size="27" font-weight="600">Imagined handwriting, decoded to text</text>
+
+  <!-- ===== ZONE A: neural signal ===== -->
+  <g filter="url(#softN)">
+    <rect x="110" y="300" width="510" height="300" rx="22" fill="#121738" stroke="#818cf8" stroke-opacity="0.3"/>
+  </g>
+  <text x="134" y="338" fill="#aeb6d6" font-size="18" font-weight="700">192-channel neural signal</text>
+  <g fill="none" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round">
+    <polyline stroke="#38bdf8" stroke-opacity="0.9" points="138,372 168,368 196,374 220,350 244,376 280,370 312,373 344,356 378,375 410,369 442,374 476,352 512,374 548,371 584,374 600,370"/>
+    <polyline stroke="#818cf8" stroke-opacity="0.9" points="138,420 170,416 198,422 226,398 250,424 286,418 318,421 350,402 384,423 414,417 448,422 482,400 514,423 550,419 586,422 600,418"/>
+    <polyline stroke="#6366f1" stroke-opacity="0.9" points="138,468 166,470 194,460 224,472 252,450 288,471 320,464 352,473 386,452 418,472 450,466 484,473 516,454 552,472 588,468 600,471"/>
+    <polyline stroke="#22d3ee" stroke-opacity="0.8" points="138,516 172,512 200,518 228,500 254,519 290,514 322,517 354,502 388,518 416,513 450,518 484,501 516,518 552,515 588,518 600,514"/>
+    <polyline stroke="#a5b4fc" stroke-opacity="0.8" points="138,562 168,564 196,556 226,565 254,546 290,565 322,559 354,566 388,548 420,565 452,560 486,566 518,550 554,565 590,562 600,565"/>
+  </g>
+
+  <!-- arrow A -> B -->
+  <line x1="624" y1="450" x2="664" y2="450" stroke="#8b93f5" stroke-width="3" marker-end="url(#arrowV)"/>
+
+  <!-- ===== ZONE B: alignment + decoders ===== -->
+  <!-- HMM chip -->
+  <g filter="url(#softN)">
+    <rect x="678" y="312" width="326" height="58" rx="29" fill="#161c40" stroke="#818cf8" stroke-opacity="0.4"/>
+  </g>
+  <text x="841" y="348" text-anchor="middle" fill="#cdd3f2" font-size="20" font-weight="800">Poisson HMM alignment</text>
+
+  <!-- decoder pills (2x2); Conformer highlighted -->
+  <!-- GRU -->
+  <rect x="678" y="398" width="156" height="66" rx="16" fill="#141a3a" stroke="#818cf8" stroke-opacity="0.28"/>
+  <text x="756" y="438" text-anchor="middle" fill="#c7cdec" font-size="22" font-weight="800">GRU</text>
+  <!-- RCNN -->
+  <rect x="848" y="398" width="156" height="66" rx="16" fill="#141a3a" stroke="#818cf8" stroke-opacity="0.28"/>
+  <text x="926" y="438" text-anchor="middle" fill="#c7cdec" font-size="22" font-weight="800">RCNN</text>
+  <!-- Conformer (winner) -->
+  <g filter="url(#glowPill)">
+    <rect x="678" y="476" width="156" height="66" rx="16" fill="url(#accV)"/>
+  </g>
+  <text x="745" y="516" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="800">Conformer</text>
+  <text x="812" y="503" text-anchor="middle" fill="#fde68a" font-size="22" font-weight="800">&#9733;</text>
+  <!-- CTC -->
+  <rect x="848" y="476" width="156" height="66" rx="16" fill="#141a3a" stroke="#818cf8" stroke-opacity="0.28"/>
+  <text x="926" y="516" text-anchor="middle" fill="#c7cdec" font-size="22" font-weight="800">CTC</text>
+
+  <text x="841" y="582" text-anchor="middle" fill="#7e87ad" font-size="17" font-weight="600">4 decoders benchmarked</text>
+
+  <!-- arrow B -> C -->
+  <line x1="1008" y1="450" x2="1048" y2="450" stroke="#8b93f5" stroke-width="3" marker-end="url(#arrowV)"/>
+
+  <!-- ===== ZONE C: decoded output ===== -->
+  <g filter="url(#softN)">
+    <rect x="1062" y="300" width="428" height="300" rx="22" fill="#121738" stroke="#22d3ee" stroke-opacity="0.26"/>
+  </g>
+  <text x="1086" y="338" fill="#aeb6d6" font-size="18" font-weight="700">Decoded text</text>
+  <g font-family="'SFMono-Regular', Consolas, 'Liberation Mono', monospace" font-size="30" font-weight="700" fill="#e7ecff">
+    <text x="1086" y="392">i can&#160;<tspan fill="#7dd3fc">almost</tspan></text>
+    <text x="1086" y="436">write&#160;<tspan fill="#a5b4fc">again</tspan>&#160;<tspan fill="#818cf8">&#9608;</tspan></text>
+  </g>
+  <!-- result chip -->
+  <g filter="url(#softN)">
+    <rect x="1086" y="478" width="380" height="86" rx="18" fill="#10243a" stroke="#22d3ee" stroke-opacity="0.4"/>
+  </g>
+  <text x="1108" y="520" fill="#e7ecff" font-size="34" font-weight="800">55.86%</text>
+  <text x="1108" y="548" fill="#9fb0c9" font-size="17" font-weight="600">best CER &#183; Conformer, multi-session</text>
+  <text x="1300" y="516" fill="#7dd3fc" font-size="18" font-weight="800">CER</text>
+
+  <!-- Footer caption -->
+  <text x="800" y="678" text-anchor="middle" fill="#7e87ad" font-size="23" font-weight="600">Intracortical signal &#8594; HMM alignment &#8594; sequence decoding</text>
+</svg>
