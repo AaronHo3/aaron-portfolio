@@ -51,7 +51,7 @@ const items = [
   { name: "Contact", url: "/contact", icon: Mail },
 ];
 
-const resumeHref = `${import.meta.env.BASE_URL}AH_Resume.pdf`;
+const resumeHref = `${import.meta.env.BASE_URL}Aaron_Ho_Resume.pdf`;
 
 function routeToTab(path) {
   if (path === "/" || path === "") return "Home";

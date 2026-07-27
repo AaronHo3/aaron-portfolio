@@ -51,7 +51,7 @@ import TubelightNavbar from "./components/TubelightNavbar.vue";
 import ThemeToggle from "./components/ThemeToggle.vue";
 
 const route = useRoute();
-const resumeHref = `${import.meta.env.BASE_URL}AH_Resume.pdf`;
+const resumeHref = `${import.meta.env.BASE_URL}Aaron_Ho_Resume.pdf`;
 const logoHref = `${import.meta.env.BASE_URL}logo.png`;
 const buildIso = __BUILD_TIME__;
 const buildDisplay = new Date(buildIso).toLocaleString(undefined, {
