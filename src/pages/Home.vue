@@ -191,7 +191,7 @@ const visualTilt = ref({});
 const flagshipSlugs = [
   "gutsense-crc-screening",
   "imagined-handwriting-decoding",
-  "score-the-story-live-scoring",
+  "uci-heart-disease-ml",
 ];
 const labSlugs = [];
 
@@ -203,7 +203,7 @@ const lab = computed(() => labSlugs.map(bySlug).filter(Boolean));
 const flagshipEyebrow = {
   "gutsense-crc-screening": "Flagship · Award winner",
   "imagined-handwriting-decoding": "Flagship · Research",
-  "score-the-story-live-scoring": "Flagship · DeepMind challenge",
+  "uci-heart-disease-ml": "Flagship · Clinical ML study",
 };
 
 /* tilt state */
