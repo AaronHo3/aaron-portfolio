@@ -37,6 +37,7 @@ export const projects = [
       "SQLAlchemy",
       "InterSystems IRIS",
       "Claude API",
+      "OpenAI Embeddings",
       "scikit-learn",
       "SQLite",
       "Tailwind CSS",
@@ -84,7 +85,7 @@ export const projects = [
       ],
       limitations: [
         "The biosensor is an architectural design and data-flow spec, not yet a fabricated device.",
-        "The risk engine runs on feature-engineered/synthetic inputs; validation on labeled clinical CRC cohorts is the critical next step.",
+        "The risk MLP was trained on 5,000 synthetic patient samples whose labels come from the sigmoid scoring formula itself, so it approximates that formula rather than learning from clinical outcomes; validation on labeled clinical CRC cohorts is the critical next step.",
         "Generated narratives require clinician-in-the-loop review before any real-world clinical use.",
       ],
       future: [
@@ -272,7 +273,7 @@ export const projects = [
     bullets: [
       "Found that alignment error TYPE matters far more than error RATE: displacing character boundaries so up to 17% of frame labels change has no measurable effect on the best decoder (-1.0, -0.7, -0.7 pp at 4%, 8%, 17% of frames), while relabeling the same proportion to the wrong character costs +2.8, +4.6 and +6.8 pp and keeps climbing to +17.1 pp. Corruption is 2.4x steeper than jitter for the RCNN, 3.3x for the GRU, and 10.8x for the Conformer. The mechanism is that 51-frame posterior smoothing against 75-frame characters absorbs mistimed boundaries, while a wrong identity is unrecoverable at any smoothing width and teaches the network a wrong mapping. The practical consequence is a design target: a forced aligner needs to be identity-correct, not temporally precise.",
       "Caught a confound that had inverted my own conclusion. Run at 1500-bin truncated sequences, the three decoders looked statistically indistinguishable (1.64 pp architecture spread against a 2.32 pp seed noise floor) and label quality appeared to dominate 3.77x. Re-running the identical grid at full 3000-bin length separated them by 17.55 pp (RCNN 67.3%, GRU 74.2%, Conformer 86.5% clean CER) and inverted the ratio to 0.54x. Truncation compresses character error rate toward a ceiling and erases the architecture signal, so benchmarks on this dataset at reduced sequence length may be measuring the ceiling rather than the model. Both grids are committed as paired evidence.",
-      "Built the study so the refutation was possible: hypotheses, sweep grids and falsification criteria written down before any run; the deciding control's interpretation rule fixed in advance; every run emitting a JSON artifact with metrics, config, seed and git SHA (stamped '-dirty' on a modified tree); figures generated only from artifacts; and 37 tests including an integrity suite that fails if a number in the write-up drifts from the data backing it. 18 conditions run twice independently returned bit-identical error rates, so the quoted noise floor is initialization variance alone.",
+      "Built the study so the refutation was possible: hypotheses, sweep grids and falsification criteria written down before any run; the deciding control's interpretation rule fixed in advance; every run emitting a JSON artifact with metrics, config, seed and git SHA (stamped '-dirty' on a modified tree); figures generated only from artifacts; and 37 tests including an integrity suite that fails if a number in the write-up drifts from the data backing it. 18 conditions run twice independently returned bit-identical error rates, so the quoted noise floor is initialization variance alone. That determinism was observed empirically on one GPU configuration rather than enforced by cuDNN flags, so it is a statement about these results, not a portable guarantee.",
     ],
     image: "/previews/neural-decoding.svg",
     headlineStats: [
@@ -319,7 +320,7 @@ export const projects = [
         { metric: "Architecture spread, full length", value: "17.55 pp", note: "Same grid, 3000-bin sequences; 4.2x the noise floor" },
         { metric: "Best clean-label CER", value: "67.3%", note: "RCNN; GRU 74.2%, Conformer 86.5%" },
         { metric: "Pre-registered hypothesis", value: "Refuted", note: "Predicted label quality dominates; ratio came out 0.54x" },
-        { metric: "Reproducibility", value: "0.000000 pp", note: "Max CER difference across 18 independently repeated conditions" },
+        { metric: "Reproducibility", value: "0.000000 pp", note: "Max CER difference across 18 independently repeated conditions; observed on one GPU configuration, not enforced by cuDNN flags" },
       ],
       limitations: [
         "One participant, one session. All results come from a single session of participant T5 in the Willett et al. dataset; nothing here establishes generality across subjects, implant sites, or recording sessions.",

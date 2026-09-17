@@ -34,7 +34,9 @@ Sources of truth:
 | Slug | Source of truth |
 |---|---|
 | `imagined-handwriting-decoding` | `Coding\Neural_handwriting_decoding\neural_decoding_imagined_handwriting\docs\RQ1_alignment_error_types.md` |
-| `uci-heart-disease-ml` | `REPORT.md` in the UCI_Heart_Disease_ML repo |
+| `uci-heart-disease-ml` | `REPORT.md` and `README.md` in the UCI_Heart_Disease_ML repo; `reports/loso_results.csv` for per-site ECE |
+| `gutsense-crc-screening` | `README.md` in the GutSense repo (sections 5, 6 and 14) |
+| `score-the-story-live-scoring` | The score-the-story README is minimal; the module docstrings in `llm_style_director.py`, `speaker_signature.py` and `style_space.py` are the source for the semantic, identity and style-space claims |
 
 ## Conventions
 
