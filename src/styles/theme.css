@@ -1,9 +1,9 @@
 /* ============================================================================
    Design system: tokens + base styles
    ----------------------------------------------------------------------------
-   Light is the default (:root). Dark applies when <html data-theme="dark">,
-   set before first paint by the inline script in index.html and toggled by
-   SiteHeader.vue. Components should use these semantic tokens only.
+   Light tokens live on :root; dark tokens apply when <html data-theme="dark">.
+   Dark is the site default: the inline script in index.html sets data-theme
+   before first paint unless the visitor chose light with the header toggle. Components should use these semantic tokens only.
    ========================================================================== */
 
 :root {

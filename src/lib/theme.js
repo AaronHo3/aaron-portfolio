@@ -1,8 +1,9 @@
 /**
- * Theme state. Light is the default; dark applies via <html data-theme="dark">.
+ * Theme state. Dark is the default; it applies via <html data-theme="dark">,
+ * which the inline script in index.html sets before first paint unless the
+ * visitor has chosen light.
  *
- * Only an explicit toggle writes `theme-preference`. index.html reads that key
- * before first paint. The legacy `theme` key (written on every page load by the
+ * Only an explicit toggle writes `theme-preference`. The legacy `theme` key (written on every page load by the
  * old toggle, so not a real choice) is intentionally ignored.
  */
 import { ref } from "vue";

@@ -114,3 +114,6 @@ the saved choice before first paint (no flash).
   docs/LIMITATIONS.md of github.com/AaronHo3/nba_advanced_statistics. That repo is PRIVATE, so
   `links.github` is empty (a public link would 404) and `status` says so; when the repo is made
   public, set `links.github` and drop the "code repository is currently private" clause.
+- Default theme switched to dark at Aaron's request (2026-10-10). index.html sets
+  `data-theme="dark"` before first paint unless `theme-preference` is "light"; the toggle still
+  offers light and remembers it.

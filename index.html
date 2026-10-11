@@ -16,13 +16,17 @@
       href="https://fonts.googleapis.com/css2?family=Figtree:wght@400..700&family=Fraunces:opsz,wght@9..144,500..700&display=swap"
     />
     <script>
-      // Apply an explicitly chosen theme before first paint. Light is the
-      // default; only a click on the header toggle writes this key.
-      try {
-        if (localStorage.getItem("theme-preference") === "dark") {
+      // Apply the theme before first paint. Dark is the default; only a click
+      // on the header toggle writes this key, so "light" is an explicit choice.
+      (function () {
+        var preference = null;
+        try {
+          preference = localStorage.getItem("theme-preference");
+        } catch (e) {}
+        if (preference !== "light") {
           document.documentElement.setAttribute("data-theme", "dark");
         }
-      } catch (e) {}
+      })();
     </script>
     <title>Aaron Ho - AI/ML for Biotech & Healthcare</title>
   </head>
