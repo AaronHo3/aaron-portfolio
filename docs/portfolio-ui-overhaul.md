@@ -161,3 +161,6 @@ Validation (refinement pass 2):
 - About: added Arashiyama Bamboo Forest and Fushimi Inari photos (July 2026) as a two-photo row
   under "Beyond the screen". Converted from the root originals to 1024px WebP in src/assets
   (2.1 MB -> 116 KB, 4.1 MB -> 321 KB); the originals were left untracked in the repo root.
+- Home experience line removed at Aaron's request (duplicated the Background section); the
+  `homeLine` fields in profile.js were removed with it. Home order is now hero, selected work,
+  background, writing and reading club, contact.

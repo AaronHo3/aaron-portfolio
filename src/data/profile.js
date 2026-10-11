@@ -19,15 +19,13 @@ export const profile = {
 
 /**
  * Most recent first. `unit` and `summary` are optional; `summary` paraphrases the
- * resume bullet with no outcomes added. `homeLine` (optional) is the short label
- * in the Home page's one-line experience summary; omit it to leave a role out.
+ * resume bullet with no outcomes added.
  */
 export const experience = [
   {
     org: "Sanofi",
     unit: "Manufacturing Sciences, Analytics, and Technology (MSAT)",
     role: "Data Science and Digital Transformation Co-op",
-    homeLine: "Sanofi, data science co-op",
     dates: "Jan 2026 to Jun 2026",
     summary:
       "Modified and tested a digital twin simulation of the Cerezyme perfusion process, and added automated inputs, testing, and version-control checks to the modeling code.",
@@ -36,14 +34,12 @@ export const experience = [
     org: "Abbott",
     unit: "Cardiac Rhythm Management",
     role: "Computer Engineering Co-op",
-    homeLine: "Abbott, computer engineering co-op",
     dates: "May 2025 to Dec 2025",
     summary:
       "Verification and validation testing for an AI-based atrial-fibrillation and pause-detection system used with insertable cardiac monitors; built a Python and Arduino tool to reposition devices during testing.",
   },
   {
     org: "USC Song Lab",
-    homeLine: "USC Song Lab, research assistant",
     unit: "Neural Modeling and Brain Interface Lab",
     role: "Research Assistant",
     dates: "Jan 2025 to May 2025",
@@ -58,7 +54,6 @@ export const experience = [
   },
   {
     org: "Brigham and Women's Hospital",
-    homeLine: "Brigham and Women's Hospital, research assistant",
     unit: "Kwiatkowski Lab",
     role: "Research Assistant",
     dates: "Aug 2020 to May 2022",

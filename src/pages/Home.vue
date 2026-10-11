@@ -20,17 +20,6 @@
       </figure>
     </section>
 
-    <!-- Compact experience line -->
-    <section class="expLine" aria-label="Experience">
-      <p>
-        <span class="eyebrow expLabel">Experience</span>
-        <template v-for="(item, i) in experienceLine" :key="item">
-          <span v-if="i" class="expSep" aria-hidden="true">·</span>
-          <span class="expItem">{{ item }}</span>
-        </template>
-      </p>
-    </section>
-
     <!-- Selected work -->
     <section id="selected-work" class="section" aria-labelledby="work-title">
       <div class="section-head">
@@ -134,7 +123,6 @@ import { papers } from "../content/reading-club/roadmap.js";
 const FEATURED_SLUGS = ["gutsense-crc-screening", "imagined-handwriting-decoding", "uci-heart-disease-ml"];
 
 const featured = FEATURED_SLUGS.map((slug) => projects.find((p) => p.slug === slug)).filter(Boolean);
-const experienceLine = experience.map((job) => job.homeLine).filter(Boolean);
 const latestPost = livePosts[0] ?? null;
 const firstPaper = papers[0] ?? null;
 const resumeHref = `${import.meta.env.BASE_URL}${profile.resumePath}`;
@@ -180,32 +168,6 @@ const resumeHref = `${import.meta.env.BASE_URL}${profile.resumePath}`;
   object-fit: cover;
   object-position: center 20%;
   border-radius: var(--radius-lg);
-}
-
-/* Compact experience line */
-.expLine {
-  margin-top: var(--space-7);
-  padding: var(--space-4) 0;
-  border-top: var(--border);
-  border-bottom: var(--border);
-}
-
-.expLine p {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--space-1) var(--space-3);
-  font-size: var(--fs-small);
-  font-weight: 600;
-}
-
-.expLabel {
-  margin-right: var(--space-2);
-  font-size: var(--fs-meta);
-}
-
-.expSep {
-  color: var(--color-text-muted);
 }
 
 /* Background */
