@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-labelledby="t">
+  <title id="t">Courtside Research: a half-court diagram beside the app's eight views, from league explorer to methods</title>
+  <rect width="800" height="450" fill="#f1ebe1"/>
+  <!-- Half court at 7 px per foot (50 x 47 ft), baseline at the top -->
+  <g fill="none" stroke="#8a5a2b" stroke-width="3">
+    <rect x="40" y="60" width="350" height="329" rx="2"/>
+    <rect x="159" y="60" width="112" height="133"/>
+    <circle cx="215" cy="193" r="42"/>
+    <path d="M61 60 V159 A166 166 0 0 0 369 159 V60"/>
+    <line x1="194" y1="88" x2="236" y2="88"/>
+    <circle cx="215" cy="97" r="5"/>
+    <path d="M173 389 A42 42 0 0 1 257 389"/>
+  </g>
+  <g font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" fill="#3d2a17">
+    <text x="440" y="84" font-size="17" font-weight="700" letter-spacing="1.5" fill="#8a5a2b">EIGHT VIEWS</text>
+    <g font-size="23" font-weight="700">
+      <text x="440" y="124">League explorer</text>
+      <text x="440" y="160">Player profiles</text>
+      <text x="440" y="196">Shooting lab</text>
+      <text x="440" y="232">Matchups</text>
+      <text x="440" y="268">Compare</text>
+      <text x="440" y="304">Teams &amp; lineups</text>
+      <text x="440" y="340">Rankings</text>
+      <text x="440" y="376">Data &amp; methods</text>
+    </g>
+  </g>
+</svg>

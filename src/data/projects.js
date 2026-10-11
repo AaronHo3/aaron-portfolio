@@ -632,4 +632,78 @@ export const projects = [
       ],
     },
   },
+  {
+    slug: "courtside-research-nba-analytics",
+    title: "Courtside Research | NBA Player & Team Analytics Workbench",
+    subtitle:
+      "A local-first research tool for exploring NBA players and teams from every angle the public data supports: league-wide scatter exploration, player profiles, a shot chart lab, offender-vs-defender matchups, lineups and on/off, transparent rankings, and a methodology page that documents every number",
+    tags: ["Sports Analytics", "Side Project"],
+    modelTypes: ["Sports Analytics"],
+    languages: ["Python", "TypeScript"],
+    stack: ["FastAPI", "pandas", "NumPy", "SciPy", "DuckDB", "Parquet", "React", "Vite", "Tailwind", "Plotly.js", "D3", "TanStack", "nba_api", "pytest", "Vitest", "Playwright", "Docker"],
+    metrics: [
+      "Eight analysis views over a resumable nba_api ingestion pipeline",
+      "Live-ingested 2023-24 to 2025-26; season totals verified against summed game logs",
+      "Clearly labelled synthetic demo league so the app works when stats.nba.com is unreachable",
+    ],
+    links: {
+      github: "", // repo is private; add https://github.com/AaronHo3/nba_advanced_statistics once public
+      demo: "",
+      report: "",
+    },
+    summary:
+      "A local-first workbench for exploring NBA players and teams: league-wide scatter exploration, player profiles with measurement provenance, an interactive shot chart lab, offender-vs-defender matchups, multi-player comparison, team rosters, lineups and on/off, transparent rankings, and a methodology page that documents every number.",
+    bullets: [
+      "Built a resumable nba_api ingestion pipeline that caches every raw response, writes normalized Parquet per data family, and records the status and coverage of each family, season, and season type in a manifest.",
+      "Served the data through FastAPI and DuckDB to a React, Plotly, and D3 front end with a league explorer, player profiles, shooting lab, matchups, comparison, teams, rankings, and a methodology page.",
+      "Added a deterministic, visibly labelled synthetic league so the app stays usable when stats.nba.com blocks the network, and kept it strictly separate from real data.",
+    ],
+    displayTitle: "Courtside Research",
+    cardSummary:
+      "A local NBA analytics workbench: league-wide exploration, player profiles, a shot chart lab, defensive matchups, lineups, and rankings whose every number is documented on a methodology page.",
+    highlight: "Live-ingested 2023-24 to 2025-26 seasons; season totals verified against summed game logs",
+    thumbnail: "/thumbnails/courtside-research.svg",
+    context: "Personal side project",
+    status: "Working local app. Real data ingested and verified for 2023-24 to 2025-26; code repository is currently private.",
+    headlineStats: [
+      { value: "8", label: "Analysis views: league explorer, player profiles, shooting lab, matchups, compare, teams, rankings, methodology" },
+      { value: "3", label: "Seasons ingested live from stats.nba.com (2023-24 to 2025-26), with season totals checked against summed game logs" },
+      { value: "2", label: "Data namespaces, real and a labelled synthetic demo, that never mix" },
+    ],
+    caseStudy: {
+      problem: [
+        "Public NBA data is rich but scattered across dozens of endpoints with different shapes, coverage start dates, and quirks, and the provider blocks or rate-limits many networks.",
+        "I wanted one place to explore players and teams from every angle the public data supports, where each number on screen can be traced back to how it was measured and computed.",
+      ],
+      approach: [
+        "The app is local-first: the browser never talks to the provider. A backend pipeline fetches cheap league summaries first and expensive families (game logs, lineups, on/off, defensive dashboards, matchups, league-wide shots) last, caching every raw response so runs resume where they stopped.",
+        "Normalized data is stored as Parquet and queried through DuckDB by a FastAPI backend, and a React front end turns it into eight views. A methodology page documents formulas, thresholds, uncertainty, shooting geometry, and ranking construction, and a coverage matrix shows exactly which seasons and families are available.",
+      ],
+      architecture: [
+        "Ingest with nba_api in a resumable pipeline: every raw response is cached, every normalized family is written to Parquet, and a manifest records status (ok, missing, stale, failed, partial), row counts, fetch times, and source for each family, season, and season type.",
+        "Serve two namespaces, real NBA data and a deterministic synthetic demo league, which never mix; the demo is labelled on every page so it cannot be mistaken for real data.",
+        "Compute analytics in the backend: metrics, uncertainty (Wilson intervals for shooting), shrinkage toward a league-wide prior for matchup efficiency, court geometry and shooting bins, percentiles, and user-defined composite ranking lenses.",
+        "Present it in eight views: league explorer, player profile with measurement provenance, shooting lab with an interactive shot chart, offender-vs-defender matchups, multi-player comparison, team rosters with lineups and on/off, rankings, and a data and methods page.",
+        "Test with pytest (analytics, data, demo invariants, API contract, ingestion fixtures), Vitest, and Playwright smoke tests; ship with Docker Compose.",
+      ],
+      findings: [
+        {
+          title: "Real totals reconcile with game logs",
+          text: "The pipeline was run live against stats.nba.com for the 2025-26 regular season (all families) and for 2024-25 and 2023-24 from a residential US connection, and a verification step confirmed that player-season and team-season totals equal the provider's summed game logs.",
+        },
+        {
+          title: "The provider data needed reconciling before analysis",
+          text: "That live run surfaced three provider quirks, all handled in the pipeline: per-team player rows carry the player's current team id rather than the team for that stint; one turnover percentage is published on a 0-100 scale while every other percentage is a fraction; and the defensive dashboard names its made, attempted, and normal columns differently for each defense category.",
+        },
+      ],
+      limitations: [
+        "No adjusted impact metrics (no RAPM, EPM, RAPTOR, LEBRON or similar). On/off, plus-minus, net rating, and PIE are shown as the provider publishes them, unadjusted for teammates, opponents, minutes, or garbage time.",
+        "No play-by-play possessions: per-100 rates inherit the provider's possession estimates, and no lineup or on/off figure is rebuilt from play-by-play.",
+        "Shooting has no defender distance, shot clock, or shot-quality model, and Wilson intervals assume independent attempts, so they are somewhat too narrow.",
+        "Matchup possessions are fractional and scheme-dependent, and shrinkage uses one league-wide prior rather than a position- or role-specific one.",
+        "Ranking percentiles are computed within a season and do not remove era effects; overlapping components in a lens can double-count a signal.",
+        "Historical coverage depends on the provider: matchups start in 2017-18, defensive dashboards in 2013-14, and shot locations in 1996-97. When stats.nba.com is unreachable, only the synthetic demo is available.",
+      ],
+    },
+  },
 ];

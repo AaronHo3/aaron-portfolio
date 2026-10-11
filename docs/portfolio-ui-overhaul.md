@@ -108,3 +108,9 @@ the saved choice before first paint (no flash).
   "retrospective and potentially leaky" caveat. New category "Sports Analytics" appears in the
   filter automatically.
 - Projects page intro rewritten in a friendlier voice.
+- Education lines ("Focus: AI-driven biomedical modeling..." and "completed and defended an
+  undergraduate thesis") confirmed correct by Aaron.
+- Added Courtside Research (`courtside-research-nba-analytics`) from the README and
+  docs/LIMITATIONS.md of github.com/AaronHo3/nba_advanced_statistics. That repo is PRIVATE, so
+  `links.github` is empty (a public link would 404) and `status` says so; when the repo is made
+  public, set `links.github` and drop the "code repository is currently private" clause.
