@@ -1,35 +1,21 @@
 <template>
   <article v-if="project" class="container page caseStudy">
-    <RouterLink class="backLink" to="/projects">← All projects</RouterLink>
+    <!-- 1. Back link and category -->
+    <p class="crumbs">
+      <RouterLink class="backLink" to="/projects">← All projects</RouterLink>
+      <span v-if="category" class="eyebrow crumbCategory">{{ category }}</span>
+    </p>
 
-    <!-- 1. Title and summary -->
     <header class="csHeader">
-      <p v-if="category" class="eyebrow">{{ category }}</p>
+      <!-- 2. Title and subtitle -->
       <h1 class="csTitle">{{ displayTitle }}</h1>
       <p v-if="titleRemainder" class="fullTitle">{{ titleRemainder }}</p>
-      <p class="lead csLead">{{ project.subtitle }}</p>
 
-      <!-- 2. Compact metadata (only fields present in projects.js) -->
-      <dl class="metaList">
-        <div v-if="project.context">
-          <dt>Context</dt>
-          <dd>{{ project.context }}</dd>
-        </div>
-        <div v-if="project.status">
-          <dt>Status</dt>
-          <dd>{{ project.status }}</dd>
-        </div>
-        <div v-if="project.languages?.length">
-          <dt>Languages</dt>
-          <dd>{{ project.languages.join(", ") }}</dd>
-        </div>
-        <div v-if="project.stack?.length">
-          <dt>Tools</dt>
-          <dd>{{ project.stack.join(", ") }}</dd>
-        </div>
-      </dl>
+      <!-- 3. Question-led introduction, with the project's status kept beside it -->
+      <p class="lead csLead">{{ project.intro || project.subtitle }}</p>
+      <p v-if="project.status" class="statusNote"><strong>Status:</strong> {{ project.status }}</p>
 
-      <!-- 4. Links -->
+      <!-- 4. Primary links -->
       <div v-if="links.length" class="csLinks">
         <a
           v-for="(link, i) in links"
@@ -45,7 +31,7 @@
       </div>
     </header>
 
-    <!-- 3. Main takeaway -->
+    <!-- 5. Main takeaway -->
     <section v-if="project.headlineStats?.length" class="glance" aria-labelledby="glance-title">
       <h2 id="glance-title" class="eyebrow glanceTitle">At a glance</h2>
       <dl class="glanceList">
@@ -56,6 +42,7 @@
       </dl>
     </section>
 
+    <!-- 6. Overview figure (only when a real one exists) -->
     <figure v-if="project.image" class="csFigure">
       <img
         :src="project.image"
@@ -72,6 +59,18 @@
         </a>
       </figcaption>
     </figure>
+
+    <!-- 7. Compact supporting metadata -->
+    <dl v-if="project.context || builtWith" class="metaStrip">
+      <div v-if="project.context">
+        <dt>Context</dt>
+        <dd>{{ project.context }}</dd>
+      </div>
+      <div v-if="builtWith">
+        <dt>Built with</dt>
+        <dd>{{ builtWith }}</dd>
+      </div>
+    </dl>
 
     <div class="csBody" :class="{ withToc: showToc }">
       <nav v-if="showToc" class="toc" aria-label="Sections">
@@ -215,6 +214,18 @@ const titleRemainder = computed(() => {
   const prefix = `${p.displayTitle} | `;
   return p.title.startsWith(prefix) ? p.title.slice(prefix.length) : p.title;
 });
+/** Languages then tools, de-duplicated case-insensitively (e.g. Python listed once). */
+const builtWith = computed(() => {
+  const seen = new Set();
+  return [...(project.value?.languages ?? []), ...(project.value?.stack ?? [])]
+    .filter((item) => {
+      const key = item.toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .join(", ");
+});
 const category = computed(() => project.value?.modelTypes?.[0] ?? "");
 const imageSize = computed(() => project.value?.imageSize ?? [1600, 900]);
 // Short alt text; the full description is in the visible figcaption, so it is not repeated here.
@@ -280,13 +291,24 @@ usePageHead(() =>
   text-decoration: none;
 }
 
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-5);
+  margin: 0;
+}
+
+.crumbCategory {
+  font-size: var(--fs-meta);
+}
+
 .csHeader {
   max-width: 820px;
-  margin-top: var(--space-4);
+  margin-top: var(--space-3);
 }
 
 .csTitle {
-  margin-top: var(--space-2);
   font-size: var(--fs-hero);
   line-height: 1.05;
 }
@@ -301,37 +323,51 @@ usePageHead(() =>
   margin-top: var(--space-5);
 }
 
-.metaList {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-4) var(--space-6);
-  margin: var(--space-6) 0 0;
-  padding-top: var(--space-5);
-  border-top: var(--border);
-}
-
-.metaList dt {
-  font-size: var(--fs-meta);
-  font-weight: 700;
+.statusNote {
+  margin-top: var(--space-4);
+  padding-left: var(--space-3);
+  border-left: 3px solid var(--color-control-border);
+  font-size: var(--fs-small);
+  line-height: 1.5;
   color: var(--color-text-muted);
 }
 
-.metaList dd {
-  margin: 2px 0 0;
-  font-size: var(--fs-small);
-  line-height: 1.5;
+.statusNote strong {
+  color: var(--color-text);
 }
 
 .csLinks {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-3);
-  margin-top: var(--space-6);
+  margin-top: var(--space-5);
+}
+
+/* Compact metadata strip after the figure */
+.metaStrip {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: var(--space-3) var(--space-6);
+  margin: var(--space-6) 0 0;
+  padding: var(--space-4) 0;
+  border-top: var(--border);
+  border-bottom: var(--border);
+  font-size: var(--fs-meta);
+  line-height: 1.55;
+}
+
+.metaStrip dt {
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+.metaStrip dd {
+  margin: 2px 0 0;
 }
 
 /* At a glance */
 .glance {
-  margin-top: var(--space-7);
+  margin-top: var(--space-6);
   padding: var(--space-5) var(--space-6);
   background: var(--color-surface);
   border: var(--border);
@@ -367,7 +403,7 @@ usePageHead(() =>
 
 /* Figure */
 .csFigure {
-  margin: var(--space-7) 0 0;
+  margin: var(--space-6) 0 0;
 }
 
 .csFigure img {
@@ -588,7 +624,7 @@ tbody th {
 
 @media (max-width: 760px) {
   .glanceList,
-  .metaList,
+  .metaStrip,
   .channels,
   .relatedGrid {
     grid-template-columns: 1fr;

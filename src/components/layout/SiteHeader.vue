@@ -2,7 +2,6 @@
   <header class="siteHeader">
     <div class="container headerInner">
       <RouterLink class="brand" to="/" aria-label="Aaron Ho, home">
-        <img class="brandMark" :src="logoSrc" alt="" width="32" height="32" />
         <span class="brandName">Aaron Ho</span>
       </RouterLink>
 
@@ -67,7 +66,7 @@ import { theme, toggleTheme } from "../../lib/theme.js";
 const NAV_ITEMS = [
   { label: "Home", to: "/", match: [] },
   { label: "Projects", to: "/projects", match: ["/projects"] },
-  { label: "Blogging", to: "/blog", match: ["/blog", "/reading-club"] },
+  { label: "Writing", to: "/blog", match: ["/blog", "/reading-club"] },
   { label: "About", to: "/about", match: ["/about"] },
   { label: "Contact", to: "/contact", match: ["/contact"] },
 ];
@@ -76,7 +75,6 @@ const route = useRoute();
 const menuOpen = ref(false);
 const menuButton = ref(null);
 
-const logoSrc = `${import.meta.env.BASE_URL}logo.png`;
 const resumeHref = `${import.meta.env.BASE_URL}${profile.resumePath}`;
 const themeLabel = computed(() => (theme.value === "dark" ? "Switch to light theme" : "Switch to dark theme"));
 
@@ -119,26 +117,21 @@ onBeforeUnmount(() => desktopMq?.removeEventListener("change", onMq));
   min-height: var(--header-h);
 }
 
+/* Text wordmark: no image logo exists that suits both themes. */
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-3);
+  min-height: 44px;
   color: var(--color-text);
   text-decoration: none;
-  font-weight: 700;
-  font-size: 1.0625rem;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 1.3125rem;
   letter-spacing: -0.01em;
 }
 
 .brand:hover {
   color: var(--color-text);
-}
-
-.brandMark {
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-sm);
-  object-fit: cover;
 }
 
 .desktopNav {

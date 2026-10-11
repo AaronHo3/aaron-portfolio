@@ -4,7 +4,7 @@
       <h1 class="page-title">Projects</h1>
       <p class="lead">
         Here are some of the things I've been working on, from clinical ML and brain-computer interfaces to music
-        and a couple of basketball side projects. Each one has a short write-up of what I built and what I learned.
+        and a fantasy basketball side project. Each one has a short write-up of what I built and what I learned.
       </p>
     </header>
 

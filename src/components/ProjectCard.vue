@@ -84,9 +84,9 @@ html[data-theme="dark"] .thumb img {
 .body {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-2);
   flex: 1;
-  padding: var(--space-5);
+  padding: var(--space-4) var(--space-5) var(--space-5);
 }
 
 .category {
@@ -121,10 +121,13 @@ html[data-theme="dark"] .thumb img {
 }
 
 .summary {
+  font-size: 1rem;
+  line-height: 1.6;
   color: var(--color-text-muted);
 }
 
 .highlight {
+  margin-top: var(--space-1);
   padding-left: var(--space-3);
   border-left: 3px solid var(--color-accent);
   font-size: var(--fs-small);
@@ -134,7 +137,7 @@ html[data-theme="dark"] .thumb img {
 
 .cta {
   margin-top: auto;
-  padding-top: var(--space-2);
+  padding-top: var(--space-3);
   color: var(--color-accent);
   font-weight: 650;
   font-size: var(--fs-small);

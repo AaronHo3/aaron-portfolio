@@ -117,3 +117,42 @@ the saved choice before first paint (no flash).
 - Default theme switched to dark at Aaron's request (2026-10-10). index.html sets
   `data-theme="dark"` before first paint unless `theme-preference` is "light"; the toggle still
   offers light and remembers it.
+- Courtside Research hidden for now (`hidden: true` in its projects.js entry); delete that line to
+  show it again. If it is re-shown, also restore "a couple of basketball side projects" in the
+  Projects page intro.
+
+## Refinement pass 2 (2026-10-10): plan and progress
+
+Scope: focused refinement of the editorial design; no new media, demos, or placeholders.
+
+| # | Change | Status |
+| --- | --- | --- |
+| 1 | Home order: hero, compact experience line, selected work, full background, writing preview, contact | [x] |
+| 2 | Shorter cards: rewrite `cardSummary` (question/product, ~20-35 words) and `highlight` (finding, ~12-25 words); tighter card spacing | [x] |
+| 3 | Case-study opening: back/category, title, question-led intro, status, links, at a glance, figure, compact metadata, body | [x] |
+| 4 | New `intro` field per project (question first); `subtitle` stays in data for search and meta | [x] |
+| 5 | Branding: no monochrome logo exists (only black-square `public/logo.png`), so the header uses the "Aaron Ho" wordmark; favicon unchanged | [x] |
+| 6 | "Blogging" -> "Writing" labels only; `/blog`, RSS, article URLs unchanged | [x] |
+| 7 | Validation | [x] |
+
+Decisions:
+- "Writing" supersedes the earlier "Blogging" rename (newer instruction from Aaron).
+- Languages and tools merge into one de-duplicated "Built with" line (e.g. Python listed once).
+- The method-heavy `subtitle` is no longer shown on case-study pages; its content is already in
+  the Approach and How it works sections. It still feeds search and meta descriptions.
+
+Validation (refinement pass 2):
+- `npm run build` passes; `npm test` 36/36. No lint or type-check tooling exists in the repo.
+- Browser (Playwright): 13 routes (Home, Projects, all 5 visible case studies, the hidden
+  project's URL, About, Contact, Writing, Reading Club, draft article) x 375/768/1280/1440 x
+  dark/light = 104 checks: correct theme, one h1, no horizontal overflow, no broken images,
+  no console errors.
+- Home order verified; "View selected work" lands the heading 80px from the top (header 65px);
+  case-study TOC anchors land at 80px.
+- Cards: equal heights per row with aligned actions in grid (1280: 622px, 768: 549px) and list
+  (300px) modes; descriptions 20-26 words, takeaways 15-19 words.
+- Nav reads Writing with active state on /blog and /reading-club; wordmark verified in both
+  themes; keyboard order skip link -> wordmark -> nav with visible focus; mobile menu opens with
+  Enter, Escape closes and returns focus.
+- Not reviewed visually this pass: mobile screenshots (covered by the automated overflow checks).
+- Case-study `subtitle` is no longer rendered; it remains in data for search and meta.

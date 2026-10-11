@@ -18,7 +18,7 @@ export const site = {
   url: "https://aaronho.dev",
   title: "Aaron Ho",
   author: "Aaron Ho",
-  blogTitle: "Blogging",
+  blogTitle: "Writing",
   blogDescription:
     "Notes on machine learning, computational biology, and the projects I am building.",
   timeZone: "America/Los_Angeles",

@@ -1,7 +1,7 @@
 <template>
   <div class="container page blogIndex">
     <header class="blogHead">
-      <h1 class="page-title">Blogging</h1>
+      <h1 class="page-title">Writing</h1>
       <p class="lead">
         Notes on machine learning and computational biology: technical explanations, project write-ups, paper
         discussions, short implementations, and the occasional reflection. I write to learn, and I hope some of it

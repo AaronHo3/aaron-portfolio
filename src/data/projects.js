@@ -10,6 +10,8 @@
  *   image: string                            // preview screenshot, e.g. "/previews/gutsense.png"
  *                                            //   (drop files in public/previews/, served from site root)
  *   inProgress: boolean                      // work-in-progress; shows an "In progress" badge + Lab strip
+ *   hidden: boolean                          // true = not listed, not routable, not in related projects;
+ *                                            //   delete the line to show the project again
  *   headlineStats: [{ value, label }]        // big stat callouts at the top
  *   caseStudy: {
  *     problem:      string | [string],        // motivation; an array renders as paragraphs
@@ -26,8 +28,9 @@
  * already stated in this entry.
  *
  *   displayTitle:  string    // short card/page title, e.g. "GutSense" (full `title` is kept)
- *   cardSummary:   string    // one or two sentences for project cards
- *   highlight:     string    // one verified result or distinguishing detail for cards
+ *   intro:         string    // case-study opening: the question or purpose first, methods later
+ *   cardSummary:   string    // card description: the question or product, ~20-35 words
+ *   highlight:     string    // card takeaway: the main finding with enough context, ~12-25 words
  *   thumbnail:     string    // simplified card image in public/thumbnails/ (16:9)
  *   imageCaption:  string    // caption for `image` on the case-study page
  *   imageSize:     [w, h]    // intrinsic size of `image` if not 1600x900 (prevents layout shift)
@@ -77,8 +80,12 @@ export const projects = [
     image: "/previews/gutsense-architecture.webp",
     imageSize: [1640, 1052],
     displayTitle: "GutSense",
-    cardSummary: "A hackathon prototype for continuous colorectal-cancer screening: an 8-biomarker risk model, EHR retrieval in InterSystems IRIS, and Claude-generated clinical narratives.",
-    highlight: "3rd Place, InterSystems Challenge, MIT Grand Hack 2026",
+    intro:
+      "Colorectal cancer is highly survivable when caught early, but screening is invasive and easy to put off. At MIT Grand Hack 2026, our team prototyped a continuous at-home alternative: a designed toilet-mounted biosensor feeding an 8-biomarker risk model, with clinical narratives grounded in each patient's own records.",
+    cardSummary:
+      "A hackathon prototype for continuous colorectal-cancer screening that turns eight stool biomarkers into a risk score and clinical narratives grounded in the patient's records.",
+    highlight:
+      "3rd Place, InterSystems Challenge, MIT Grand Hack 2026. The risk model was trained on synthetic data.",
     thumbnail: "/thumbnails/gutsense.svg",
     imageCaption: "System architecture of the prototype: biosensor design, 8-biomarker risk engine, IRIS vector retrieval over FHIR records, and Claude-generated narratives. The biosensor is an architectural specification, not a fabricated device.",
     context: "Team project, MIT Grand Hack 2026 (InterSystems Challenge)",
@@ -155,8 +162,12 @@ export const projects = [
     ],
     image: "/previews/score-the-story.svg",
     displayTitle: "Score the Story",
-    cardSummary: "A real-time instrument where a narrator's voice is the controller: prosody shapes the music's texture while Whisper and Claude set the scene's style, and Magenta RealTime 2 composes live.",
-    highlight: "Built for the Google DeepMind challenge, Music Technology Hackathon 2026",
+    intro:
+      "Live narration, from theater to tabletop games to audiobooks, has no music that follows the moment. I built a real-time instrument where a narrator's voice is the controller: how they speak shapes the texture, what they say sets the scene, and DeepMind's Magenta RealTime 2 composes the score live.",
+    cardSummary:
+      "Can music follow a story while it is being told? A real-time instrument where a narrator's voice steers a live generative score, with no pre-composed music.",
+    highlight:
+      "Pairing how something is said with what is said made the score feel intentional. Evaluation is qualitative so far.",
     thumbnail: "/thumbnails/score-the-story.svg",
     imageCaption: "Signal flow: live narration feeds a prosody channel (how it is said) and a Whisper-to-Claude semantic channel (what is said), which together steer Magenta RealTime 2 to generate the score in real time.",
     context: "Google DeepMind challenge, Music Technology Hackathon 2026",
@@ -325,8 +336,12 @@ export const projects = [
     ],
     image: "/previews/neural-decoding.svg",
     displayTitle: "Neural Decoding",
-    cardSummary: "Brain-to-text decoders train on alignment labels no one observed. Across 198 runs I injected controlled label error to find which kind of alignment mistake actually costs accuracy.",
-    highlight: "Mistiming 17% of frame labels had no measurable cost (-0.7 pp, inside the noise floor); mislabeling the same share cost +6.8 pp",
+    intro:
+      "Brain-to-text decoders learn from character labels that no one ever observed; a forced aligner estimates them. I measured which kinds of label error actually cost accuracy by injecting controlled errors across 198 training runs, and I report the pre-registered hypothesis that the results refuted.",
+    cardSummary:
+      "Testing how errors in training labels affect brain-to-text decoders, across 198 controlled runs on an imagined-handwriting dataset from one participant.",
+    highlight:
+      "In this study, character identity errors cost far more accuracy than timing errors: 2.4 to 10.8 times steeper.",
     thumbnail: "/thumbnails/neural-decoding.svg",
     imageCaption: "Study overview: boundary jitter (right characters, wrong times) versus identity corruption (right times, wrong characters), injected in controlled amounts and measured as character error rate cost. Data: Willett et al. (2021) intracortical handwriting recordings.",
     context: "Research project on the Willett et al. (2021) imagined-handwriting dataset",
@@ -452,8 +467,12 @@ export const projects = [
     ],
     image: "/previews/uci-heart-disease.svg",
     displayTitle: "Heart Disease",
-    cardSummary: "Does a heart-disease model trained at some hospitals work at one it has never seen? A multi-site methodology study across four UCI cohorts (n=920).",
-    highlight: "Logistic regression: pooled-CV AUC 0.88 falls to 0.80 inside a held-out hospital",
+    intro:
+      "I tested whether heart-disease models remain reliable when transferred to a hospital they have never seen. Holding out each of four UCI hospital cohorts (n=920) in turn, I checked not just accuracy but whether the probabilities, decisions, and error rates held up across sites and patient groups.",
+    cardSummary:
+      "Do heart-disease models stay reliable at a hospital they have never seen? A methodology study across four UCI hospital cohorts (n=920).",
+    highlight:
+      "Pooled cross-validation overstated transfer: logistic regression AUC fell from 0.88 to 0.80 at held-out hospitals.",
     thumbnail: "/thumbnails/heart-disease.svg",
     imageCaption: "Study design schematic: leave-one-hospital-out validation across four cohorts, three model families under nested cross-validation, then calibration and decision-curve analysis.",
     context: "Methodology study on the UCI heart-disease cohorts",
@@ -561,9 +580,12 @@ export const projects = [
       "Tested the advice in paired mock drafts and kept the parts that held up, dropping or demoting the parts that did not.",
     ],
     displayTitle: "Fantasy Draft Copilot",
+    intro:
+      "I wanted a tool for my ESPN league with friends that answers 'who should I take now, and why?', and I wanted to know whether its advice beats ordinary drafting before trusting it on draft day. The copilot ranks each pick with learned projections and the league's exact rules, and I tested every layer in mock drafts.",
     cardSummary:
-      "A side project for my fantasy basketball league with friends: a local draft assistant that ranks my next pick with learned player projections and the league's exact rules, then tests its own advice in mock drafts.",
-    highlight: "+0.53 categories per matchup over value-order drafting in 120 paired mock drafts (retrospective)",
+      "A side project for my fantasy basketball league with friends: a draft assistant that ranks my next pick and tests its own advice in mock drafts.",
+    highlight:
+      "Beat value-order drafting by 0.53 categories per matchup in retrospective mock drafts, but no better than projected value alone.",
     thumbnail: "/thumbnails/fantasy-draft-copilot.svg",
     context: "Personal side project for an ESPN league with friends",
     status: "Working local app. Evaluation is retrospective and potentially leaky, not a rigorous draft backtest.",
@@ -634,6 +656,7 @@ export const projects = [
   },
   {
     slug: "courtside-research-nba-analytics",
+    hidden: true, // hidden for now; delete this line to show it again
     title: "Courtside Research | NBA Player & Team Analytics Workbench",
     subtitle:
       "A local-first research tool for exploring NBA players and teams from every angle the public data supports: league-wide scatter exploration, player profiles, a shot chart lab, offender-vs-defender matchups, lineups and on/off, transparent rankings, and a methodology page that documents every number",
@@ -659,9 +682,12 @@ export const projects = [
       "Added a deterministic, visibly labelled synthetic league so the app stays usable when stats.nba.com blocks the network, and kept it strictly separate from real data.",
     ],
     displayTitle: "Courtside Research",
+    intro:
+      "Public NBA data is rich but scattered across dozens of endpoints with different shapes and quirks. I built a local workbench to explore players and teams from every angle that data supports, where each number on screen can be traced back to how it was measured and computed.",
     cardSummary:
-      "A local NBA analytics workbench: league-wide exploration, player profiles, a shot chart lab, defensive matchups, lineups, and rankings whose every number is documented on a methodology page.",
-    highlight: "Live-ingested 2023-24 to 2025-26 seasons; season totals verified against summed game logs",
+      "A local workbench for exploring NBA players and teams from every angle the public data supports, where each number traces back to how it was measured.",
+    highlight:
+      "Live data for 2023-24 to 2025-26 matched summed game logs after three provider quirks were fixed.",
     thumbnail: "/thumbnails/courtside-research.svg",
     context: "Personal side project",
     status: "Working local app. Real data ingested and verified for 2023-24 to 2025-26; code repository is currently private.",

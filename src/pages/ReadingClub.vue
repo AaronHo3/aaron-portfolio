@@ -1,6 +1,6 @@
 <template>
   <div class="container page club">
-    <RouterLink class="backLink" to="/blog">← Blogging</RouterLink>
+    <RouterLink class="backLink" to="/blog">← Writing</RouterLink>
     <header class="clubHead">
       <p class="eyebrow">Series · {{ readingClub.cadence }}</p>
       <h1 class="page-title clubTitle">ML × Bio Reading Club</h1>

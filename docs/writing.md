@@ -1,4 +1,4 @@
-# Blogging and the ML × Bio Reading Club
+# Writing and the ML × Bio Reading Club
 
 How to write, preview, and publish articles, and how to manage the reading
 roadmap. Everything is plain files in this repo; there is no admin panel.
