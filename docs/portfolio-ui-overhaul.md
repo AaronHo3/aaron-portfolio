@@ -158,3 +158,6 @@ Validation (refinement pass 2):
 - Case-study `subtitle` is no longer rendered; it remains in data for search and meta.
 - Contact draft form removed at Aaron's request (redundant with email, LinkedIn, GitHub).
   `src/lib/mailto.js` and `tests/mailto.test.js` were only used by it and were deleted; tests 32/32.
+- About: added Arashiyama Bamboo Forest and Fushimi Inari photos (July 2026) as a two-photo row
+  under "Beyond the screen". Converted from the root originals to 1024px WebP in src/assets
+  (2.1 MB -> 116 KB, 4.1 MB -> 321 KB); the originals were left untracked in the repo root.

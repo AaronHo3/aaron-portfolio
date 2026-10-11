@@ -97,6 +97,18 @@
         <figcaption>Sequoia National Park, June 2025</figcaption>
       </figure>
     </section>
+
+    <!-- Travel photos -->
+    <section class="travel" aria-label="Travel photos">
+      <figure class="photo">
+        <img :src="arashiyamaPhoto" alt="Aaron standing in the Arashiyama bamboo forest, looking up" width="1024" height="1365" loading="lazy" />
+        <figcaption>Arashiyama Bamboo Forest, July 2026</figcaption>
+      </figure>
+      <figure class="photo">
+        <img :src="fushimiInariPhoto" alt="Aaron leaning on a bright orange railing beneath green maple trees at Fushimi Inari" width="1024" height="1365" loading="lazy" />
+        <figcaption>Fushimi Inari, July 2026</figcaption>
+      </figure>
+    </section>
   </div>
 </template>
 
@@ -104,6 +116,8 @@
 import momoPhoto from "../assets/momo.webp";
 import osakaCastlePhoto from "../assets/osaka-castle-steps.webp";
 import sequoiaPhoto from "../assets/sequoia-national-park.webp";
+import arashiyamaPhoto from "../assets/arashiyama-forest.webp";
+import fushimiInariPhoto from "../assets/fushimi-inari.webp";
 import { education, experience, profile } from "../data/profile.js";
 
 const resumeHref = `${import.meta.env.BASE_URL}${profile.resumePath}`;
@@ -304,7 +318,24 @@ const resumeHref = `${import.meta.env.BASE_URL}${profile.resumePath}`;
   aspect-ratio: 4 / 3;
 }
 
+/* Travel: two portrait photos side by side, sized like the Momo photo */
+.travel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 340px));
+  justify-content: end; /* continues the photo column above on wide screens */
+  gap: var(--space-6);
+  margin-top: var(--space-6);
+}
+
+.travel img {
+  aspect-ratio: 3 / 4;
+}
+
 @media (max-width: 960px) {
+  .travel {
+    justify-content: start;
+    gap: var(--space-4);
+  }
   .beyond {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
