@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import {
   buildRoadmap,
   crossCheckRoadmap,
-  findNextSession,
   resolvePaperForPost,
   validateRoadmap,
 } from "../src/lib/content/roadmap.js";
@@ -41,11 +40,9 @@ describe("the real roadmap file", () => {
     expect(validateRoadmap(realRoadmap).errors).toEqual([]);
   });
 
-  it("seeds every paper as backlog with no invented dates or articles", () => {
+  it("uses source order and keeps each session date on its own entry", () => {
     for (const p of realRoadmap) {
-      expect(p.status).toBe("backlog");
-      expect(p.sessionDate).toBeUndefined();
-      expect(p.articleSlug).toBeUndefined();
+      if (p.sessionDate) expect(p.status).not.toBe("backlog");
     }
   });
 });
@@ -94,36 +91,6 @@ describe("reordering preserves relationships", () => {
       expect(after[id].article?.slug).toBe(before[id].article?.slug);
     }
     expect(after["u-net"].article.slug).toBe("unet-notes");
-    expect(findNextSession(original, TODAY).id).toBe(findNextSession(moved, TODAY).id);
-  });
-});
-
-describe("next session", () => {
-  it("is chosen by the earliest future date, independent of position", () => {
-    const papers = [
-      paper("first-in-list", { sessionDate: "2026-11-15" }),
-      paper("no-date"),
-      paper("past", { sessionDate: "2026-10-04" }),
-      paper("soonest", { sessionDate: "2026-10-18" }),
-    ];
-    expect(findNextSession(papers, TODAY).id).toBe("soonest");
-  });
-
-  it("counts a session dated today as upcoming", () => {
-    expect(findNextSession([paper("t", { sessionDate: TODAY })], TODAY).id).toBe("t");
-  });
-
-  it("breaks same-day ties by time", () => {
-    const papers = [
-      paper("late", { sessionDate: "2026-10-18", sessionTime: "20:00" }),
-      paper("early", { sessionDate: "2026-10-18", sessionTime: "18:00" }),
-    ];
-    expect(findNextSession(papers, TODAY).id).toBe("early");
-  });
-
-  it("is null when nothing is scheduled, never the first backlog paper", () => {
-    expect(findNextSession([paper("a"), paper("b")], TODAY)).toBeNull();
-    expect(findNextSession([paper("old", { sessionDate: "2026-01-04" })], TODAY)).toBeNull();
   });
 });
 

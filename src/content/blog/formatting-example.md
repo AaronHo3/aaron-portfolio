@@ -5,7 +5,6 @@ date: 2026-10-10
 draft: true
 tags: [generative-models, tutorial]
 series: ml-bio-reading-club
-paperId: vae
 paperTitle: "Auto-Encoding Variational Bayes"
 paperUrl: "https://arxiv.org/abs/1312.6114"
 paperAuthors: "Diederik P. Kingma, Max Welling"

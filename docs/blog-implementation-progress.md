@@ -25,11 +25,10 @@ status only.
 | One filter, `isPublished()` in `src/lib/content/posts.js` | Used by routes, index, archive, related posts, RSS, sitemap |
 | Keep hash routing | Existing convention; migrating the site router was out of scope. All absolute URLs go through `src/lib/content/urls.js` so a future history-mode switch is one edit |
 | Roadmap = array order in `src/content/reading-club/roadmap.js` | No order field, no sorting anywhere; position is display-only |
-| Next session chosen by `sessionDate`, never position | Reordering cannot change the schedule |
 | Articles carry their own `paperTitle` / `paperUrl` | Removing a roadmap entry never breaks an article; missing references are warnings, not errors |
 | Roadmap errors (duplicate IDs, malformed fields) fail the build; cross-reference issues only warn | Avoids contradictory rules where deleting a paper fails a valid article build |
 | "Today" uses `site.timeZone` (America/Los_Angeles, editable) | Date-only strings compared as strings; display formatting pins UTC so dates never shift |
-| Label "Writing" in nav, routes `/blog`, `/blog/:slug`, `/reading-club` | "Writing" fits a portfolio nav; spec-preferred paths |
+| Label "Blogging" in nav (renamed from "Writing" at Aaron's request), routes `/blog`, `/blog/:slug`, `/reading-club` | Spec-preferred paths; URLs unchanged by the rename |
 | vitest (dev only) for focused tests, separate `vitest.config.js` | Standard for Vite, no test framework existed |
 
 ## Status
@@ -39,16 +38,17 @@ status only.
 - [x] Content libs: dates, posts, roadmap, urls
 - [x] Build plugin: Markdown render, virtual modules, RSS, sitemap, validation
 - [x] Pages: `/blog`, `/blog/:slug`, `/reading-club`; nav item
-- [x] Seed roadmap (8 papers, all backlog), templates, formatting draft, scaffold script
+- [x] Seed roadmap, templates, formatting draft, scaffold script
+- [x] 2026-10-10 revision: roadmap reduced to BERT (session 2026-10-11); "Next session" and "Format" blocks removed at Aaron's request (the page is a notes archive, not a schedule); `findNextSession` deleted
 - [x] Docs: `docs/writing.md`, README link
 - [x] Tests (`npm test`)
 - [x] Build + browser check (see Validation)
 
 ## Validation results (2026-10-10)
 
-- `npm test`: 36 tests pass (tests/roadmap.test.js, tests/content.test.js).
+- `npm test`: 32 tests pass after the revision (36 before) (tests/roadmap.test.js, tests/content.test.js).
   Covers source-order roadmap, add/remove/reorder, relationships preserved on
-  move, next session by date, draft/future exclusion from index, routes, RSS,
+  move, draft/future exclusion from index, routes, RSS,
   sitemap, related posts, and dist assets, removed-paper articles, date
   handling, Markdown output.
 - `npm run build`: passes; `dist/` contains no draft text or draft assets;

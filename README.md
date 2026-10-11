@@ -2,7 +2,7 @@
 
 This repository just contains all the code used to create my page
 
-## Writing and the reading club
+## Blogging and the reading club
 
 Blog articles live in `src/content/blog/` as Markdown, and the ML × Bio Reading Club roadmap lives in `src/content/reading-club/roadmap.js`. See [docs/writing.md](docs/writing.md) for how to write, preview, and publish articles and how to add, remove, or reorder papers.
 

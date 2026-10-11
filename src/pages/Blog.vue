@@ -1,7 +1,7 @@
 <template>
   <section class="section blogScope">
     <header class="blogHead">
-      <h1 class="blogPageTitle">Writing</h1>
+      <h1 class="blogPageTitle">Blogging</h1>
       <p class="blogLede">
         Notes on machine learning and computational biology: technical explanations, project write-ups, paper
         discussions, short implementations, and the occasional reflection. I write to learn, and I hope some of it

@@ -4,7 +4,6 @@
  * Invariants (covered by tests/roadmap.test.js):
  *   - Display order is the order of entries in roadmap.js. Nothing here sorts
  *     the roadmap, and no function reads an array index as meaning.
- *   - The next session is chosen by `sessionDate`, never by position.
  *   - A paper's article link only resolves to a post the caller passes in as
  *     public, so drafts are never linked.
  */
@@ -86,7 +85,7 @@ export function validateRoadmap(papers) {
     }
 
     if (paper.status === "scheduled" && !paper.sessionDate) {
-      warnings.push(`${where} status is "scheduled" but no sessionDate is set, so it will not show as the next session`);
+      warnings.push(`${where} status is "scheduled" but no sessionDate is set`);
     }
     if (!paper.question) warnings.push(`${where} consider adding a "question" (the main learning question)`);
   });
@@ -153,32 +152,6 @@ export function resolvePaperArticle(paper, publicPosts) {
  */
 export function buildRoadmap(papers, publicPosts) {
   return papers.map((paper) => ({ ...paper, article: resolvePaperArticle(paper, publicPosts) }));
-}
-
-/**
- * The earliest paper whose sessionDate is today or later. Ties on date are
- * broken by sessionTime (untimed first). Array position is not consulted
- * except as a final, deterministic tiebreak.
- * @param {object[]} papers
- * @param {string} today "YYYY-MM-DD"
- * @returns {object | null}
- */
-export function findNextSession(papers, today) {
-  return upcomingSessions(papers, today)[0] ?? null;
-}
-
-/** All papers with a sessionDate on or after today, soonest first. */
-export function upcomingSessions(papers, today) {
-  return papers
-    .filter((p) => isIsoDate(p.sessionDate) && p.sessionDate >= today)
-    .map((p, i) => ({ p, i }))
-    .sort(
-      (a, b) =>
-        a.p.sessionDate.localeCompare(b.p.sessionDate) ||
-        (a.p.sessionTime ?? "").localeCompare(b.p.sessionTime ?? "") ||
-        a.i - b.i,
-    )
-    .map(({ p }) => p);
 }
 
 /**

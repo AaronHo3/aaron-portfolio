@@ -5,7 +5,7 @@
     <div v-else-if="meta && body" class="articleLayout" :class="{ withToc: hasToc }">
       <article class="article">
         <header class="articleHead">
-          <RouterLink class="blogBackLink" to="/blog">← All writing</RouterLink>
+          <RouterLink class="blogBackLink" to="/blog">← All posts</RouterLink>
 
           <p v-if="series" class="seriesLine">
             <RouterLink v-if="series.path" class="blogSeriesBadge" :to="series.path">{{ series.label }}</RouterLink>
@@ -74,14 +74,14 @@
 
         <footer class="articleFoot">
           <section v-if="related.length" aria-labelledby="relatedHeading">
-            <h2 id="relatedHeading" class="relatedTitle">Related writing</h2>
+            <h2 id="relatedHeading" class="relatedTitle">Related posts</h2>
             <ul class="relatedList">
               <li v-for="p in related" :key="p.slug">
                 <PostListItem :post="p" :heading-level="3" />
               </li>
             </ul>
           </section>
-          <RouterLink class="blogBackLink" to="/blog">← Back to all writing</RouterLink>
+          <RouterLink class="blogBackLink" to="/blog">← Back to all posts</RouterLink>
         </footer>
       </article>
 
@@ -94,7 +94,7 @@
     <div v-else class="card blogEmpty notFound">
       <h1 class="notFoundTitle">Article not found</h1>
       <p>It may have moved or not been published yet.</p>
-      <p><RouterLink class="btn" to="/blog">Browse all writing</RouterLink></p>
+      <p><RouterLink class="btn" to="/blog">Browse all posts</RouterLink></p>
     </div>
   </section>
 </template>

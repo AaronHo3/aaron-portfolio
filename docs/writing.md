@@ -1,4 +1,4 @@
-# Writing and the ML × Bio Reading Club
+# Blogging and the ML × Bio Reading Club
 
 How to write, preview, and publish articles, and how to manage the reading
 roadmap. Everything is plain files in this repo; there is no admin panel.
@@ -49,7 +49,7 @@ tags: [single-cell, reflection]
 ### Create a reading-club article
 
 ```sh
-npm run new:post -- "U-Net, explained for biologists" --club --paper u-net
+npm run new:post -- "BERT, explained for biologists" --club --paper bert
 ```
 
 `--paper` takes a roadmap `id` and fills in the paper title and link. The
@@ -61,10 +61,10 @@ Reading-club front matter adds:
 
 ```yaml
 series: ml-bio-reading-club
-paperId: u-net                         # roadmap id; links article and paper
-paperTitle: "U-Net: Convolutional Networks for Biomedical Image Segmentation"
-paperUrl: "https://arxiv.org/abs/1505.04597"
-# paperAuthors: "Olaf Ronneberger, Philipp Fischer, Thomas Brox"
+paperId: bert                          # roadmap id; links article and paper
+paperTitle: "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding"
+paperUrl: "https://arxiv.org/abs/1810.04805"
+# paperAuthors: "Jacob Devlin, Ming-Wei Chang, Kenton Lee, Kristina Toutanova"
 # codeUrl: https://github.com/you/notebook     # shown only when set
 # discussionUrl: https://...                    # shown only when set
 ```
@@ -140,7 +140,7 @@ The roadmap is the `papers` array in `src/content/reading-club/roadmap.js`.
 order number to maintain, and nothing is sorted by title, year, status, or
 date. The numbers on the page are computed from the position.
 
-Every entry has a stable `id` (like `u-net`). Never derive it from the title,
+Every entry has a stable `id` (like `bert`). Never derive it from the title,
 and do not change it once an article uses it as `paperId`.
 
 ### Add a paper
@@ -158,7 +158,7 @@ Copy this block, fill it in, and paste it where it belongs in the list
     url: "https://www.science.org/doi/10.1126/science.ade2574",
     question: "What does a protein language model learn about structure from sequence alone?",
     concept: "Protein language models.",
-    prerequisites: ["Transformers (see the transformer entry)", "Basics of protein structure"],
+    prerequisites: ["Transformers (see the BERT entry)", "Basics of protein structure"],
     bioConnection: "Structure prediction and variant-effect scoring from sequence.",
     exercise: "Embed a few protein families and check whether they cluster.",
     topics: ["proteins", "sequences"],
@@ -171,20 +171,20 @@ fields are `id`, `title`, `year`, `url`, and `status`; the rest are optional.
 
 ### Remove a paper
 
-Delete its whole `{ ... },` block. Example: to drop GCN, remove everything
-from the `{` above `id: "gcn",` through the matching `},`.
+Delete its whole `{ ... },` block. Example: to drop BERT, remove everything
+from the `{` above `id: "bert",` through the matching `},`.
 
 Articles about a removed paper are not deleted and keep working. Their page
 shows the paper title and link from their own front matter (`paperTitle`,
 `paperUrl`). The build prints a warning such as
-`article "gcn-notes": paperId "gcn" is not in the roadmap`, but it does not
+`article "bert-notes": paperId "bert" is not in the roadmap`, but it does not
 fail. Delete or update the article's `paperId` if you want to silence it.
 
 ### Reorder papers
 
 Cut a whole entry and paste it at the new position. For example, to read
-Attention Is All You Need first, move the block containing
-`id: "transformer"` to directly after `export const papers = [`.
+a newly added paper before BERT, move the block containing its `id` to
+directly after `export const papers = [`.
 
 Moving an entry keeps its `id`, `status`, `sessionDate`, `sessionTime`, and
 `articleSlug`, because they live inside the entry.
@@ -214,10 +214,9 @@ Add a date (and optionally a time) to the entry. Do not move it:
     status: "scheduled",
 ```
 
-The "Next session" card shows the paper with the earliest `sessionDate` that
-is today or later, wherever it sits in the list. With no future dates, the
-page says no session is scheduled; it never promotes the first backlog paper.
-Remove or update past dates once a session has happened.
+The date shows on that paper's card. Moving the entry keeps its date. After
+the session, change `status` to `discussed` (or `published` once the write-up
+is out).
 
 ### Link an article to a paper
 
