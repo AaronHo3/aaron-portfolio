@@ -40,13 +40,14 @@
 <script setup>
 import { onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import { Home, User, Briefcase, Mail, FileText } from "lucide-vue-next";
+import { Home, User, Briefcase, Mail, FileText, PenLine } from "lucide-vue-next";
 
 const route = useRoute();
 
 const items = [
   { name: "Home", url: "/", icon: Home },
   { name: "Projects", url: "/projects", icon: Briefcase },
+  { name: "Writing", url: "/blog", icon: PenLine },
   { name: "About", url: "/about", icon: User },
   { name: "Contact", url: "/contact", icon: Mail },
 ];
@@ -56,6 +57,7 @@ const resumeHref = `${import.meta.env.BASE_URL}Aaron_Ho_Resume.pdf`;
 function routeToTab(path) {
   if (path === "/" || path === "") return "Home";
   if (path.startsWith("/projects")) return "Projects";
+  if (path.startsWith("/blog") || path.startsWith("/reading-club")) return "Writing";
   if (path.startsWith("/about")) return "About";
   if (path.startsWith("/contact")) return "Contact";
   return "Home";
