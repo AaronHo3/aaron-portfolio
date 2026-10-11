@@ -156,3 +156,5 @@ Validation (refinement pass 2):
   Enter, Escape closes and returns focus.
 - Not reviewed visually this pass: mobile screenshots (covered by the automated overflow checks).
 - Case-study `subtitle` is no longer rendered; it remains in data for search and meta.
+- Contact draft form removed at Aaron's request (redundant with email, LinkedIn, GitHub).
+  `src/lib/mailto.js` and `tests/mailto.test.js` were only used by it and were deleted; tests 32/32.

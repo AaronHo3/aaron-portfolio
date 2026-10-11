@@ -36,52 +36,6 @@
       </ul>
     </section>
 
-    <section class="draft" aria-labelledby="draft-title">
-      <h2 id="draft-title" class="draftTitle">Write a draft here</h2>
-      <p class="muted draftNote">
-        This form does not send anything on its own. It opens a pre-filled draft in your email app, and you send it from
-        there. If you use webmail and nothing opens, copy the address above instead.
-      </p>
-
-      <form class="draftForm" novalidate @submit.prevent="openDraft">
-        <div class="field">
-          <label for="c-name">Your name <span class="optional">(optional)</span></label>
-          <input id="c-name" v-model.trim="name" class="input" type="text" autocomplete="name" />
-        </div>
-        <div class="field">
-          <label for="c-email">Your email <span class="optional">(optional)</span></label>
-          <input
-            id="c-email"
-            v-model.trim="email"
-            class="input"
-            type="email"
-            autocomplete="email"
-            :aria-invalid="emailError ? 'true' : undefined"
-            :aria-describedby="emailError ? 'c-email-error' : undefined"
-          />
-          <p v-if="emailError" id="c-email-error" class="fieldError">{{ emailError }}</p>
-        </div>
-        <div class="field">
-          <label for="c-message">Message</label>
-          <textarea
-            id="c-message"
-            v-model.trim="message"
-            class="input"
-            rows="6"
-            required
-            :aria-invalid="messageError ? 'true' : undefined"
-            :aria-describedby="messageError ? 'c-message-error' : undefined"
-          ></textarea>
-          <p v-if="messageError" id="c-message-error" class="fieldError">{{ messageError }}</p>
-        </div>
-        <div class="formActions">
-          <button class="btn btn-primary" type="submit">Open email draft</button>
-          <p v-if="draftOpened" class="meta" role="status">
-            Your email app should now show the draft. Nothing is sent until you press send there.
-          </p>
-        </div>
-      </form>
-    </section>
   </div>
 </template>
 
@@ -89,16 +43,8 @@
 import { ref } from "vue";
 import { Check, Copy, Mail } from "lucide-vue-next";
 import { profile } from "../data/profile.js";
-import { buildMailto, isPlausibleEmail } from "../lib/mailto.js";
 
 const COPY_RESET_MS = 2500;
-
-const name = ref("");
-const email = ref("");
-const message = ref("");
-const emailError = ref("");
-const messageError = ref("");
-const draftOpened = ref(false);
 
 const copyState = ref("idle");
 const copyMessage = ref("");
@@ -118,21 +64,6 @@ async function copyEmail() {
     copyState.value = "idle";
     copyMessage.value = "";
   }, COPY_RESET_MS);
-}
-
-function openDraft() {
-  emailError.value = email.value && !isPlausibleEmail(email.value) ? "Check this address, or leave it empty." : "";
-  messageError.value = message.value ? "" : "Write a short message first.";
-  if (emailError.value || messageError.value) {
-    document.getElementById(messageError.value && !emailError.value ? "c-message" : "c-email")?.focus();
-    return;
-  }
-  window.location.href = buildMailto(profile.email, {
-    name: name.value,
-    email: email.value,
-    message: message.value,
-  });
-  draftOpened.value = true;
 }
 </script>
 
@@ -192,60 +123,5 @@ function openDraft() {
   align-items: center;
   min-height: 44px;
   font-weight: 650;
-}
-
-.draft {
-  margin-top: var(--space-8);
-  max-width: 640px;
-}
-
-.draftTitle {
-  font-size: var(--fs-h3);
-}
-
-.draftNote {
-  margin-top: var(--space-2);
-}
-
-.draftForm {
-  display: grid;
-  gap: var(--space-5);
-  margin-top: var(--space-5);
-}
-
-.field {
-  display: grid;
-  gap: var(--space-2);
-}
-
-.field label {
-  font-weight: 650;
-  font-size: var(--fs-small);
-}
-
-.optional {
-  font-weight: 400;
-  color: var(--color-text-muted);
-}
-
-textarea.input {
-  resize: vertical;
-  min-height: 140px;
-}
-
-.fieldError {
-  font-size: var(--fs-small);
-  font-weight: 600;
-  color: #b3261e;
-}
-
-:global(html[data-theme="dark"] .fieldError) {
-  color: #f2b8b5;
-}
-
-.formActions {
-  display: grid;
-  gap: var(--space-3);
-  justify-items: start;
 }
 </style>
