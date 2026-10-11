@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-labelledby="t">
+  <title id="t">GutSense pipeline: stool biomarkers feed a neural-net risk score; IRIS vector search over FHIR records and the score feed a clinical narrative</title>
+  <rect width="800" height="450" fill="#e8efeb"/>
+  <g font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" fill="#202723">
+    <g stroke="#176b60" stroke-width="3" fill="#ffffff">
+      <rect x="40" y="95" width="320" height="110" rx="14"/>
+      <rect x="440" y="95" width="320" height="110" rx="14"/>
+      <rect x="40" y="255" width="320" height="110" rx="14"/>
+      <rect x="440" y="255" width="320" height="110" rx="14"/>
+    </g>
+    <g font-size="17" font-weight="700" fill="#176b60" letter-spacing="1.5">
+      <text x="64" y="132">1  SENSE</text><text x="464" y="132">2  SCORE</text>
+      <text x="64" y="292">3  RETRIEVE</text><text x="464" y="292">4  EXPLAIN</text>
+    </g>
+    <g font-size="27" font-weight="700">
+      <text x="64" y="176">8 stool biomarkers</text>
+      <text x="464" y="176">MLP risk, 0 to 100</text>
+      <text x="64" y="336">IRIS search · FHIR</text>
+      <text x="464" y="336">Clinical narrative</text>
+    </g>
+    <g stroke="#176b60" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M368 150 H430 M418 138 L430 150 L418 162"/>
+      <path d="M600 211 V247 M588 235 L600 247 L612 235"/>
+      <path d="M368 310 H430 M418 298 L430 310 L418 322"/>
+    </g>
+  </g>
+</svg>

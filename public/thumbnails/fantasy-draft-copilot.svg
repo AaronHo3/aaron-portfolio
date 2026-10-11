@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-labelledby="t">
+  <title id="t">Categories won per matchup versus a value-order drafting bot: copilot ranking plus 0.53, simulation layer minus 0.32, last season's numbers minus 0.54</title>
+  <rect width="800" height="450" fill="#ebeee4"/>
+  <g font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" fill="#202723">
+    <text x="48" y="64" font-size="22" font-weight="700" fill="#3f4a2c">Categories won per matchup vs. value-order drafting</text>
+    <line x1="470" y1="92" x2="470" y2="372" stroke="#8f977f" stroke-width="2"/>
+    <text x="470" y="404" font-size="18" text-anchor="middle" fill="#59614a">0</text>
+    <text x="48" y="146" font-size="24" font-weight="700">Copilot ranking</text>
+    <rect x="470" y="118" width="159" height="44" fill="#4f7a3a"/>
+    <text x="645" y="151" font-size="28" font-weight="800" fill="#3f4a2c">+0.53</text>
+    <text x="48" y="246" font-size="24" font-weight="700">Simulation layer</text>
+    <rect x="374" y="218" width="96" height="44" fill="#b07d3a"/>
+    <text x="360" y="251" font-size="28" font-weight="800" text-anchor="end" fill="#3f4a2c">−0.32</text>
+    <text x="48" y="346" font-size="24" font-weight="700">Last season's stats</text>
+    <rect x="308" y="318" width="162" height="44" fill="#b4513a"/>
+    <text x="458" y="351" font-size="28" font-weight="800" text-anchor="end" fill="#ffffff">−0.54</text>
+  </g>
+</svg>

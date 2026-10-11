@@ -1,12 +1,27 @@
 /* Article body typography for rendered Markdown (build/markdown.js).
-   Uses theme tokens only, so it follows the site's light/dark settings. */
+   Uses design tokens, so it follows the light/dark theme. */
 
 .prose {
-  max-width: 70ch;
-  font-size: 1.06em;
-  line-height: 1.75;
-  color: color-mix(in srgb, var(--text) 94%, var(--muted));
+  --hl-comment: #5d6762;
+  --hl-keyword: #7432d9;
+  --hl-string: #1d6b2f;
+  --hl-number: #a3480f;
+  --hl-title: #0b5f8a;
+  --hl-meta: #a3266b;
+
+  max-width: var(--w-prose);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
   overflow-wrap: break-word;
+}
+
+html[data-theme="dark"] .prose {
+  --hl-comment: #8f9a95;
+  --hl-keyword: #c8a6ff;
+  --hl-string: #9fdba9;
+  --hl-number: #f5b886;
+  --hl-title: #8fcff0;
+  --hl-meta: #f2a6cf;
 }
 
 .prose > :first-child {
@@ -24,205 +39,200 @@
   margin: 0 0 1.25em;
 }
 
-.prose h2,
-.prose h3,
-.prose h4 {
-  color: var(--text);
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-  scroll-margin-top: 96px;
-}
 .prose h2 {
-  margin: 2em 0 0.6em;
-  font-size: 1.6em;
-}
-.prose h3 {
-  margin: 1.6em 0 0.5em;
-  font-size: 1.25em;
-}
-.prose h4 {
-  margin: 1.4em 0 0.4em;
-  font-family: "Figtree", system-ui, sans-serif;
-  font-size: 1em;
+  margin: 2.2em 0 0.6em;
+  font-size: var(--fs-h2);
 }
 
-.prose a {
-  color: var(--accent);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
+.prose h3 {
+  margin: 1.8em 0 0.5em;
+  font-size: 1.25rem;
 }
-.prose a:hover {
-  text-decoration-thickness: 2px;
+
+.prose h4 {
+  margin: 1.5em 0 0.4em;
+  font-size: 1.0625rem;
 }
 
 .prose strong {
-  color: var(--text);
+  font-weight: 700;
 }
 
 .prose ul,
 .prose ol {
   padding-left: 1.4em;
 }
+
 .prose li + li {
   margin-top: 0.35em;
 }
 
-.prose blockquote {
-  padding: 0.2em 0 0.2em 1.1em;
-  border-left: 3px solid color-mix(in srgb, var(--accent) 60%, var(--border));
-  color: var(--muted);
+.prose li::marker {
+  color: var(--color-accent);
 }
+
+.prose blockquote {
+  padding-left: 1.1em;
+  border-left: 3px solid var(--color-accent);
+  color: var(--color-text-muted);
+}
+
 .prose blockquote p:last-child {
   margin-bottom: 0;
 }
 
 .prose hr {
   border: 0;
-  height: 1px;
-  background: var(--border);
+  border-top: var(--border);
   margin: 2.4em 0;
 }
 
-/* ---- Figures ---- */
+/* Figures may extend beyond the prose column on wide screens */
+.prose figure {
+  margin-block: 1.75em;
+}
+
 .prose img {
   display: block;
   max-width: 100%;
   height: auto;
-  border-radius: var(--r-md);
-}
-.prose figure img {
-  margin: 0 auto;
-  border: 1px solid var(--border);
-}
-.prose figcaption {
-  margin-top: 0.6em;
-  text-align: center;
-  font-size: 0.88em;
-  color: var(--muted);
-  line-height: 1.5;
+  border-radius: var(--radius-md);
 }
 
-/* ---- Inline code ---- */
+.prose figure img {
+  margin-inline: auto;
+  border: var(--border);
+}
+
+.prose figcaption {
+  margin-top: 0.6em;
+  font-size: var(--fs-small);
+  color: var(--color-text-muted);
+  line-height: 1.55;
+}
+
+/* Inline code */
 .prose :not(pre) > code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  padding: 0.1em 0.35em;
+  border-radius: var(--radius-sm);
+  background: var(--color-code-bg);
+  font-family: var(--font-mono);
   font-size: 0.88em;
-  padding: 0.12em 0.4em;
-  border-radius: 6px;
-  background: color-mix(in srgb, var(--bg) 70%, var(--card));
-  border: 1px solid var(--border);
   overflow-wrap: anywhere;
 }
 
-/* ---- Code blocks ---- */
+/* Code blocks */
 .prose .codeBlock {
   position: relative;
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  background: color-mix(in srgb, var(--bg) 82%, black);
+  border: var(--border);
+  border-radius: var(--radius-md);
+  background: var(--color-code-bg);
 }
+
 .prose .codeLang {
   position: absolute;
-  top: 8px;
-  right: 12px;
-  font-size: 11px;
-  font-weight: 850;
-  letter-spacing: 0.06em;
+  top: 0.5rem;
+  right: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--color-text-muted);
   pointer-events: none;
 }
+
 .prose pre {
   margin: 0;
   padding: 1.1em 1.2em;
   overflow-x: auto;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.86em;
   line-height: 1.6;
   tab-size: 4;
 }
+
 .prose pre code {
   white-space: pre;
 }
 
-/* highlight.js tokens, tuned to the site palette */
 .prose .hljs-comment,
 .prose .hljs-quote {
-  color: #8193ad;
+  color: var(--hl-comment);
   font-style: italic;
 }
+
 .prose .hljs-keyword,
 .prose .hljs-selector-tag,
 .prose .hljs-built_in,
 .prose .hljs-literal {
-  color: #c4a7ff;
+  color: var(--hl-keyword);
 }
+
 .prose .hljs-string,
 .prose .hljs-attr,
 .prose .hljs-regexp {
-  color: #86efac;
+  color: var(--hl-string);
 }
+
 .prose .hljs-number,
 .prose .hljs-symbol {
-  color: #fdba74;
+  color: var(--hl-number);
 }
+
 .prose .hljs-title,
 .prose .hljs-title.function_,
 .prose .hljs-section {
-  color: #7dd3fc;
-}
-.prose .hljs-params,
-.prose .hljs-variable,
-.prose .hljs-template-variable {
-  color: var(--text);
-}
-.prose .hljs-meta,
-.prose .hljs-type {
-  color: #f9a8d4;
+  color: var(--hl-title);
 }
 
-/* ---- Tables ---- */
+.prose .hljs-meta,
+.prose .hljs-type {
+  color: var(--hl-meta);
+}
+
+/* Tables */
 .prose .tableWrap {
   overflow-x: auto;
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
+  border: var(--border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
 }
+
 .prose table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.92em;
+  font-size: var(--fs-small);
+  line-height: 1.5;
 }
+
 .prose th,
 .prose td {
   padding: 0.6em 0.9em;
   text-align: left;
-  border-bottom: 1px solid var(--border);
   vertical-align: top;
+  border-bottom: var(--border);
 }
+
 .prose th {
-  color: var(--text);
-  background: color-mix(in srgb, var(--accent-soft) 30%, transparent);
+  background: var(--color-surface-muted);
   white-space: nowrap;
 }
+
 .prose tr:last-child td {
   border-bottom: 0;
 }
 
-/* ---- Math ---- */
+/* Math */
 .prose .mathBlock {
   overflow-x: auto;
   overflow-y: hidden;
   padding: 0.2em 0;
 }
+
 .prose .mathBlock .katex-block {
   margin: 0;
 }
-.prose .katex {
-  font-size: 1.08em;
-}
 
-/* Keyboard-scrollable regions need a visible focus ring */
-.prose [tabindex="0"]:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent);
-  outline-offset: 2px;
+.prose .katex {
+  font-size: 1.06em;
 }

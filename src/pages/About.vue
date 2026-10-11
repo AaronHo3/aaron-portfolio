@@ -1,615 +1,337 @@
 <template>
-  <section class="section aboutPage">
-    <div class="bento">
-      <article class="card card-hero">
-        <div class="heroTop">
-          <div class="heroCopy">
-            <div class="hero-eyebrow">About me</div>
-            <h1 class="hero-name">Aaron<br /><em>Ho.</em></h1>
-            <p class="hero-role">Dog Lover · Curious by nature</p>
-            <p class="hero-bio hero-bio-lead">
-              I’ve always been drawn to understanding how things work, especially complex systems and challenging
-              problems. I enjoy breaking ideas down, learning from different perspectives, and building things that can
-              make a real impact.
-            </p>
-          </div>
-          <div class="heroMedia">
-            <img class="heroPhoto" :src="osakaCastlePhoto" alt="Aaron smiling by Osaka Castle steps" />
-            <p class="heroPhotoCaption">Osaka Castle Dec 2025</p>
-          </div>
-        </div>
-        <p class="hero-bio hero-bio-full">
-          Curiosity, thoughtful problem-solving, and continuous growth are values I try to carry with me in
-          everything I do.
+  <div class="container page about">
+    <!-- Intro -->
+    <section class="intro" aria-labelledby="about-title">
+      <div class="introText">
+        <p class="eyebrow">About me</p>
+        <h1 id="about-title" class="aboutTitle">Aaron Ho</h1>
+        <p class="role">Dog Lover · Curious by nature</p>
+        <p class="lead">
+          I’ve always been drawn to understanding how things work, especially complex systems and challenging
+          problems. I enjoy breaking ideas down, learning from different perspectives, and building things that can
+          make a real impact.
         </p>
-      </article>
+        <p class="introBody">
+          Curiosity, thoughtful problem-solving, and continuous growth are values I try to carry with me in everything
+          I do.
+        </p>
+        <p class="availability">
+          <span class="dot" aria-hidden="true"></span>
+          <span><strong>Currently available.</strong> Open to full-time roles &amp; collaborations.</span>
+        </p>
+      </div>
+      <figure class="photo introPhoto">
+        <img :src="osakaCastlePhoto" alt="Aaron smiling on the steps in front of Osaka Castle" width="1024" height="1536" fetchpriority="high" />
+        <figcaption>Osaka Castle, December 2025</figcaption>
+      </figure>
+    </section>
 
-      <article class="card card-status card-green">
-        <div class="status-indicator">
-          <div class="dot"></div>
-          <span class="status-label">Currently available</span>
-        </div>
-        <div class="status-detail">Open to full-time roles &amp; collaborations</div>
-      </article>
-
-      <article class="card card-approach">
-        <div class="card-label">Currently Exploring</div>
-        <div class="card-title explore-title">Focus areas right now.</div>
-        <ul class="explore-list">
+    <!-- Focus and values -->
+    <section class="section twoCol" aria-label="Focus and values">
+      <div>
+        <h2 class="colTitle">Focus areas right now</h2>
+        <p class="muted colIntro">What I am currently exploring.</p>
+        <ul class="plainList">
           <li>Personalized/Precision Medicine</li>
           <li>Digital Twins</li>
           <li>Disease Diagnosis and Prognostics</li>
           <li>AI-Assisted Robotic Surgery</li>
         </ul>
-      </article>
+      </div>
+      <div>
+        <h2 class="colTitle">What I value</h2>
+        <p class="muted colIntro">Principles that guide the work.</p>
+        <p class="values">Ownership, clarity, craft, honesty, curiosity, and growth.</p>
+        <blockquote class="quote">
+          <p>“Motivation forgives mistakes, hesitation charges interest.”</p>
+          <footer class="meta">A guiding thought, and a personal favourite</footer>
+        </blockquote>
+      </div>
+    </section>
 
-      <article class="card card-values card-warm">
-        <div class="card-label">What I Value</div>
-        <div class="card-title">Principles that guide the work.</div>
-        <div class="value-tags">
-          <span class="value-tag">Ownership</span>
-          <span class="value-tag">Clarity</span>
-          <span class="value-tag">Craft</span>
-          <span class="value-tag">Honesty</span>
-          <span class="value-tag">Curiosity</span>
-          <span class="value-tag">Growth</span>
-        </div>
-      </article>
+    <!-- Background -->
+    <section class="section" aria-labelledby="background-title">
+      <div class="section-head">
+        <h2 id="background-title">Background</h2>
+        <a class="text-link" :href="resumeHref" target="_blank" rel="noopener">
+          Full resume (PDF)<span class="visually-hidden"> opens in a new tab</span> <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+      <ol class="timeline">
+        <li v-for="job in experience" :key="job.org + job.dates">
+          <p class="meta">{{ job.dates }}</p>
+          <div>
+            <h3 class="tlRole">{{ job.role }}</h3>
+            <p class="tlOrg">{{ [job.org, job.unit].filter(Boolean).join(" · ") }}</p>
+            <p v-if="job.summary" class="tlSummary">{{ job.summary }}</p>
+          </div>
+        </li>
+      </ol>
+      <h3 class="eduHeading eyebrow">Education</h3>
+      <ul class="eduList">
+        <li v-for="ed in education" :key="ed.school">
+          <p class="tlRole">{{ ed.degree }}</p>
+          <p class="tlOrg">{{ ed.school }}</p>
+          <p class="tlSummary">{{ ed.detail }}</p>
+        </li>
+      </ul>
+    </section>
 
-      <article class="card card-photo card-photo-main">
-        <div class="card-label">What I Love</div>
-        <img class="photoMainImg" :src="momoPhoto" alt="Momo the dog" />
-        <p class="photoCaption">Momo</p>
-      </article>
-
-      <article class="card card-fivetonine card-dark">
-        <div class="card-label">My "5-9"</div>
-        <div class="card-title">Beyond the screen.</div>
-        <p class="card-body">
-          Away from the computer, I recharge through volleyball, time outdoors, and training in the gym. I’m always
-          on the lookout for new music and new experiences, and I value spending time with people who challenge me to
-          grow and broaden my perspective.
+    <!-- Beyond the screen -->
+    <section class="section beyond" aria-labelledby="beyond-title">
+      <div class="beyondText">
+        <p class="eyebrow">My “5-9”</p>
+        <h2 id="beyond-title">Beyond the screen</h2>
+        <p>
+          Away from the computer, I recharge through volleyball, time outdoors, and training in the gym. I’m always on
+          the lookout for new music and new experiences, and I value spending time with people who challenge me to grow
+          and broaden my perspective.
         </p>
-      </article>
-
-      <article class="card card-quote card-accent">
-        <div class="card-label">A guiding thought</div>
-        <p class="big-quote">"Motivation forgives mistakes, hesitation charges interest."</p>
-        <p class="quote-attr">A personal favourite</p>
-      </article>
-
-      <article class="card card-photo card-photo-placeholder">
-        <img class="photoAltImg" :src="sequoiaPhoto" alt="Sequoia National Park" />
-        <p class="photoCaption">Sequoia National Park June 2025</p>
-      </article>
-
-    </div>
-  </section>
+      </div>
+      <figure class="photo momo">
+        <img :src="momoPhoto" alt="Momo, a curly brown dog in an orange harness, sitting and smiling" width="1024" height="1536" loading="lazy" />
+        <figcaption>Momo, what I love</figcaption>
+      </figure>
+      <figure class="photo sequoia">
+        <img :src="sequoiaPhoto" alt="A group of people sitting inside a huge fallen sequoia trunk in a green forest" width="1200" height="900" loading="lazy" />
+        <figcaption>Sequoia National Park, June 2025</figcaption>
+      </figure>
+    </section>
+  </div>
 </template>
 
 <script setup>
 import momoPhoto from "../assets/momo.webp";
 import osakaCastlePhoto from "../assets/osaka-castle-steps.webp";
 import sequoiaPhoto from "../assets/sequoia-national-park.webp";
+import { education, experience, profile } from "../data/profile.js";
+
+const resumeHref = `${import.meta.env.BASE_URL}${profile.resumePath}`;
 </script>
 
 <style scoped>
-.aboutPage {
-  margin-top: 14px;
-  --page-bg: color-mix(in srgb, var(--bg) 94%, var(--bg-elev));
-  --card-base: color-mix(in srgb, var(--card) 92%, var(--bg-elev));
-  --card-ice: color-mix(in srgb, var(--accent) 16%, var(--card));
-  --card-mist: color-mix(in srgb, var(--accent-2) 12%, var(--card));
-  --card-soft: color-mix(in srgb, var(--accent) 10%, var(--bg));
-  --card-dark: color-mix(in srgb, var(--bg) 84%, #060b16);
-  --card-accent: linear-gradient(
-    145deg,
-    color-mix(in srgb, var(--accent-2) 40%, #12223f),
-    color-mix(in srgb, var(--accent) 34%, #0a162b)
-  );
-  --text-ink: var(--text);
-  --text-muted: var(--muted);
-  --accent-main: var(--accent);
-  --accent-soft: color-mix(in srgb, var(--accent) 18%, var(--bg-elev));
-  --border-soft: color-mix(in srgb, var(--border) 70%, var(--accent) 30%);
-}
-
-.bento {
-  max-width: 1200px;
-  margin: 0 auto;
-  background: var(--page-bg);
-  border: 1px solid color-mix(in srgb, var(--border-soft) 86%, var(--bg-elev));
-  border-radius: 22px;
-  padding: 18px;
+.intro {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 18px;
-}
-
-.card {
-  background: var(--card-base);
-  border-radius: 20px;
-  padding: 40px;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  font-family: "Figtree", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  color: var(--text-ink);
-}
-
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 20px 60px color-mix(in srgb, var(--accent-main) 22%, transparent);
-}
-
-.card-dark {
-  background: var(--card-dark);
-  color: color-mix(in srgb, var(--text-ink) 92%, white);
-}
-
-.card-accent {
-  background: var(--card-accent);
-  color: color-mix(in srgb, var(--text-ink) 88%, white);
-}
-
-.card-warm {
-  background: var(--card-soft);
-}
-
-.card-green {
-  background: var(--card-ice);
-}
-
-.card-hero {
-  background: var(--card-mist);
-  padding: 30px 30px 28px;
-}
-
-.heroTop {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 250px;
-  column-gap: 18px;
-  align-items: start;
-}
-
-.heroCopy {
-  min-width: 0;
-  position: relative;
-  z-index: 2;
-  top: 0;
-}
-
-.card-approach {
-  background:
-    radial-gradient(circle at 92% 12%, color-mix(in srgb, var(--accent-main) 20%, transparent), transparent 38%),
-    color-mix(in srgb, var(--card-base) 94%, var(--card-ice));
-  border: 1px solid color-mix(in srgb, var(--accent-main) 22%, var(--border-soft));
-}
-
-.card-values {
-  background: var(--card-soft);
-}
-
-.card-hero {
-  grid-column: 1 / span 7;
-  grid-row: 1 / span 2;
-}
-
-.card-status {
-  grid-column: 8 / span 5;
-  grid-row: 1;
-}
-
-.card-approach {
-  grid-column: 8 / span 5;
-  grid-row: 2;
-}
-
-.card-values {
-  grid-column: 1 / span 4;
-  grid-row: 3;
-}
-
-.card-quote {
-  grid-column: 1 / span 6;
-  grid-row: 4;
-}
-
-.card-fivetonine {
-  grid-column: 9 / span 4;
-  grid-row: 3;
-}
-
-.card-photo-main {
-  grid-column: 5 / span 4;
-  grid-row: 3;
-  padding: 14px;
-}
-
-.card-photo-placeholder {
-  grid-column: 7 / span 6;
-  grid-row: 4;
-}
-
-.hero-eyebrow {
-  font-size: 11px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--accent-main);
-  margin-bottom: 10px;
-  font-weight: 500;
-}
-
-.hero-name {
-  font-family: "Fraunces", Georgia, "Times New Roman", serif;
-  font-size: 64px;
-  line-height: 1;
-  letter-spacing: -2px;
-  margin-bottom: 8px;
-}
-
-.hero-name em {
-  font-style: normal;
-  color: var(--accent-main);
-}
-
-.hero-role {
-  font-size: 15px;
-  color: var(--text-muted);
-  margin-bottom: 12px;
-  font-weight: 300;
-}
-
-.hero-bio {
-  font-size: 15px;
-  line-height: 1.75;
-  color: color-mix(in srgb, var(--text-ink) 80%, var(--text-muted));
-  max-width: 64ch;
-}
-
-.hero-bio-lead {
-  margin-bottom: 0;
-}
-
-.hero-bio-full {
-  max-width: 72ch;
-  margin-top: 10px;
-}
-
-.heroMedia {
-  width: 250px;
-  position: relative;
-  margin: 46px 0 0;
-  z-index: 2;
-}
-
-.heroPhoto {
-  width: 100%;
-  min-height: 320px;
-  aspect-ratio: 4 / 5;
-  border-radius: 12px;
-  object-fit: cover;
-  border: 1px solid color-mix(in srgb, var(--accent-main) 34%, var(--border-soft));
-  background: color-mix(in srgb, var(--accent-main) 12%, var(--card-base));
-  box-shadow: 0 18px 30px color-mix(in srgb, var(--accent-main) 20%, transparent);
-}
-
-.heroPhotoCaption {
-  margin: 8px 4px 0;
-  text-align: center;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--text-muted) 84%, var(--text-ink));
-}
-
-.status-indicator {
-  display: flex;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: var(--space-8);
   align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
+}
+
+.aboutTitle {
+  margin-top: var(--space-2);
+  font-size: var(--fs-hero);
+  line-height: 1.02;
+}
+
+.role {
+  margin: var(--space-3) 0 var(--space-5);
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.introBody {
+  margin-top: var(--space-4);
+  max-width: 60ch;
+}
+
+.availability {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: var(--border);
 }
 
 .dot {
-  width: 8px;
-  height: 8px;
+  flex: none;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  background: var(--accent-main);
-  animation: pulse 2s ease-in-out infinite;
+  background: var(--color-accent);
+  transform: translateY(-1px);
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-main) 40%, transparent); }
-  50% { opacity: 0.8; box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent-main) 0%, transparent); }
+/* Photos share one treatment: rounded, captioned, fixed aspect ratios */
+.photo {
+  margin: 0;
 }
 
-.status-label {
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  color: color-mix(in srgb, var(--text-ink) 88%, var(--text-muted));
+.photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
+  object-fit: cover;
 }
 
-.status-detail {
-  font-size: 22px;
-  font-family: "Fraunces", Georgia, "Times New Roman", serif;
-  line-height: 1.3;
+.photo figcaption {
+  margin-top: var(--space-2);
+  font-size: var(--fs-meta);
+  color: var(--color-text-muted);
 }
 
-.card-label {
-  font-size: 12px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 16px;
-  font-weight: 500;
+.introPhoto img {
+  aspect-ratio: 4 / 5;
+  object-position: center 30%;
 }
 
-.card-dark .card-label {
-  color: color-mix(in srgb, var(--text-muted) 75%, #9ca3af);
+/* Focus and values */
+.twoCol {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: var(--border);
 }
 
-.card-accent .card-label {
-  color: color-mix(in srgb, var(--text-ink) 56%, #b5c8ee);
+.colTitle {
+  font-size: var(--fs-h3);
 }
 
-.card-title {
-  font-family: "Fraunces", Georgia, "Times New Roman", serif;
-  font-size: 30px;
-  line-height: 1.2;
-  margin-bottom: 14px;
-  letter-spacing: -0.5px;
+.colIntro {
+  margin: var(--space-2) 0 var(--space-4);
 }
 
-.card-dark .card-title {
-  color: color-mix(in srgb, var(--text-ink) 92%, white);
-}
-
-.card-accent .card-title {
-  color: color-mix(in srgb, var(--text-ink) 92%, white);
-}
-
-.card-body {
-  font-size: 13px;
-  line-height: 1.7;
-  color: color-mix(in srgb, var(--text-ink) 72%, var(--text-muted));
-}
-
-.explore-list {
+.plainList {
   margin: 0;
   padding: 0;
   list-style: none;
-  display: grid;
-  gap: 10px;
 }
 
-.explore-title {
-  margin-bottom: 16px;
-}
-
-.explore-list li {
-  position: relative;
-  padding: 10px 12px 10px 34px;
-  border-radius: 12px;
-  border: 1px solid color-mix(in srgb, var(--accent-main) 26%, var(--border-soft));
-  background: color-mix(in srgb, var(--accent-main) 9%, var(--card-base));
-  color: color-mix(in srgb, var(--text-ink) 86%, var(--text-muted));
-  font-size: 16px;
+.plainList li {
+  padding: var(--space-3) 0;
+  border-bottom: var(--border);
   font-weight: 600;
+}
+
+.values {
+  font-family: var(--font-serif);
+  font-size: var(--fs-lead);
+  line-height: 1.45;
+}
+
+.quote {
+  margin: var(--space-6) 0 0;
+  padding-left: var(--space-5);
+  border-left: 3px solid var(--color-accent);
+}
+
+.quote p {
+  font-family: var(--font-serif);
+  font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  font-style: italic;
   line-height: 1.35;
 }
 
-.explore-list li::before {
-  content: "";
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  width: 12px;
-  height: 12px;
-  border-radius: 999px;
-  transform: translateY(-50%);
-  background: linear-gradient(145deg, var(--accent-main), var(--accent-2));
-  box-shadow: 0 0 14px color-mix(in srgb, var(--accent-main) 35%, transparent);
+.quote footer {
+  margin-top: var(--space-2);
 }
 
-.card-dark .card-body {
-  color: color-mix(in srgb, var(--text-muted) 88%, #b9c5d9);
+/* Background */
+.timeline {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: var(--border);
 }
 
-.card-accent .card-body {
-  color: color-mix(in srgb, var(--text-ink) 76%, #b8c9e5);
-}
-
-.card-quote {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-}
-
-.card-quote .card-label,
-.card-quote .quote-attr {
-  text-align: center;
-}
-
-.value-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 18px;
-}
-
-.value-tag {
-  padding: 9px 16px;
-  background: color-mix(in srgb, var(--accent-main) 18%, var(--card-base));
-  color: color-mix(in srgb, var(--accent-main) 72%, var(--text-ink));
-  border-radius: 100px;
-  font-size: 16px;
-  font-weight: 650;
-  line-height: 1;
-}
-
-.big-quote {
-  font-family: "Fraunces", Georgia, "Times New Roman", serif;
-  font-style: italic;
-  font-size: clamp(24px, 2.35vw, 34px);
-  line-height: 1.34;
-  color: color-mix(in srgb, var(--text-ink) 90%, white);
-  margin: 8px 0 16px;
-}
-
-.quote-attr {
-  font-size: 11px;
-  color: color-mix(in srgb, #a7bbdd 74%, var(--text-ink));
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.card-photo {
-  background: color-mix(in srgb, var(--accent-main) 9%, var(--card-base));
-}
-
-.card-photo img {
-  width: 100%;
-  height: 100%;
-  min-height: 260px;
-  max-height: 340px;
-  object-fit: cover;
-  border-radius: 14px;
-  border: 1px solid color-mix(in srgb, var(--border-soft) 88%, var(--bg-elev));
-}
-
-.card-photo-main {
-  display: flex;
-  flex-direction: column;
-}
-
-.photoMainImg {
-  min-height: 0;
-  max-height: none;
-  aspect-ratio: 4 / 5;
-  object-fit: contain;
-  object-position: center;
-  padding: 12px;
-  background: color-mix(in srgb, var(--card-base) 92%, var(--bg-elev));
-  transform: none;
-}
-
-.photoCaption {
-  margin: 10px 4px 0;
-  text-align: center;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--text-muted) 84%, var(--text-ink));
-}
-
-.photoAltImg {
-  object-position: center;
-  transform: scale(1.07);
-  transform-origin: center;
-}
-
-.photoPlaceholder {
-  min-height: 260px;
-  border-radius: 14px;
-  border: 1px dashed color-mix(in srgb, var(--accent-main) 40%, var(--border-soft));
-  background: color-mix(in srgb, var(--accent-main) 10%, var(--card-base));
+.timeline li {
   display: grid;
-  place-items: center;
-  text-align: center;
-  color: color-mix(in srgb, var(--text-ink) 74%, var(--text-muted));
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  padding: 14px;
-  gap: 8px;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: var(--space-5);
+  padding: var(--space-5) 0;
+  border-bottom: var(--border);
 }
 
-.photoPlaceholder strong {
-  font-size: 14px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+.timeline .meta {
+  padding-top: 3px;
 }
 
-.photoPlaceholder span {
-  font-size: 12px;
-  color: color-mix(in srgb, var(--text-ink) 68%, var(--text-muted));
+.tlRole {
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  font-weight: 700;
 }
 
-@media (max-width: 1100px) {
-  .bento {
-    grid-template-columns: repeat(6, 1fr);
-  }
+.tlOrg {
+  color: var(--color-text-muted);
+  font-size: var(--fs-small);
+}
 
-  .card-hero {
-    grid-column: span 6;
-    grid-row: span 2;
-  }
+.tlSummary {
+  margin-top: var(--space-2);
+  max-width: var(--w-prose);
+}
 
-  .card-status,
-  .card-approach {
-    grid-column: span 6;
-    grid-row: auto;
-  }
+.eduHeading {
+  margin: var(--space-7) 0 var(--space-4);
+  font-size: var(--fs-meta);
+}
 
-  .card-values,
-  .card-quote,
-  .card-fivetonine,
-  .card-photo-main,
-  .card-photo-placeholder {
-    grid-column: span 3;
-    grid-row: auto;
+.eduList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Beyond the screen: text, then two photos at their natural shapes */
+.beyond {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.7fr) minmax(0, 1.2fr);
+  gap: var(--space-6);
+  align-items: start;
+  padding-top: var(--space-6);
+  border-top: var(--border);
+}
+
+.beyondText {
+  align-self: start;
+}
+
+.beyondText h2 {
+  margin: var(--space-2) 0 var(--space-4);
+}
+
+.momo img {
+  aspect-ratio: 3 / 4;
+}
+
+.sequoia img {
+  aspect-ratio: 4 / 3;
+}
+
+@media (max-width: 960px) {
+  .beyond {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .beyondText {
+    grid-column: 1 / -1;
   }
 }
 
-@media (max-width: 820px) {
-  .bento {
+@media (max-width: 760px) {
+  .intro,
+  .twoCol,
+  .eduList {
     grid-template-columns: 1fr;
-    padding: 10px;
-    gap: 12px;
+    gap: var(--space-6);
   }
-
-  .card-status,
-  .card-approach,
-  .card-values,
-  .card-quote,
-  .card-fivetonine,
-  .card-photo-main,
-  .card-photo-placeholder {
-    grid-column: 1;
-    grid-row: auto;
+  .introPhoto {
+    max-width: 360px;
   }
-
-  .card {
-    padding: 24px;
-  }
-
-  .hero-name {
-    font-size: 52px;
-  }
-
-  .heroMedia {
-    width: min(280px, 100%);
-    margin: 0;
-  }
-
-  .heroTop {
+  .timeline li {
     grid-template-columns: 1fr;
-    row-gap: 10px;
+    gap: var(--space-1);
   }
+}
 
-  .heroCopy {
-    max-width: 100%;
-  }
-
-  .heroMedia {
-    position: static;
-  }
-
-  .card-hero {
-    padding-right: 24px;
+@media (max-width: 520px) {
+  .beyond {
+    grid-template-columns: 1fr;
   }
 }
 </style>

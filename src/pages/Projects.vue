@@ -1,456 +1,234 @@
 <template>
-  <section class="section">
-    <div class="head">
-      <h2 class="sectionTitle">Projects</h2>
-      <div class="headControls">
-        <div class="viewToggle">
-          <button
-            class="viewBtn"
-            :class="{ active: viewMode === 'stack' }"
-            @click="viewMode = 'stack'"
-            aria-label="Stack view"
-          >
-            <Layers :size="16" />
+  <div class="container page">
+    <header class="pageHead">
+      <h1 class="page-title">Projects</h1>
+      <p class="lead">
+        Here are some of the things I've been working on, from clinical ML and brain-computer interfaces to music
+        and a fantasy basketball side project. Each one has a short write-up of what I built and what I learned.
+      </p>
+    </header>
+
+    <form class="controls" role="search" aria-label="Filter projects" @submit.prevent>
+      <div class="field searchField">
+        <label for="project-search">Search</label>
+        <input id="project-search" v-model="query" class="input" type="search" placeholder="Title, method, tool…" />
+      </div>
+      <div class="field">
+        <label for="project-category">Category</label>
+        <select id="project-category" v-model="category" class="input">
+          <option value="">All categories</option>
+          <option v-for="c in categories" :key="c" :value="c">{{ c }}</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="project-language">Language</label>
+        <select id="project-language" v-model="language" class="input">
+          <option value="">All languages</option>
+          <option v-for="l in languages" :key="l" :value="l">{{ l }}</option>
+        </select>
+      </div>
+      <fieldset class="field viewField">
+        <legend>View</legend>
+        <div class="segmented">
+          <button type="button" :aria-pressed="view === 'grid'" @click="view = 'grid'">
+            <LayoutGrid :size="16" aria-hidden="true" /> Grid
           </button>
-          <button
-            class="viewBtn"
-            :class="{ active: viewMode === 'grid' }"
-            @click="viewMode = 'grid'"
-            aria-label="Grid view"
-          >
-            <LayoutGrid :size="16" />
+          <button type="button" :aria-pressed="view === 'list'" @click="view = 'list'">
+            <List :size="16" aria-hidden="true" /> List
           </button>
         </div>
-        <input v-model="q" class="input" placeholder="Search…" />
-      </div>
+      </fieldset>
+    </form>
+
+    <div class="resultBar">
+      <p class="meta" aria-live="polite">
+        {{ filtered.length }} of {{ visible.length }} {{ visible.length === 1 ? "project" : "projects" }}
+      </p>
+      <button v-if="isFiltered" type="button" class="btn btn-sm" @click="reset">Reset filters</button>
     </div>
 
-    <div class="filterGroup">
-      <p class="filterLabel">Project Category</p>
-      <div class="chips">
-        <button class="chip" :class="{ active: modelType === 'All' }" @click="modelType = 'All'">All</button>
-        <button
-          v-for="m in modelTypes"
-          :key="m"
-          class="chip"
-          :class="{ active: modelType === m }"
-          @click="modelType = m"
-        >
-          {{ m }}
-        </button>
-      </div>
-    </div>
+    <ul v-if="filtered.length" class="projectGrid" :class="view">
+      <li v-for="(p, i) in filtered" :key="p.slug">
+        <ProjectCard :project="p" :heading-level="2" :layout="view" :eager="i < 2" />
+      </li>
+    </ul>
 
-    <div class="filterGroup">
-      <p class="filterLabel">Language</p>
-      <div class="chips">
-        <button class="chip" :class="{ active: language === 'All' }" @click="language = 'All'">All</button>
-        <button
-          v-for="l in languages"
-          :key="l"
-          class="chip"
-          :class="{ active: language === l }"
-          @click="language = l"
-        >
-          {{ l }}
-        </button>
-      </div>
+    <div v-else class="empty">
+      <p><strong>No projects match these filters.</strong></p>
+      <p class="muted">Try a broader search term, or reset the filters to see all {{ visible.length }} projects.</p>
+      <button type="button" class="btn btn-sm" @click="reset">Reset filters</button>
     </div>
-
-    <!-- Display Cards (Stack) View -->
-    <div v-if="viewMode === 'stack'" class="stackView">
-      <div class="displayCardsStack">
-        <component
-          :is="cardComponent(p)"
-          v-for="(p, idx) in filtered"
-          :key="p.slug"
-          class="displayCard"
-          :class="[`dc${idx}`, { locked: p.underConstruction }]"
-          :style="cardStackStyle(idx)"
-          v-bind="cardProps(p)"
-        >
-          <div class="dcTop">
-            <span class="dcIconWrap" :style="{ '--tone': projectTone(p) }">
-              <component :is="projectIcon(p.slug)" class="dcIcon" />
-            </span>
-            <p class="dcType" :style="{ color: projectTone(p) }">{{ p.tags?.[0] || 'Project' }}</p>
-          </div>
-          <p class="dcTitle">{{ p.title }}</p>
-          <p class="dcSub">{{ p.subtitle }}</p>
-          <p v-if="p.underConstruction" class="dcConstruction">Under construction</p>
-        </component>
-      </div>
-    </div>
-
-    <!-- Grid View (original) -->
-    <div v-else class="grid">
-      <ProjectCard v-for="p in filtered" :key="p.slug" :project="p" />
-    </div>
-  </section>
+  </div>
 </template>
 
 <script setup>
 import { computed, ref } from "vue";
-import { RouterLink } from "vue-router";
-import {
-  Activity,
-  AudioLines,
-  BrainCircuit,
-  ChartScatter,
-  FlaskConical,
-  Heart,
-  Layers,
-  LayoutGrid,
-  ScanSearch,
-} from "lucide-vue-next";
-import { projects } from "../data/projects";
+import { LayoutGrid, List } from "lucide-vue-next";
 import ProjectCard from "../components/ProjectCard.vue";
+import { projects } from "../data/projects";
 
-const q = ref("");
-const modelType = ref("All");
-const language = ref("All");
-const viewMode = ref("grid");
+const query = ref("");
+const category = ref("");
+const language = ref("");
+const view = ref("grid");
 
-const allowedModelTypes = [
-  "Healthcare AI",
-  "Neuroscience",
-  "Generative AI",
-];
+// Finished work first, in-progress last (stable sort keeps file order within groups).
+const visible = projects
+  .filter((p) => !p.hidden)
+  .sort((a, b) => Number(Boolean(a.inProgress)) - Number(Boolean(b.inProgress)));
 
-const modelTypes = computed(() => allowedModelTypes);
+/** Unique, sorted values across visible projects, so new projects need no UI edits. */
+const uniqueSorted = (pick) => [...new Set(visible.flatMap(pick))].sort((a, b) => a.localeCompare(b));
+// Category = each project's primary modelType; filtering still matches any of its modelTypes.
+const categories = uniqueSorted((p) => (p.modelTypes?.length ? [p.modelTypes[0]] : []));
+const languages = uniqueSorted((p) => p.languages || []);
 
-const languages = computed(() => {
-  const s = new Set();
-  for (const p of projects) for (const l of p.languages || []) s.add(l);
-  return Array.from(s).sort();
-});
+function searchText(p) {
+  return [p.title, p.displayTitle, p.subtitle, p.cardSummary, ...(p.tags || []), ...(p.modelTypes || []), ...(p.languages || []), ...(p.stack || [])]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}
 
 const filtered = computed(() => {
-  const query = q.value.trim().toLowerCase();
-
-  return projects
-    .filter((p) => {
-      const matchesQuery =
-        !query ||
-        (p.title
-          + " "
-          + p.subtitle
-          + " "
-          + p.tags.join(" ")
-          + " "
-          + (p.modelTypes || []).join(" ")
-          + " "
-          + (p.languages || []).join(" ")
-          + " "
-          + p.stack.join(" "))
-          .toLowerCase()
-          .includes(query);
-
-      const matchesModelType = modelType.value === "All" || (p.modelTypes || []).includes(modelType.value);
-      const matchesLanguage = language.value === "All" || (p.languages || []).includes(language.value);
-
-      return !p.hidden && matchesQuery && matchesModelType && matchesLanguage;
-    })
-    // Finished work first, in-progress last (stable sort preserves order within groups)
-    .sort((a, b) => Number(Boolean(a.inProgress)) - Number(Boolean(b.inProgress)));
+  const q = query.value.trim().toLowerCase();
+  return visible.filter(
+    (p) =>
+      (!q || searchText(p).includes(q)) &&
+      (!category.value || (p.modelTypes || []).includes(category.value)) &&
+      (!language.value || (p.languages || []).includes(language.value)),
+  );
 });
 
-/* ---- Icon / tone helpers ---- */
-const iconBySlug = {
-  "gutsense-crc-screening": FlaskConical,
-  "eeg-seizure-classification": BrainCircuit,
-  "luna16-nodule-segmentation": ScanSearch,
-  "chest-cancer-efficientnet-deit-smallvit": ScanSearch,
-  "imagined-handwriting-decoding": Activity,
-  "uci-heart-disease-ml": Heart,
-  "score-the-story-live-scoring": AudioLines,
-};
+const isFiltered = computed(() => Boolean(query.value.trim() || category.value || language.value));
 
-const toneByTag = {
-  "Healthcare AI": "#38bdf8",
-  "Medical Imaging": "#6366f1",
-  Neuroscience: "#818cf8",
-  "Generative AI": "#a855f7",
-  Hackathon: "#10b981",
-  Miscellaneous: "#64748b",
-};
-
-function projectIcon(slug) {
-  return iconBySlug[slug] || ChartScatter;
-}
-
-function projectTone(project) {
-  const match = project.tags.find((t) => toneByTag[t]);
-  return match ? toneByTag[match] : "var(--accent)";
-}
-
-function cardComponent(project) {
-  return project.underConstruction ? "article" : RouterLink;
-}
-
-function cardProps(project) {
-  return project.underConstruction ? {} : { to: `/projects/${project.slug}` };
-}
-
-function cardStackStyle(idx) {
-  const xOffset = idx * 18;
-  const yOffset = idx * 30;
-  return {
-    "--stack-x": `${xOffset}px`,
-    "--stack-y": `${yOffset}px`,
-    zIndex: idx + 1,
-  };
+function reset() {
+  query.value = "";
+  category.value = "";
+  language.value = "";
 }
 </script>
 
 <style scoped>
-.head {
+.pageHead .lead {
+  margin-top: var(--space-4);
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) repeat(2, minmax(0, 1fr)) auto;
+  gap: var(--space-4);
+  align-items: end;
+  margin-top: var(--space-7);
+  padding-bottom: var(--space-5);
+  border-bottom: var(--border);
+}
+
+.field {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.field label,
+.field legend {
+  padding: 0;
+  font-size: var(--fs-meta);
+  font-weight: 650;
+  color: var(--color-text-muted);
+}
+
+.segmented {
+  display: inline-flex;
+  border: 1px solid var(--color-control-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.segmented button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 42px;
+  padding: 0 var(--space-4);
+  border: 0;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font: inherit;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.segmented button + button {
+  border-left: 1px solid var(--color-control-border);
+}
+
+.segmented button[aria-pressed="true"] {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.segmented button:focus-visible {
+  outline-offset: -3px;
+}
+
+.resultBar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
-  flex-wrap: wrap;
+  gap: var(--space-4);
+  min-height: 44px;
+  margin: var(--space-4) 0 var(--space-5);
 }
 
-.headControls {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.head :deep(.input) {
-  min-width: min(260px, 100%);
-}
-
-.viewToggle {
-  display: flex;
-  border: 1px solid var(--border);
-  border-radius: var(--r-pill);
-  overflow: hidden;
-}
-
-.viewBtn {
+.projectGrid {
   display: grid;
-  place-items: center;
-  padding: 7px 10px;
-  border: none;
-  background: color-mix(in srgb, var(--card) 90%, var(--bg-elev));
-  color: var(--muted);
-  cursor: pointer;
-  transition: color 160ms ease, background 160ms ease;
-}
-
-.viewBtn:first-child {
-  border-right: 1px solid var(--border);
-}
-
-.viewBtn:hover {
-  color: var(--text);
-}
-
-.viewBtn.active {
-  color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 18%, var(--bg-elev));
-}
-
-.filterGroup {
-  margin-top: 12px;
-  width: 100%;
-}
-
-.filterLabel {
-  margin: 0 0 8px;
-  color: var(--muted);
-  font-weight: 800;
-  font-size: 13px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 14px;
-  margin-top: 14px;
-}
-
-.chips {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6);
   margin: 0;
-  width: 100%;
+  padding: 0;
+  list-style: none;
 }
 
-.chip {
-  border: 1px solid var(--border);
-  background: color-mix(in srgb, var(--card) 90%, var(--bg-elev));
-  color: var(--muted);
-  padding: 8px 12px;
-  border-radius: var(--r-pill);
-  font-weight: 900;
-  cursor: pointer;
-  transition: transform 160ms ease, box-shadow 160ms ease, color 160ms ease;
+.projectGrid.list {
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
 }
 
-.chip:hover {
-  transform: translateY(-2px);
-  border-color: color-mix(in srgb, var(--accent) 34%, var(--border));
-  box-shadow: 0 10px 22px color-mix(in srgb, var(--accent) 18%, transparent);
-  color: var(--text);
-}
-
-.chip.active {
-  color: var(--text);
-  border-color: color-mix(in srgb, var(--accent) 52%, var(--border));
-  background: color-mix(in srgb, var(--accent) 26%, var(--bg-elev));
-  box-shadow: 0 14px 24px color-mix(in srgb, var(--accent) 18%, transparent);
-}
-
-/* ---- Display Cards Stack View ---- */
-.stackView {
-  margin-top: 14px;
-  display: flex;
-  justify-content: center;
-  padding: 40px 0 60px;
-}
-
-.displayCardsStack {
+.empty {
   display: grid;
-  grid-template-areas: "stack";
-  place-items: center;
+  gap: var(--space-3);
+  justify-items: start;
+  padding: var(--space-6);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
 }
 
-.displayCard {
-  grid-area: stack;
-  position: relative;
-  width: 380px;
-  max-width: 85vw;
-  padding: 22px 24px;
-  border-radius: var(--r-lg);
-  border: 2px solid var(--border);
-  background: color-mix(in srgb, var(--card) 92%, var(--bg-elev));
-  backdrop-filter: blur(8px);
-  text-decoration: none;
-  color: var(--text);
-  transform: skewY(-8deg) translateX(var(--stack-x)) translateY(var(--stack-y));
-  transition: transform 500ms cubic-bezier(0.2, 0.9, 0.2, 1),
-    border-color 300ms ease,
-    background 300ms ease,
-    box-shadow 300ms ease,
-    filter 500ms ease;
-  cursor: pointer;
-  user-select: none;
-}
-
-/* All cards except the top one get greyed out */
-.displayCard:not(:last-child) {
-  filter: grayscale(100%);
-}
-.displayCard:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: var(--r-lg);
-  background: color-mix(in srgb, var(--bg) 45%, transparent);
-  pointer-events: none;
-  transition: opacity 500ms ease;
-}
-
-.displayCard:hover {
-  border-color: color-mix(in srgb, var(--accent) 44%, var(--border));
-  box-shadow: 0 18px 36px color-mix(in srgb, var(--accent) 20%, transparent);
-  transform: skewY(-8deg) translateX(var(--stack-x)) translateY(calc(var(--stack-y) - 36px));
-  filter: grayscale(0%);
-}
-.displayCard:hover::after {
-  opacity: 0;
-}
-
-.displayCard.locked {
-  cursor: not-allowed;
-  border-style: dashed;
-}
-.displayCard.locked:hover {
-  transform: skewY(-8deg) translateX(var(--stack-x)) translateY(var(--stack-y));
-  box-shadow: none;
-}
-
-.dcTop {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.dcIconWrap {
-  display: inline-grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 999px;
-  background: linear-gradient(140deg, var(--tone, var(--accent)), color-mix(in srgb, var(--tone, var(--accent)) 60%, var(--accent-2)));
-}
-
-.dcIcon {
-  width: 14px;
-  height: 14px;
-  color: white;
-}
-
-.dcType {
-  margin: 0;
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-}
-
-.dcTitle {
-  margin: 10px 0 0;
-  font-size: 17px;
-  font-weight: 850;
-  letter-spacing: -0.01em;
-  line-height: 1.2;
-}
-
-.dcSub {
-  margin: 6px 0 0;
-  font-size: 13px;
-  color: var(--muted);
-  line-height: 1.45;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.dcConstruction {
-  margin: 8px 0 0;
-  display: inline-flex;
-  border-radius: var(--r-pill);
-  border: 1px dashed color-mix(in srgb, var(--accent) 52%, var(--border));
-  background: color-mix(in srgb, var(--accent-soft) 58%, transparent);
-  padding: 4px 8px;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  color: var(--text);
-}
-
-/* Mobile: fall back to grid */
-@media (max-width: 640px) {
-  .stackView {
-    display: none;
+@media (max-width: 900px) {
+  .controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
-  /* Show grid view automatically on mobile */
-  .headControls .viewToggle {
-    display: none;
+  .searchField {
+    grid-column: 1 / -1;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .displayCard {
-    transition: none !important;
-    filter: none !important;
-    transform: none !important;
+@media (max-width: 760px) {
+  .projectGrid {
+    grid-template-columns: 1fr;
+  }
+  .viewField {
+    display: none; /* list and grid are identical at one column */
+  }
+}
+
+@media (max-width: 480px) {
+  .controls {
+    grid-template-columns: 1fr;
   }
 }
 </style>

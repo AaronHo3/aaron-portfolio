@@ -1,143 +1,251 @@
 <template>
-  <section class="section contactSection">
-    <div class="card contactIntro">
-      <h2>Let’s Connect</h2>
-      <p>
-        For roles, collaborations, or project discussions, email is the fastest way to reach me. You can also connect on LinkedIn or GitHub.
+  <div class="container page contact">
+    <header class="contactHead">
+      <h1 class="page-title">Contact</h1>
+      <p class="lead">
+        For roles, collaborations, or project discussions, email is the fastest way to reach me. You can also connect on
+        LinkedIn or GitHub.
       </p>
-      <p class="emailLine">aaronho0218@gmail.com</p>
+    </header>
 
-      <div class="row">
-        <a class="btn emailBtn" href="mailto:aaronho0218@gmail.com">
-          <Mail class="icon" />
-          <span>Email</span>
+    <section class="emailBlock" aria-labelledby="email-title">
+      <h2 id="email-title" class="visually-hidden">Email</h2>
+      <a class="emailLink" :href="`mailto:${profile.email}`">{{ profile.email }}</a>
+      <div class="emailActions">
+        <a class="btn btn-primary" :href="`mailto:${profile.email}`">
+          <Mail :size="18" aria-hidden="true" /> Email me
         </a>
-
-        <a class="btn githubBtn" href="https://github.com/AaronHo3" target="_blank" rel="noreferrer">
-          <Github class="icon" />
-          <span>GitHub</span>
-        </a>
-
-        <a class="btn linkedinBtn" href="https://www.linkedin.com/in/aaronho3/" target="_blank" rel="noreferrer">
-          <Linkedin class="icon" />
-          <span>LinkedIn</span>
-        </a>
+        <button type="button" class="btn" @click="copyEmail">
+          <Check v-if="copyState === 'copied'" :size="18" aria-hidden="true" />
+          <Copy v-else :size="18" aria-hidden="true" />
+          {{ copyState === "copied" ? "Copied" : "Copy email address" }}
+        </button>
+        <p class="copyStatus meta" role="status">{{ copyMessage }}</p>
       </div>
-    </div>
+      <ul class="profiles">
+        <li>
+          <a :href="profile.links.linkedin" target="_blank" rel="noopener">
+            LinkedIn<span class="visually-hidden"> (opens in a new tab)</span> ↗
+          </a>
+        </li>
+        <li>
+          <a :href="profile.links.github" target="_blank" rel="noopener">
+            GitHub<span class="visually-hidden"> (opens in a new tab)</span> ↗
+          </a>
+        </li>
+      </ul>
+    </section>
 
-    <form class="card contactForm" @submit.prevent="sendViaEmail">
-      <h3>Send a Message</h3>
+    <section class="draft" aria-labelledby="draft-title">
+      <h2 id="draft-title" class="draftTitle">Write a draft here</h2>
+      <p class="muted draftNote">
+        This form does not send anything on its own. It opens a pre-filled draft in your email app, and you send it from
+        there. If you use webmail and nothing opens, copy the address above instead.
+      </p>
 
-      <label class="field">
-        <span>Name</span>
-        <input v-model.trim="name" class="input" type="text" placeholder="Your name" />
-      </label>
-
-      <label class="field">
-        <span>Email</span>
-        <input v-model.trim="email" class="input" type="email" placeholder="you@example.com" />
-      </label>
-
-      <label class="field">
-        <span>Message</span>
-        <textarea v-model.trim="message" class="input messageInput" rows="5" placeholder="What are you reaching out about?" />
-      </label>
-
-      <button class="btn sendBtn" type="submit">Send via Email</button>
-    </form>
-  </section>
+      <form class="draftForm" novalidate @submit.prevent="openDraft">
+        <div class="field">
+          <label for="c-name">Your name <span class="optional">(optional)</span></label>
+          <input id="c-name" v-model.trim="name" class="input" type="text" autocomplete="name" />
+        </div>
+        <div class="field">
+          <label for="c-email">Your email <span class="optional">(optional)</span></label>
+          <input
+            id="c-email"
+            v-model.trim="email"
+            class="input"
+            type="email"
+            autocomplete="email"
+            :aria-invalid="emailError ? 'true' : undefined"
+            :aria-describedby="emailError ? 'c-email-error' : undefined"
+          />
+          <p v-if="emailError" id="c-email-error" class="fieldError">{{ emailError }}</p>
+        </div>
+        <div class="field">
+          <label for="c-message">Message</label>
+          <textarea
+            id="c-message"
+            v-model.trim="message"
+            class="input"
+            rows="6"
+            required
+            :aria-invalid="messageError ? 'true' : undefined"
+            :aria-describedby="messageError ? 'c-message-error' : undefined"
+          ></textarea>
+          <p v-if="messageError" id="c-message-error" class="fieldError">{{ messageError }}</p>
+        </div>
+        <div class="formActions">
+          <button class="btn btn-primary" type="submit">Open email draft</button>
+          <p v-if="draftOpened" class="meta" role="status">
+            Your email app should now show the draft. Nothing is sent until you press send there.
+          </p>
+        </div>
+      </form>
+    </section>
+  </div>
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
-import { Mail, Github, Linkedin } from "lucide-vue-next";
+import { ref } from "vue";
+import { Check, Copy, Mail } from "lucide-vue-next";
+import { profile } from "../data/profile.js";
+import { buildMailto, isPlausibleEmail } from "../lib/mailto.js";
+
+const COPY_RESET_MS = 2500;
 
 const name = ref("");
 const email = ref("");
 const message = ref("");
+const emailError = ref("");
+const messageError = ref("");
+const draftOpened = ref(false);
 
-const mailHref = computed(() => {
-  const subject = name.value ? `Portfolio inquiry from ${name.value}` : "Portfolio inquiry";
-  const body = [
-    name.value ? `Name: ${name.value}` : "",
-    email.value ? `Email: ${email.value}` : "",
-    "",
-    message.value || "",
-  ].filter(Boolean).join("\n");
+const copyState = ref("idle");
+const copyMessage = ref("");
+let copyTimer;
 
-  return `mailto:aaronho0218@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-});
+async function copyEmail() {
+  clearTimeout(copyTimer);
+  try {
+    await navigator.clipboard.writeText(profile.email);
+    copyState.value = "copied";
+    copyMessage.value = "Email address copied to the clipboard.";
+  } catch {
+    copyState.value = "idle";
+    copyMessage.value = `Copy did not work in this browser. The address is ${profile.email}.`;
+  }
+  copyTimer = setTimeout(() => {
+    copyState.value = "idle";
+    copyMessage.value = "";
+  }, COPY_RESET_MS);
+}
 
-function sendViaEmail() {
-  window.location.href = mailHref.value;
+function openDraft() {
+  emailError.value = email.value && !isPlausibleEmail(email.value) ? "Check this address, or leave it empty." : "";
+  messageError.value = message.value ? "" : "Write a short message first.";
+  if (emailError.value || messageError.value) {
+    document.getElementById(messageError.value && !emailError.value ? "c-message" : "c-email")?.focus();
+    return;
+  }
+  window.location.href = buildMailto(profile.email, {
+    name: name.value,
+    email: email.value,
+    message: message.value,
+  });
+  draftOpened.value = true;
 }
 </script>
 
 <style scoped>
-.contactSection {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
+.contact {
+  max-width: calc(var(--w-wide) + 2 * var(--gutter));
 }
 
-h2, h3 {
-  margin: 0 0 10px;
+.contactHead .lead {
+  margin-top: var(--space-4);
 }
 
-p {
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.6;
+.emailBlock {
+  margin-top: var(--space-7);
+  padding: var(--space-6);
+  background: var(--color-surface);
+  border: var(--border);
+  border-radius: var(--radius-lg);
 }
 
-.emailLine {
-  margin-top: 10px;
-  font-weight: 800;
-  color: var(--text);
+.emailLink {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 1.1rem + 1.8vw, 2.5rem);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  text-decoration: none;
 }
 
-.row {
+.emailLink:hover {
+  text-decoration: underline;
+}
+
+.emailActions {
   display: flex;
-  gap: 12px;
   flex-wrap: wrap;
-  margin-top: 14px;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
 }
 
-.icon {
-  width: 18px;
-  height: 18px;
-  stroke: currentColor;
+.copyStatus {
+  flex-basis: 100%;
+  min-height: 1.5em;
+}
+
+.profiles {
+  display: flex;
+  gap: var(--space-5);
+  margin: var(--space-3) 0 0;
+  padding: var(--space-4) 0 0;
+  border-top: var(--border);
+  list-style: none;
+}
+
+.profiles a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 650;
+}
+
+.draft {
+  margin-top: var(--space-8);
+  max-width: 640px;
+}
+
+.draftTitle {
+  font-size: var(--fs-h3);
+}
+
+.draftNote {
+  margin-top: var(--space-2);
+}
+
+.draftForm {
+  display: grid;
+  gap: var(--space-5);
+  margin-top: var(--space-5);
 }
 
 .field {
   display: grid;
-  gap: 6px;
-  margin-top: 10px;
+  gap: var(--space-2);
 }
 
-.field span {
-  font-size: 13px;
-  color: var(--muted);
-  font-weight: 800;
+.field label {
+  font-weight: 650;
+  font-size: var(--fs-small);
 }
 
-.messageInput {
+.optional {
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
+textarea.input {
   resize: vertical;
-  min-height: 120px;
+  min-height: 140px;
 }
 
-.sendBtn {
-  margin-top: 14px;
+.fieldError {
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: #b3261e;
 }
 
-.emailBtn:hover { border-color: #ea4335; color: #ea4335; }
-.githubBtn:hover { border-color: #333; color: #333; }
-html[data-theme="dark"] .githubBtn:hover { border-color: #c9d1d9; color: #c9d1d9; }
-.linkedinBtn:hover { border-color: #0a66c2; color: #0a66c2; }
+:global(html[data-theme="dark"] .fieldError) {
+  color: #f2b8b5;
+}
 
-@media (max-width: 900px) {
-  .contactSection {
-    grid-template-columns: 1fr;
-  }
+.formActions {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: start;
 }
 </style>

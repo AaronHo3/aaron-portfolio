@@ -14,7 +14,6 @@
   "dependencies": {
     "katex": "^0.16.47",
     "lucide-vue-next": "^0.575.0",
-    "three": "^0.183.2",
     "vue": "^3.5.25",
     "vue-router": "^5.0.3"
   },

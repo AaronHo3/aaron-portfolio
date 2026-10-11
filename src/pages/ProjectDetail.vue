@@ -1,466 +1,600 @@
 <template>
-  <section class="section" v-if="project">
-    <!-- HEADER -->
-    <div class="head">
-      <div>
-        <RouterLink class="backLink" to="/projects">← All projects</RouterLink>
-        <h1 class="title">{{ project.title }}</h1>
-        <p class="subtitle">{{ project.subtitle }}</p>
-        <div class="tagRow">
-          <span v-for="t in project.tags || []" :key="t" class="tag">{{ t }}</span>
+  <article v-if="project" class="container page caseStudy">
+    <RouterLink class="backLink" to="/projects">← All projects</RouterLink>
+
+    <!-- 1. Title and summary -->
+    <header class="csHeader">
+      <p v-if="category" class="eyebrow">{{ category }}</p>
+      <h1 class="csTitle">{{ displayTitle }}</h1>
+      <p v-if="titleRemainder" class="fullTitle">{{ titleRemainder }}</p>
+      <p class="lead csLead">{{ project.subtitle }}</p>
+
+      <!-- 2. Compact metadata (only fields present in projects.js) -->
+      <dl class="metaList">
+        <div v-if="project.context">
+          <dt>Context</dt>
+          <dd>{{ project.context }}</dd>
         </div>
-      </div>
+        <div v-if="project.status">
+          <dt>Status</dt>
+          <dd>{{ project.status }}</dd>
+        </div>
+        <div v-if="project.languages?.length">
+          <dt>Languages</dt>
+          <dd>{{ project.languages.join(", ") }}</dd>
+        </div>
+        <div v-if="project.stack?.length">
+          <dt>Tools</dt>
+          <dd>{{ project.stack.join(", ") }}</dd>
+        </div>
+      </dl>
 
-      <div class="actions">
-        <a v-if="project.links.github" class="btn" :href="project.links.github" target="_blank" rel="noreferrer">GitHub ↗</a>
+      <!-- 4. Links -->
+      <div v-if="links.length" class="csLinks">
         <a
-          v-if="liveLink"
-          class="btn primary"
-          :href="liveLink"
+          v-for="(link, i) in links"
+          :key="link.href"
+          class="btn"
+          :class="{ 'btn-primary': i === 0 }"
+          :href="link.href"
           target="_blank"
-          rel="noreferrer"
+          rel="noopener"
         >
-          {{ liveLabel }} ↗
+          {{ link.label }}<span class="visually-hidden"> (opens in a new tab)</span> <span aria-hidden="true">↗</span>
         </a>
-        <a v-if="project.links.report" class="btn" :href="project.links.report" target="_blank" rel="noreferrer">Report ↗</a>
       </div>
-    </div>
+    </header>
 
-    <!-- HERO SCREENSHOT (optional) -->
-    <figure v-if="project.image" class="heroShot">
-      <img :src="project.image" :alt="`${project.title} preview`" loading="lazy" />
+    <!-- 3. Main takeaway -->
+    <section v-if="project.headlineStats?.length" class="glance" aria-labelledby="glance-title">
+      <h2 id="glance-title" class="eyebrow glanceTitle">At a glance</h2>
+      <dl class="glanceList">
+        <div v-for="s in project.headlineStats" :key="s.label" class="glanceItem">
+          <dt class="glanceValue">{{ s.value }}</dt>
+          <dd class="glanceLabel">{{ s.label }}</dd>
+        </div>
+      </dl>
+    </section>
+
+    <figure v-if="project.image" class="csFigure">
+      <img
+        :src="project.image"
+        :alt="figureAlt"
+        :width="imageSize[0]"
+        :height="imageSize[1]"
+        loading="lazy"
+        decoding="async"
+      />
+      <figcaption>
+        <span v-if="project.imageCaption">{{ project.imageCaption }}</span>
+        <a :href="project.image" target="_blank" rel="noopener" class="figureLink">
+          Open full-size figure<span class="visually-hidden"> (opens in a new tab)</span> ↗
+        </a>
+      </figcaption>
     </figure>
 
-    <!-- HEADLINE STATS -->
-    <div v-if="project.headlineStats?.length" class="statRow">
-      <div v-for="s in project.headlineStats" :key="s.label" class="statCard">
-        <p class="statValue">{{ s.value }}</p>
-        <p class="statLabel">{{ s.label }}</p>
-      </div>
-    </div>
+    <div class="csBody" :class="{ withToc: showToc }">
+      <nav v-if="showToc" class="toc" aria-label="Sections">
+        <p class="tocTitle">On this page</p>
+        <ol>
+          <li v-for="s in sections" :key="s.id">
+            <RouterLink :to="{ hash: `#${s.id}` }">{{ s.label }}</RouterLink>
+          </li>
+        </ol>
+      </nav>
 
-    <!-- BODY -->
-    <div class="grid">
-      <!-- MAIN NARRATIVE -->
-      <div class="main">
-        <!-- Case-study layout -->
+      <div class="csProse">
         <template v-if="cs">
-          <article class="card block">
-            <h2 class="h2">The problem</h2>
-            <p class="p">{{ cs.problem }}</p>
-          </article>
+          <!-- 5. Question -->
+          <section v-if="cs.problem" id="question" aria-labelledby="question-title">
+            <h2 id="question-title">The question</h2>
+            <p v-for="(para, i) in asParagraphs(cs.problem)" :key="i">{{ para }}</p>
+          </section>
 
-          <article class="card block">
-            <h2 class="h2">Approach</h2>
-            <p class="p">{{ cs.approach }}</p>
-          </article>
+          <!-- 6. Approach and contribution -->
+          <section v-if="cs.approach" id="approach" aria-labelledby="approach-title">
+            <h2 id="approach-title">Approach</h2>
+            <p v-for="(para, i) in asParagraphs(cs.approach)" :key="i">{{ para }}</p>
 
-          <article v-if="cs.architecture?.length" class="card block">
-            <h2 class="h2">How it works</h2>
-            <ol class="steps">
-              <li v-for="(step, i) in cs.architecture" :key="i" class="step">
-                <span class="stepNum">{{ i + 1 }}</span>
-                <span class="stepText">{{ step }}</span>
-              </li>
-            </ol>
-          </article>
-
-          <article v-if="cs.findings?.length" class="card block">
-            <h2 class="h2">Key findings</h2>
-            <ul class="list">
-              <li v-for="f in cs.findings" :key="f">{{ f }}</li>
-            </ul>
-          </article>
-
-          <article v-if="cs.results?.length" class="card block">
-            <h2 class="h2">Results</h2>
-            <div class="resultTable">
-              <div v-for="r in cs.results" :key="r.metric" class="resultRow">
-                <span class="resultMetric">{{ r.metric }}</span>
-                <span class="resultValue">{{ r.value }}</span>
-                <span class="resultNote">{{ r.note }}</span>
+            <div v-if="project.channels?.length" class="channels">
+              <div v-for="c in project.channels" :key="c.name" class="channel">
+                <h3>{{ c.name }}</h3>
+                <p>{{ c.text }}</p>
               </div>
             </div>
-          </article>
 
-          <div class="twoUp">
-            <article v-if="cs.limitations?.length" class="card block">
-              <h2 class="h2">Limitations</h2>
-              <ul class="list">
-                <li v-for="l in cs.limitations" :key="l">{{ l }}</li>
-              </ul>
-            </article>
+            <template v-if="cs.architecture?.length">
+              <h3>How it works</h3>
+              <ol class="steps">
+                <li v-for="(step, i) in cs.architecture" :key="i">{{ step }}</li>
+              </ol>
+            </template>
+          </section>
 
-            <article v-if="cs.future?.length" class="card block">
-              <h2 class="h2">What's next</h2>
-              <ul class="list">
-                <li v-for="f in cs.future" :key="f">{{ f }}</li>
-              </ul>
-            </article>
-          </div>
-        </template>
+          <!-- 7. Findings -->
+          <section v-if="cs.findings?.length" id="findings" aria-labelledby="findings-title">
+            <h2 id="findings-title">Findings</h2>
+            <div v-for="(f, i) in normalizedFindings" :key="i" class="finding">
+              <h3 v-if="f.title">{{ f.title }}</h3>
+              <p>{{ f.text }}</p>
+            </div>
+          </section>
 
-        <!-- Fallback layout (projects without a case study yet) -->
-        <template v-else>
-          <article class="card block">
-            <h2 class="h2">Overview</h2>
-            <p class="p">{{ project.summary }}</p>
-            <ul class="list" v-if="project.bullets?.length">
-              <li v-for="b in project.bullets" :key="b">{{ b }}</li>
+          <section v-if="cs.results?.length" id="results" aria-labelledby="results-title">
+            <h2 id="results-title">{{ cs.findings?.length ? "Supporting results" : "Results" }}</h2>
+            <div class="tableWrap" tabindex="0" role="region" aria-labelledby="results-title">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">Measure</th>
+                    <th scope="col">Value</th>
+                    <th scope="col">Detail</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="r in cs.results" :key="r.metric">
+                    <th scope="row">{{ r.metric }}</th>
+                    <td class="valueCell">{{ r.value }}</td>
+                    <td>{{ r.note }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- 8. Limitations -->
+          <section v-if="cs.limitations?.length" id="limitations" aria-labelledby="limitations-title">
+            <h2 id="limitations-title">Limitations</h2>
+            <ul class="bullets">
+              <li v-for="l in cs.limitations" :key="l">{{ l }}</li>
             </ul>
-          </article>
+          </section>
+
+          <!-- 9. Next steps -->
+          <section v-if="cs.future?.length" id="next-steps" aria-labelledby="next-title">
+            <h2 id="next-title">Next steps</h2>
+            <ul class="bullets">
+              <li v-for="f in cs.future" :key="f">{{ f }}</li>
+            </ul>
+          </section>
         </template>
+
+        <!-- Projects without a case study yet -->
+        <section v-else id="overview" aria-labelledby="overview-title">
+          <h2 id="overview-title">Overview</h2>
+          <p>{{ project.summary }}</p>
+          <ul v-if="project.bullets?.length" class="bullets">
+            <li v-for="b in project.bullets" :key="b">{{ b }}</li>
+          </ul>
+        </section>
       </div>
-
-      <!-- META SIDEBAR -->
-      <aside class="side">
-        <div class="card metaCard">
-          <div v-if="liveLink" class="metaLinks">
-            <a class="btn primary full" :href="liveLink" target="_blank" rel="noreferrer">{{ liveLabel }} ↗</a>
-          </div>
-          <a v-if="project.links.github" class="btn full" :href="project.links.github" target="_blank" rel="noreferrer">View code on GitHub ↗</a>
-
-          <div v-if="project.modelTypes?.length" class="metaGroup">
-            <h3 class="metaHead">Focus areas</h3>
-            <div class="pillRow">
-              <span v-for="t in project.modelTypes" :key="t" class="pill">{{ t }}</span>
-            </div>
-          </div>
-
-          <div v-if="project.languages?.length" class="metaGroup">
-            <h3 class="metaHead">Languages</h3>
-            <div class="pillRow">
-              <span v-for="l in project.languages" :key="l" class="pill">{{ l }}</span>
-            </div>
-          </div>
-
-          <div v-if="project.stack?.length" class="metaGroup">
-            <h3 class="metaHead">Tools</h3>
-            <div class="pillRow">
-              <span v-for="s in project.stack" :key="s" class="pill">{{ s }}</span>
-            </div>
-          </div>
-
-          <div v-if="!cs && project.metrics?.length" class="metaGroup">
-            <h3 class="metaHead">Metrics</h3>
-            <div class="pillRow">
-              <span v-for="m in project.metrics" :key="m" class="pill">{{ m }}</span>
-            </div>
-          </div>
-        </div>
-      </aside>
     </div>
-  </section>
 
-  <section class="section" v-else>
-    <div class="card">
-      <h2 class="h2">Project not found</h2>
-      <RouterLink class="btn" to="/projects">Back to Projects</RouterLink>
-    </div>
-  </section>
+    <!-- 10. Related projects -->
+    <section v-if="related.length" class="section related" aria-labelledby="related-title">
+      <div class="section-head">
+        <h2 id="related-title">More projects</h2>
+        <RouterLink class="text-link" to="/projects">All projects <span class="arrow" aria-hidden="true">→</span></RouterLink>
+      </div>
+      <ul class="relatedGrid">
+        <li v-for="p in related" :key="p.slug">
+          <ProjectCard :project="p" :heading-level="3" />
+        </li>
+      </ul>
+    </section>
+  </article>
+
+  <div v-else class="container page">
+    <h1 class="page-title">Project not found</h1>
+    <p class="lead notFoundLead">This project may have moved or been unpublished.</p>
+    <RouterLink class="btn" to="/projects">Browse all projects</RouterLink>
+  </div>
 </template>
 
 <script setup>
 import { computed } from "vue";
 import { useRoute } from "vue-router";
+import ProjectCard from "../components/ProjectCard.vue";
 import { projects } from "../data/projects";
+import { absoluteUrl } from "../lib/content/urls.js";
+import { usePageHead } from "../lib/head.js";
+
+/** Show the section menu once a write-up has at least this many sections. */
+const TOC_MIN_SECTIONS = 5;
+const RELATED_COUNT = 2;
 
 const route = useRoute();
 
-const project = computed(() => {
-  const slug = route.params.slug;
-  return projects.find((p) => p.slug === slug);
-});
-
+const project = computed(() => projects.find((p) => p.slug === route.params.slug && !p.hidden));
 const cs = computed(() => project.value?.caseStudy);
+const displayTitle = computed(() => project.value?.displayTitle || project.value?.title);
+/** "Neural Decoding | What Actually Limits..." -> "What Actually Limits..." when displayTitle is the prefix. */
+const titleRemainder = computed(() => {
+  const p = project.value;
+  if (!p?.displayTitle || p.displayTitle === p.title) return "";
+  const prefix = `${p.displayTitle} | `;
+  return p.title.startsWith(prefix) ? p.title.slice(prefix.length) : p.title;
+});
+const category = computed(() => project.value?.modelTypes?.[0] ?? "");
+const imageSize = computed(() => project.value?.imageSize ?? [1600, 900]);
+// Short alt text; the full description is in the visible figcaption, so it is not repeated here.
+const figureAlt = computed(() => `${displayTitle.value} overview diagram`);
 
-const liveLink = computed(() => {
-  const l = project.value?.links || {};
-  return l.dashboard || l.demo || "";
+/** Problem/approach may be one string or an array of paragraphs. */
+const asParagraphs = (value) => (Array.isArray(value) ? value : [value]);
+
+const normalizedFindings = computed(() =>
+  (cs.value?.findings ?? []).map((f) => (typeof f === "string" ? { title: "", text: f } : f)),
+);
+
+const links = computed(() => {
+  const l = project.value?.links ?? {};
+  return [
+    l.github && { label: "Code on GitHub", href: l.github },
+    l.report && { label: "Full report", href: l.report },
+    (l.demo || l.dashboard) && { label: "Live demo", href: l.demo || l.dashboard },
+  ].filter(Boolean);
 });
 
-const liveLabel = computed(() =>
-  project.value?.links?.dashboard ? "Open live dashboard" : "Open live demo"
+const sections = computed(() => {
+  const c = cs.value;
+  if (!c) return [];
+  return [
+    c.problem && { id: "question", label: "The question" },
+    c.approach && { id: "approach", label: "Approach" },
+    c.findings?.length && { id: "findings", label: "Findings" },
+    c.results?.length && { id: "results", label: c.findings?.length ? "Supporting results" : "Results" },
+    c.limitations?.length && { id: "limitations", label: "Limitations" },
+    c.future?.length && { id: "next-steps", label: "Next steps" },
+  ].filter(Boolean);
+});
+
+const showToc = computed(() => sections.value.length >= TOC_MIN_SECTIONS);
+
+const related = computed(() => {
+  if (!project.value) return [];
+  const others = projects.filter((p) => !p.hidden && p.slug !== project.value.slug);
+  const sameCategory = others.filter((p) => p.modelTypes?.[0] === category.value);
+  const rest = others.filter((p) => !sameCategory.includes(p));
+  return [...sameCategory, ...rest].slice(0, RELATED_COUNT);
+});
+
+usePageHead(() =>
+  project.value
+    ? {
+        title: `${displayTitle.value} | Aaron Ho`,
+        description: project.value.cardSummary || project.value.subtitle,
+        canonical: absoluteUrl(`/projects/${project.value.slug}`),
+      }
+    : { title: "Project not found | Aaron Ho", noindex: true },
 );
 </script>
 
 <style scoped>
-/* ---- HEADER ---- */
-.head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 18px;
-  flex-wrap: wrap;
-}
-
 .backLink {
-  display: inline-block;
-  margin-bottom: 12px;
-  color: var(--muted);
-  font-weight: 850;
-  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: var(--fs-small);
+  font-weight: 600;
   text-decoration: none;
-  transition: color 160ms ease;
-}
-.backLink:hover {
-  color: var(--accent);
 }
 
-.title {
+.csHeader {
+  max-width: 820px;
+  margin-top: var(--space-4);
+}
+
+.csTitle {
+  margin-top: var(--space-2);
+  font-size: var(--fs-hero);
+  line-height: 1.05;
+}
+
+.fullTitle {
+  margin-top: var(--space-3);
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.csLead {
+  margin-top: var(--space-5);
+}
+
+.metaList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4) var(--space-6);
+  margin: var(--space-6) 0 0;
+  padding-top: var(--space-5);
+  border-top: var(--border);
+}
+
+.metaList dt {
+  font-size: var(--fs-meta);
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+.metaList dd {
+  margin: 2px 0 0;
+  font-size: var(--fs-small);
+  line-height: 1.5;
+}
+
+.csLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+/* At a glance */
+.glance {
+  margin-top: var(--space-7);
+  padding: var(--space-5) var(--space-6);
+  background: var(--color-surface);
+  border: var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.glanceTitle {
+  font-size: var(--fs-meta);
+  margin-bottom: var(--space-4);
+}
+
+.glanceList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-5) var(--space-6);
   margin: 0;
-  font-size: clamp(28px, 3.4vw, 44px);
-  letter-spacing: -0.03em;
-  line-height: 1.08;
-  max-width: 20ch;
 }
 
-.subtitle {
-  margin: 12px 0 0;
-  color: var(--muted);
-  line-height: 1.55;
-  max-width: 720px;
+.glanceValue {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 1.3rem + 0.8vw, 2rem);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--color-accent);
 }
 
-.tagRow {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 14px;
-}
-.tag {
-  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
-  border-radius: var(--r-pill);
-  padding: 5px 12px;
-  font-weight: 850;
-  font-size: 12px;
-  color: var(--accent);
-  background: color-mix(in srgb, var(--accent-soft) 40%, transparent);
+.glanceLabel {
+  margin: var(--space-2) 0 0;
+  font-size: var(--fs-small);
+  line-height: 1.5;
+  color: var(--color-text-muted);
 }
 
-.actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+/* Figure */
+.csFigure {
+  margin: var(--space-7) 0 0;
 }
 
-/* ---- HERO SCREENSHOT ---- */
-.heroShot {
-  margin: 24px 0 0;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow);
-}
-.heroShot img {
+.csFigure img {
   display: block;
   width: 100%;
   height: auto;
+  border: var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
 }
 
-/* ---- HEADLINE STATS ---- */
-.statRow {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 14px;
-  margin-top: 28px;
-}
-.statCard {
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 18px 20px;
-  background: color-mix(in srgb, var(--card) 80%, transparent);
-  position: relative;
-  overflow: hidden;
-}
-.statCard::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto;
-  height: 3px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
-  opacity: 0.8;
-}
-.statValue {
-  margin: 0;
-  font-family: "Fraunces", Georgia, serif;
-  font-size: clamp(28px, 3vw, 40px);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  background: linear-gradient(120deg, var(--accent), var(--accent-2));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  line-height: 1;
-}
-.statLabel {
-  margin: 10px 0 0;
-  color: var(--muted);
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1.4;
-}
-
-/* ---- BODY GRID ---- */
-.grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
-  gap: 16px;
-  margin-top: 28px;
-  align-items: start;
-}
-@media (max-width: 900px) {
-  .grid { grid-template-columns: 1fr; }
-}
-
-.main {
+.csFigure figcaption {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-  min-width: 0;
-}
-.block { padding: var(--space-4); }
-
-.twoUp {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-@media (max-width: 620px) {
-  .twoUp { grid-template-columns: 1fr; }
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  justify-content: space-between;
+  max-width: var(--w-prose);
+  margin-top: var(--space-3);
+  font-size: var(--fs-small);
+  color: var(--color-text-muted);
+  line-height: 1.55;
 }
 
-.side {
-  position: sticky;
-  top: 20px;
-}
-@media (max-width: 900px) {
-  .side { position: static; }
-}
-
-/* ---- TYPOGRAPHY ---- */
-.h2 {
-  margin: 0 0 12px;
-  letter-spacing: -0.02em;
-  font-size: 20px;
-}
-.p {
-  margin: 0;
-  color: var(--text);
-  opacity: 0.92;
-  line-height: 1.7;
-}
-.list {
-  margin: 0;
-  padding-left: 20px;
-  color: var(--muted);
-  line-height: 1.7;
-}
-.list li { margin-bottom: 8px; }
-.list li:last-child { margin-bottom: 0; }
-
-/* ---- NUMBERED STEPS ---- */
-.steps {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-.step {
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-}
-.stepNum {
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 999px;
-  font-family: "Fraunces", Georgia, serif;
-  font-weight: 800;
-  font-size: 14px;
-  color: color-mix(in srgb, #0f172a 80%, white);
-  background: linear-gradient(140deg, var(--accent), var(--accent-2));
-}
-.stepText {
-  color: var(--muted);
-  line-height: 1.6;
-  padding-top: 3px;
-}
-
-/* ---- RESULTS TABLE ---- */
-.resultTable {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  overflow: hidden;
-}
-.resultRow {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-template-areas: "metric value" "note note";
-  gap: 2px 12px;
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--border);
-}
-.resultRow:last-child { border-bottom: none; }
-.resultRow:nth-child(odd) {
-  background: color-mix(in srgb, var(--accent-soft) 14%, transparent);
-}
-.resultMetric {
-  grid-area: metric;
-  font-weight: 800;
-  color: var(--text);
-  font-size: 14px;
-}
-.resultValue {
-  grid-area: value;
-  font-family: "Fraunces", Georgia, serif;
-  font-weight: 800;
-  font-size: 16px;
-  color: var(--accent);
+.figureLink {
+  font-weight: 600;
   white-space: nowrap;
 }
-.resultNote {
-  grid-area: note;
-  color: var(--muted);
-  font-size: 13px;
+
+/* Body with section menu */
+.csBody {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-7);
+  margin-top: var(--space-7);
 }
 
-/* ---- META SIDEBAR ---- */
-.metaCard {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+.csBody.withToc {
+  grid-template-columns: 200px minmax(0, 1fr);
 }
-.metaLinks { display: flex; }
-.full { width: 100%; justify-content: center; }
-.metaGroup { display: flex; flex-direction: column; gap: 10px; }
-.metaHead {
+
+.toc {
+  position: sticky;
+  top: calc(var(--header-h) + var(--space-5));
+  align-self: start;
+}
+
+.tocTitle {
+  margin-bottom: var(--space-3);
+  font-size: var(--fs-meta);
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+.toc ol {
+  display: grid;
+  gap: var(--space-1);
   margin: 0;
-  font-family: "Figtree", system-ui, sans-serif;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-  font-weight: 900;
+  padding: 0;
+  list-style: none;
+  border-left: var(--border);
 }
-.pillRow {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+
+.toc a {
+  display: block;
+  padding: var(--space-1) var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--fs-small);
+  text-decoration: none;
 }
-.pill {
-  border: 1px solid var(--border);
-  border-radius: var(--r-pill);
-  padding: 6px 10px;
-  font-weight: 850;
-  font-size: 12px;
-  color: var(--muted);
+
+.toc a:hover {
+  color: var(--color-accent);
+}
+
+.csProse {
+  max-width: var(--w-prose);
+}
+
+.csProse section + section {
+  margin-top: var(--space-7);
+}
+
+.csProse h2 {
+  margin-bottom: var(--space-4);
+}
+
+.csProse h3 {
+  margin: var(--space-5) 0 var(--space-2);
+  font-size: 1.1875rem;
+}
+
+.csProse p + p {
+  margin-top: var(--space-4);
+}
+
+.finding + .finding {
+  margin-top: var(--space-5);
+}
+
+.channels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+}
+
+.channel {
+  padding: var(--space-4) var(--space-5);
+  border: var(--border);
+  border-top: 3px solid var(--color-accent);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.channel h3 {
+  margin-top: 0;
+}
+
+.channel p {
+  font-size: var(--fs-small);
+  line-height: 1.6;
+}
+
+.steps,
+.bullets {
+  display: grid;
+  gap: var(--space-3);
+  margin: var(--space-3) 0 0;
+  padding-left: 1.4em;
+}
+
+.steps li::marker {
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.bullets li::marker {
+  color: var(--color-accent);
+}
+
+/* Results table */
+.tableWrap {
+  overflow-x: auto;
+  border: var(--border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  font-size: var(--fs-small);
+  line-height: 1.5;
+}
+
+th,
+td {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  vertical-align: top;
+  border-bottom: var(--border);
+}
+
+thead th {
+  font-size: var(--fs-meta);
+  color: var(--color-text-muted);
+  background: var(--color-surface-muted);
+}
+
+tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+tbody th {
+  font-weight: 650;
+}
+
+.valueCell {
+  font-weight: 700;
+  color: var(--color-accent);
+  white-space: nowrap;
+}
+
+/* Related */
+.relatedGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.notFoundLead {
+  margin: var(--space-4) 0 var(--space-5);
+}
+
+@media (max-width: 1000px) {
+  .csBody.withToc {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .toc {
+    position: static;
+  }
+  .toc ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-2);
+    border-left: 0;
+  }
+  .toc a {
+    padding: var(--space-1) var(--space-2);
+    border: var(--border);
+    border-radius: var(--radius-sm);
+  }
+}
+
+@media (max-width: 760px) {
+  .glanceList,
+  .metaList,
+  .channels,
+  .relatedGrid {
+    grid-template-columns: 1fr;
+  }
+  .glance {
+    padding: var(--space-5);
+  }
 }
 </style>

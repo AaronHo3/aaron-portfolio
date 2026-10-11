@@ -4,7 +4,26 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="Aaron Ho builds AI for biotech and healthcare. Research case studies in clinical ML, neural decoding, and generative audio, plus a blog and an ML × Bio reading club."
+    />
     <link rel="alternate" type="application/rss+xml" title="Blogging | Aaron Ho" href="/rss.xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400..700&family=Fraunces:opsz,wght@9..144,500..700&display=swap"
+    />
+    <script>
+      // Apply an explicitly chosen theme before first paint. Light is the
+      // default; only a click on the header toggle writes this key.
+      try {
+        if (localStorage.getItem("theme-preference") === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
+        }
+      } catch (e) {}
+    </script>
     <title>Aaron Ho - AI/ML for Biotech & Healthcare</title>
   </head>
   <body>

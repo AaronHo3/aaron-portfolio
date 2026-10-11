@@ -1,7 +1,8 @@
 /**
  * Per-page <title>, description, canonical, and social tags for the SPA.
- * Tags added here are marked and removed when the page unmounts, and the
- * original document title is restored, so other pages are unaffected.
+ * Tags added here are marked and removed when the page unmounts. The next
+ * page's title comes from its route meta (router.afterEach) or its own
+ * usePageHead call, so the title is not restored here.
  *
  * Note: with hash routing, crawlers that do not run JavaScript only see the
  * static index.html. See docs/blog-implementation-progress.md.
@@ -28,8 +29,6 @@ function addTag(tag, attrs) {
  * @param {() => PageHead | null} getHead reactive getter
  */
 export function usePageHead(getHead) {
-  const originalTitle = document.title;
-
   const stop = watchEffect(() => {
     const head = getHead();
     clearManaged();
@@ -53,6 +52,5 @@ export function usePageHead(getHead) {
   onBeforeUnmount(() => {
     stop();
     clearManaged();
-    document.title = originalTitle;
   });
 }

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-labelledby="t">
+  <title id="t">Score the Story: a narrator's voice splits into prosody and semantics channels that steer a live generative score</title>
+  <rect width="800" height="450" fill="#ece9f2"/>
+  <g font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" fill="#202723">
+    <g stroke="#5b4a8a" stroke-width="5" stroke-linecap="round">
+      <path d="M60 225 V225 M78 205 V245 M96 180 V270 M114 200 V250 M132 160 V290 M150 190 V260 M168 215 V235"/>
+    </g>
+    <text x="114" y="330" font-size="22" font-weight="700" text-anchor="middle">Voice</text>
+    <g stroke="#5b4a8a" stroke-width="4" fill="none" stroke-linecap="round">
+      <path d="M200 225 C250 225 250 135 300 135"/>
+      <path d="M200 225 C250 225 250 315 300 315"/>
+      <path d="M600 135 C650 135 650 225 690 225"/>
+      <path d="M600 315 C650 315 650 225 690 225"/>
+    </g>
+    <g fill="#ffffff" stroke="#5b4a8a" stroke-width="3">
+      <rect x="300" y="85" width="300" height="100" rx="14"/>
+      <rect x="300" y="265" width="300" height="100" rx="14"/>
+    </g>
+    <text x="324" y="127" font-size="26" font-weight="700">Prosody</text>
+    <text x="324" y="160" font-size="20" fill="#4f4566">how it is said</text>
+    <text x="324" y="307" font-size="26" font-weight="700">Semantics</text>
+    <text x="324" y="340" font-size="20" fill="#4f4566">what is said</text>
+    <circle cx="718" cy="225" r="40" fill="#5b4a8a"/>
+    <path d="M708 205 V240 M708 205 L732 199 V232" stroke="#ffffff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="703" cy="241" r="7" fill="#ffffff"/><circle cx="727" cy="234" r="7" fill="#ffffff"/>
+    <text x="718" y="300" font-size="22" font-weight="700" text-anchor="middle">Live score</text>
+  </g>
+</svg>

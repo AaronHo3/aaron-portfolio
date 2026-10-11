@@ -1,66 +1,59 @@
 <template>
-  <section class="section blogScope">
-    <p v-if="status === 'loading'" class="loading" aria-live="polite">Loading article…</p>
+  <div class="container page">
+    <p v-if="status === 'loading'" class="meta" aria-live="polite">Loading article…</p>
 
     <div v-else-if="meta && body" class="articleLayout" :class="{ withToc: hasToc }">
       <article class="article">
         <header class="articleHead">
-          <RouterLink class="blogBackLink" to="/blog">← All posts</RouterLink>
-
+          <RouterLink class="backLink" to="/blog">← All posts</RouterLink>
           <p v-if="series" class="seriesLine">
-            <RouterLink v-if="series.path" class="blogSeriesBadge" :to="series.path">{{ series.label }}</RouterLink>
-            <span v-else class="blogSeriesBadge">{{ series.label }}</span>
+            <RouterLink v-if="series.path" class="seriesLabel" :to="series.path">{{ series.label }}</RouterLink>
+            <span v-else class="seriesLabel">{{ series.label }}</span>
           </p>
-
           <h1 class="articleTitle">{{ meta.title }}</h1>
-          <p class="articleDesc">{{ meta.description }}</p>
-
-          <p class="articleMeta">
+          <p class="lead articleDesc">{{ meta.description }}</p>
+          <p class="meta articleMeta">
             <span>Published <time :datetime="meta.date">{{ formatDate(meta.date) }}</time></span>
             <span v-if="meta.updated">
               <span aria-hidden="true"> · </span>Updated <time :datetime="meta.updated">{{ formatDate(meta.updated) }}</time>
             </span>
             <span aria-hidden="true"> · </span><span>{{ meta.readingMinutes }} min read</span>
           </p>
-
-          <ul v-if="meta.tags.length" class="blogTags" aria-label="Topics">
+          <ul v-if="meta.tags.length" class="tag-list" aria-label="Topics">
             <li v-for="tag in meta.tags" :key="tag">
-              <RouterLink class="blogTag" :to="{ path: '/blog', query: { topic: tag } }">{{ topicLabel(tag) }}</RouterLink>
+              <RouterLink class="tag" :to="{ path: '/blog', query: { topic: tag } }">{{ topicLabel(tag) }}</RouterLink>
             </li>
           </ul>
-
-          <div v-if="meta.state !== 'published'" class="blogNotice" role="note">
+          <p v-if="meta.state !== 'published'" class="notice stateNotice" role="note">
             <strong>{{ meta.state === "draft" ? "Draft" : "Scheduled" }} preview.</strong>
             {{
               meta.state === "draft"
                 ? "This article has draft: true. It is visible only on the local dev server and is not part of production builds."
                 : `This article is dated ${formatDate(meta.date)}. It will be included in the first production build on or after that date.`
             }}
-          </div>
+          </p>
         </header>
 
-        <aside v-if="paper || meta.codeUrl || meta.discussionUrl" class="card resources" aria-label="Paper and resources">
-          <div v-if="paper" class="resourcePaper">
-            <p class="resourceLabel">Paper</p>
+        <aside v-if="paper || meta.codeUrl || meta.discussionUrl" class="resources" aria-label="Paper and resources">
+          <div v-if="paper">
+            <p class="meta resourceLabel">Paper discussed</p>
             <p class="resourceTitle">
               <a v-if="paper.url" :href="paper.url" target="_blank" rel="noopener noreferrer">
-                {{ paper.title }}<span class="srOnly"> (original paper, opens in a new tab)</span><span aria-hidden="true"> ↗</span>
+                {{ paper.title }}<span class="visually-hidden"> (original paper, opens in a new tab)</span><span aria-hidden="true"> ↗</span>
               </a>
               <span v-else>{{ paper.title }}</span>
             </p>
-            <p v-if="paper.authors || paper.year" class="resourceByline">
-              {{ [paper.authors, paper.year].filter(Boolean).join(" · ") }}
-            </p>
+            <p v-if="paper.authors || paper.year" class="meta">{{ [paper.authors, paper.year].filter(Boolean).join(" · ") }}</p>
           </div>
           <div v-if="meta.codeUrl || meta.discussionUrl" class="resourceLinks">
-            <a v-if="meta.codeUrl" class="btn" :href="meta.codeUrl" target="_blank" rel="noopener noreferrer">
-              Code / notebook<span class="srOnly"> (opens in a new tab)</span> ↗
+            <a v-if="meta.codeUrl" class="btn btn-sm" :href="meta.codeUrl" target="_blank" rel="noopener noreferrer">
+              Code / notebook<span class="visually-hidden"> (opens in a new tab)</span> ↗
             </a>
-            <a v-if="meta.discussionUrl" class="btn" :href="meta.discussionUrl" target="_blank" rel="noopener noreferrer">
-              Discussion<span class="srOnly"> (opens in a new tab)</span> ↗
+            <a v-if="meta.discussionUrl" class="btn btn-sm" :href="meta.discussionUrl" target="_blank" rel="noopener noreferrer">
+              Discussion<span class="visually-hidden"> (opens in a new tab)</span> ↗
             </a>
           </div>
-          <p v-if="previewMode && meta.paperId && paper && !paper.inRoadmap" class="authorNote">
+          <p v-if="previewMode && meta.paperId && paper && !paper.inRoadmap" class="meta authorNote">
             Preview note: paperId "{{ meta.paperId }}" is not in the roadmap, so the article's own paper fields are shown.
           </p>
         </aside>
@@ -73,30 +66,30 @@
         <div class="prose" v-html="body.html" @click="onProseClick"></div>
 
         <footer class="articleFoot">
-          <section v-if="related.length" aria-labelledby="relatedHeading">
-            <h2 id="relatedHeading" class="relatedTitle">Related posts</h2>
+          <section v-if="related.length" aria-labelledby="related-heading">
+            <h2 id="related-heading" class="relatedTitle">Related posts</h2>
             <ul class="relatedList">
               <li v-for="p in related" :key="p.slug">
                 <PostListItem :post="p" :heading-level="3" />
               </li>
             </ul>
           </section>
-          <RouterLink class="blogBackLink" to="/blog">← Back to all posts</RouterLink>
+          <RouterLink class="backLink" to="/blog">← Back to all posts</RouterLink>
         </footer>
       </article>
 
       <nav v-if="hasToc" class="tocAside" aria-label="Table of contents">
-        <p class="tocHeading">On this page</p>
+        <p class="meta tocHeading">On this page</p>
         <TocList :toc="body.toc" />
       </nav>
     </div>
 
-    <div v-else class="card blogEmpty notFound">
-      <h1 class="notFoundTitle">Article not found</h1>
-      <p>It may have moved or not been published yet.</p>
-      <p><RouterLink class="btn" to="/blog">Browse all posts</RouterLink></p>
+    <div v-else class="notFound">
+      <h1 class="page-title">Article not found</h1>
+      <p class="lead">It may have moved or not been published yet.</p>
+      <RouterLink class="btn" to="/blog">Browse all posts</RouterLink>
     </div>
-  </section>
+  </div>
 </template>
 
 <script setup>
@@ -119,6 +112,8 @@ import { usePageHead } from "../lib/head.js";
 
 /** Minimum number of h2/h3 headings before a table of contents is shown. */
 const TOC_MIN_HEADINGS = 3;
+/** Matches the router's anchor offset (sticky header height + 16px). */
+const ANCHOR_OFFSET = 80;
 
 const TocList = defineComponent({
   props: { toc: { type: Array, required: true } },
@@ -175,7 +170,7 @@ function scrollToHash(hash) {
     return; // malformed percent-encoding in a hand-typed URL
   }
   const el = document.getElementById(id);
-  if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 96 });
+  if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - ANCHOR_OFFSET });
 }
 
 watch(() => route.params.slug, (slug) => slug && load(slug), { immediate: true });
@@ -212,188 +207,151 @@ usePageHead(() => {
 </script>
 
 <style scoped>
-.loading {
-  color: var(--muted);
-  font-weight: 800;
-}
-
 .articleLayout {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-5);
-  max-width: 1120px;
-  margin: 0 auto;
+  gap: var(--space-7);
 }
 
 .articleLayout.withToc {
-  grid-template-columns: minmax(0, 1fr) 230px;
+  grid-template-columns: minmax(0, 1fr) 220px;
 }
 
 .article {
   min-width: 0;
-  max-width: 74ch;
+  max-width: calc(var(--w-prose) + 4ch);
 }
 
 .seriesLine {
-  margin: 0 0 12px;
-}
-
-.articleTitle {
-  margin: 0;
-  font-size: clamp(30px, 4vw, 48px);
-  letter-spacing: -0.03em;
-  line-height: 1.08;
-  overflow-wrap: anywhere;
-  hyphens: auto;
-}
-
-.articleDesc {
-  margin: 14px 0 0;
-  color: var(--muted);
-  font-size: 1.12em;
-  line-height: 1.6;
-}
-
-.articleMeta {
-  margin: 16px 0 12px;
-  color: var(--muted);
-  font-size: 14px;
-  font-weight: 800;
-}
-
-.resources {
-  margin: var(--space-4) 0;
-  padding: var(--space-3) var(--space-4);
-  display: grid;
-  gap: 12px;
-}
-.resourceLabel {
-  margin: 0;
-  font-size: 11px;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.resourceTitle {
-  margin: 4px 0 0;
-  font-weight: 850;
-  line-height: 1.4;
-  overflow-wrap: anywhere;
-}
-.resourceTitle a {
-  color: var(--text);
-  text-decoration: none;
-}
-.resourceTitle a:hover {
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.resourceByline {
-  margin: 4px 0 0;
-  color: var(--muted);
-  font-size: 13px;
-}
-.resourceLinks {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.authorNote {
-  margin: 0;
-  font-size: 13px;
-  color: #f59e0b;
-}
-
-.prose {
   margin-top: var(--space-4);
 }
 
-/* ---- Table of contents ---- */
+.articleTitle {
+  margin-top: var(--space-2);
+  font-size: var(--fs-h1);
+  overflow-wrap: anywhere;
+}
+
+.articleDesc {
+  margin-top: var(--space-4);
+}
+
+.articleMeta {
+  margin: var(--space-4) 0 var(--space-3);
+}
+
+.stateNotice {
+  margin-top: var(--space-5);
+}
+
+.resources {
+  display: grid;
+  gap: var(--space-3);
+  margin: var(--space-6) 0;
+  padding: var(--space-4) 0 var(--space-4) var(--space-5);
+  border-left: 3px solid var(--color-accent);
+}
+
+.resourceLabel {
+  font-weight: 700;
+}
+
+.resourceTitle {
+  font-weight: 700;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.resourceTitle a {
+  color: var(--color-text);
+}
+
+.resourceTitle a:hover {
+  color: var(--color-accent);
+}
+
+.resourceLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.prose {
+  margin-top: var(--space-6);
+}
+
 .tocAside {
   position: sticky;
-  top: 96px;
+  top: calc(var(--header-h) + var(--space-5));
   align-self: start;
-  padding-left: 16px;
-  border-left: 1px solid var(--border);
-  max-height: calc(100vh - 120px);
+  max-height: calc(100vh - var(--header-h) - 48px);
   overflow-y: auto;
 }
+
 .tocHeading {
-  margin: 0 0 10px;
-  font-size: 11px;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
+  margin-bottom: var(--space-3);
+  font-weight: 700;
 }
+
 .tocInline {
   display: none;
-  margin-top: var(--space-3);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 10px 14px;
+  margin-top: var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  border: var(--border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
 }
+
 .tocInline summary {
+  min-height: 32px;
+  font-weight: 650;
   cursor: pointer;
-  font-weight: 850;
-}
-.tocInline[open] summary {
-  margin-bottom: 8px;
 }
 
 :deep(.tocList) {
-  list-style: none;
+  display: grid;
+  gap: var(--space-1);
   margin: 0;
   padding: 0;
-  display: grid;
-  gap: 6px;
-  font-size: 14px;
-  line-height: 1.4;
-}
-:deep(.tocList a) {
-  color: var(--muted);
-  text-decoration: none;
-  font-weight: 700;
-}
-:deep(.tocList a:hover) {
-  color: var(--accent);
-}
-:deep(.tocList .toc-h3) {
-  padding-left: 12px;
-  font-size: 13px;
-}
-
-/* ---- Footer ---- */
-.articleFoot {
-  margin-top: var(--space-6);
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--border);
-}
-.relatedTitle {
-  margin: 0 0 14px;
-  font-size: 22px;
-  letter-spacing: -0.02em;
-}
-.relatedList {
   list-style: none;
-  margin: 0 0 var(--space-4);
-  padding: 0;
-  display: grid;
-  gap: 12px;
+  border-left: var(--border);
 }
 
-.notFound {
-  max-width: 640px;
+:deep(.tocList a) {
+  display: block;
+  padding: var(--space-1) var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--fs-small);
+  text-decoration: none;
 }
-.notFoundTitle {
-  margin: 0 0 6px;
-  color: var(--text);
-  font-size: 26px;
+
+:deep(.tocList a:hover) {
+  color: var(--color-accent);
 }
-.notFound p + p {
-  margin-top: 14px;
+
+:deep(.tocList .toc-h3 a) {
+  padding-left: var(--space-5);
+  font-size: var(--fs-meta);
+}
+
+.articleFoot {
+  margin-top: var(--space-8);
+  padding-top: var(--space-5);
+  border-top: var(--border);
+}
+
+.relatedTitle {
+  font-size: var(--fs-h3);
+}
+
+.relatedList {
+  margin: 0 0 var(--space-5);
+  padding: 0;
+  list-style: none;
+}
+
+.notFound .lead {
+  margin: var(--space-4) 0 var(--space-5);
 }
 
 @media (max-width: 1100px) {

@@ -1,416 +1,163 @@
 <template>
-  <component
-    :is="cardComponent"
-    class="card linkCard"
-    :class="{ locked: isUnderConstruction }"
-    v-bind="cardProps"
-    :style="{ '--tone': tone }"
-  >
-    <div class="visual" :class="{ hasImage: props.project.image }">
-      <div class="visualTexture" aria-hidden="true"></div>
+  <article class="projectCard" :class="{ horizontal: layout === 'list' }">
+    <div class="thumb">
       <img
-        v-if="props.project.image"
-        class="cardImg"
-        :src="props.project.image"
-        :alt="`${props.project.title} preview`"
-        loading="lazy"
+        v-if="thumbSrc"
+        :src="thumbSrc"
+        alt=""
+        width="800"
+        height="450"
+        :loading="eager ? 'eager' : 'lazy'"
+        decoding="async"
       />
-      <span v-if="hasLive" class="liveBadge">Live</span>
-      <span v-else-if="props.project.inProgress" class="wipBadge">In progress</span>
-
-      <div class="visualTop">
-        <div class="visualMark">
-          <component :is="projectIcon(props.project.slug)" class="visualIcon" />
-        </div>
-        <div class="visualCopy">
-          <p class="eyebrow">{{ visualLabel(props.project.slug) }}</p>
-          <p class="visualMeta">{{ projectMeta(props.project) }}</p>
-        </div>
-      </div>
     </div>
-
-    <div class="content">
-      <p v-if="isUnderConstruction" class="construction">Hard-hat zone: under construction</p>
-
-      <div class="top">
-        <h3>{{ props.project.title }}</h3>
-        <span class="chev">{{ isUnderConstruction ? "Soon" : "View" }}</span>
-      </div>
-
-      <p class="muted">{{ props.project.subtitle }}</p>
-
-      <div class="tags">
-        <span v-for="t in props.project.tags" :key="t" class="tag">{{ t }}</span>
-      </div>
+    <div class="body">
+      <p v-if="category" class="meta category">{{ category }}</p>
+      <component :is="`h${headingLevel}`" class="title">
+        <RouterLink class="titleLink" :to="`/projects/${project.slug}`">{{ displayTitle }}</RouterLink>
+      </component>
+      <p class="summary">{{ summary }}</p>
+      <p v-if="project.highlight" class="highlight">{{ project.highlight }}</p>
+      <span class="cta" aria-hidden="true">Read the case study <span class="arrow">→</span></span>
     </div>
-  </component>
+  </article>
 </template>
 
 <script setup>
 import { computed } from "vue";
-import { RouterLink } from "vue-router";
-import { Activity, BrainCircuit, ChartScatter, Heart, ScanSearch } from "lucide-vue-next";
 
 const props = defineProps({
   project: { type: Object, required: true },
+  headingLevel: { type: Number, default: 3 },
+  /** "grid" stacks the image above text; "list" puts it beside the text on wide screens. */
+  layout: { type: String, default: "grid" },
+  eager: { type: Boolean, default: false },
 });
 
-const toneByTag = {
-  "Healthcare AI": "#38bdf8",
-  "Medical Imaging": "#6366f1",
-  Neuroscience: "#818cf8",
-  Miscellaneous: "#64748b",
-};
-
-const tone = computed(() => {
-  const match = props.project.tags.find((t) => toneByTag[t]);
-  return match ? toneByTag[match] : "var(--accent)";
-});
-const isUnderConstruction = computed(() => Boolean(props.project.underConstruction));
-const hasLive = computed(() =>
-  Boolean(props.project.links?.dashboard || props.project.links?.demo)
-);
-const cardComponent = computed(() => (isUnderConstruction.value ? "article" : RouterLink));
-const cardProps = computed(() =>
-  isUnderConstruction.value ? {} : { to: `/projects/${props.project.slug}` }
-);
-
-const iconBySlug = {
-  "eeg-seizure-classification": BrainCircuit,
-  "luna16-nodule-segmentation": ScanSearch,
-  "chest-cancer-efficientnet-deit-smallvit": ScanSearch,
-  "imagined-handwriting-decoding": Activity,
-  "uci-heart-disease-ml": Heart,
-};
-
-const labelBySlug = {
-  "eeg-seizure-classification": "EEG ML pipeline",
-  "luna16-nodule-segmentation": "CT segmentation model",
-  "chest-cancer-efficientnet-deit-smallvit": "Chest imaging models",
-  "imagined-handwriting-decoding": "Neural decoding models",
-  "uci-heart-disease-ml": "Cardiac risk modeling",
-};
-
-function projectIcon(slug) {
-  return iconBySlug[slug] || ChartScatter;
-}
-
-function visualLabel(slug) {
-  return labelBySlug[slug] || "Interactive project";
-}
-
-function projectMeta(project) {
-  const languages = (project.languages || []).slice(0, 2).join(" / ");
-  return languages || (project.tags || []).slice(0, 2).join(" / ") || "Interactive case study";
-}
+const displayTitle = computed(() => props.project.displayTitle || props.project.title);
+const summary = computed(() => props.project.cardSummary || props.project.subtitle);
+const thumbSrc = computed(() => props.project.thumbnail || props.project.image || "");
+const category = computed(() => (props.project.modelTypes || props.project.tags || [])[0] || "");
 </script>
 
 <style scoped>
-.linkCard {
+.projectCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--color-surface);
+  border: var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+
+.projectCard:hover {
+  border-color: var(--color-control-border);
+  box-shadow: var(--shadow-md);
+}
+
+/* The link's own outline is hidden (it spans the card), so the card shows focus. */
+.projectCard:has(.titleLink:focus-visible) {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+.thumb {
+  aspect-ratio: 16 / 9;
+  background: var(--color-surface-muted);
+  border-bottom: var(--border);
+}
+
+.thumb img {
   display: block;
-  text-decoration: none;
-  position: relative;
-  overflow: hidden;
-  padding: 0;
-  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, background 160ms ease;
-}
-
-.linkCard.locked {
-  cursor: not-allowed;
-  border-style: dashed;
-}
-
-.linkCard::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto;
-  height: 1px;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--tone) 92%, white), color-mix(in srgb, var(--tone) 20%, transparent));
-  opacity: 0.9;
-}
-
-.linkCard::after {
-  content: "";
-  position: absolute;
-  inset: auto -16% -24% auto;
-  width: 180px;
-  height: 180px;
-  border-radius: 999px;
-  pointer-events: none;
-  background: radial-gradient(circle, color-mix(in srgb, var(--tone) 12%, transparent), transparent 66%);
-  transition: opacity 160ms ease, transform 220ms ease;
-  opacity: 0.55;
-}
-
-.linkCard:hover {
-  transform: translateY(-4px);
-  border-color: color-mix(in srgb, var(--tone) 42%, var(--border));
-  box-shadow: 0 16px 30px color-mix(in srgb, var(--tone) 20%, transparent);
-  background: color-mix(in srgb, var(--card) 88%, var(--tone) 4%);
-}
-
-.linkCard.locked:hover {
-  transform: none;
-  box-shadow: 0 10px 24px color-mix(in srgb, var(--tone) 18%, transparent);
-}
-
-.linkCard:hover::after {
-  opacity: 0.86;
-  transform: scale(1.08);
-}
-
-.visual {
-  position: relative;
-  min-height: 120px;
-  padding: 18px 18px 16px;
-  overflow: hidden;
-  border-radius: calc(var(--r-lg) - 1px) calc(var(--r-lg) - 1px) 0 0;
-  background:
-    radial-gradient(circle at top right, color-mix(in srgb, var(--tone) 22%, transparent), transparent 32%),
-    linear-gradient(135deg, color-mix(in srgb, var(--tone) 14%, var(--bg-elev)), color-mix(in srgb, var(--card) 86%, var(--bg)));
-  border-bottom: 1px solid color-mix(in srgb, var(--tone) 24%, var(--border));
-}
-
-.visualTexture,
-.visualTop,
-.visualCopy {
-  position: relative;
-  z-index: 1;
-}
-
-/* Optional screenshot fills the visual; scrim keeps overlaid text readable */
-.cardImg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-.visual.hasImage .visualTexture {
-  display: none;
+
+html[data-theme="dark"] .thumb img {
+  filter: brightness(0.92);
 }
-.visual.hasImage::after {
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  flex: 1;
+  padding: var(--space-5);
+}
+
+.category {
+  font-weight: 600;
+}
+
+.title {
+  font-family: var(--font-sans);
+  font-size: clamp(1.375rem, 1.25rem + 0.4vw, 1.625rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.titleLink {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+/* Whole card is clickable through this one link (single tab stop). */
+.titleLink::after {
   content: "";
   position: absolute;
   inset: 0;
-  z-index: 0;
-  background: linear-gradient(180deg, rgba(2, 6, 23, 0.12), rgba(2, 6, 23, 0.8));
 }
 
-/* Live demo badge */
-.liveBadge {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px 4px 8px;
-  border-radius: var(--r-pill);
-  font-size: 11px;
-  font-weight: 900;
-  letter-spacing: 0.02em;
-  color: #04231c;
-  background: color-mix(in srgb, #10b981 88%, white);
-  box-shadow: 0 4px 12px color-mix(in srgb, #10b981 40%, transparent);
-}
-.liveBadge::before {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: #04231c;
-  animation: livePulse 1.8s ease-in-out infinite;
-}
-.wipBadge {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: var(--r-pill);
-  font-size: 11px;
-  font-weight: 900;
-  letter-spacing: 0.02em;
-  color: #3a2a05;
-  background: color-mix(in srgb, #f59e0b 86%, white);
-  box-shadow: 0 4px 12px color-mix(in srgb, #f59e0b 34%, transparent);
-}
-.wipBadge::before {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: #3a2a05;
-}
-@keyframes livePulse {
-  0%, 100% { opacity: 0.45; transform: scale(0.85); }
-  50% { opacity: 1; transform: scale(1.1); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .liveBadge::before { animation: none !important; }
+.titleLink:focus-visible {
+  outline: none;
 }
 
-.visualTexture {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(120deg, transparent 0 58%, color-mix(in srgb, white 7%, transparent) 58% 62%, transparent 62%),
-    linear-gradient(0deg, color-mix(in srgb, white 6%, transparent) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 20px;
-  opacity: 0.45;
-  mask-image: linear-gradient(180deg, black, transparent 90%);
+.projectCard:hover .titleLink {
+  color: var(--color-accent);
 }
 
-.visualTop {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 16px;
+.summary {
+  color: var(--color-text-muted);
 }
 
-.eyebrow {
-  margin: 0;
-  max-width: none;
-  font-size: 18px;
-  line-height: 1.15;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: white;
+.highlight {
+  padding-left: var(--space-3);
+  border-left: 3px solid var(--color-accent);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  line-height: 1.5;
 }
 
-.visualMark {
-  width: 48px;
-  height: 48px;
-  flex: 0 0 auto;
-  display: grid;
-  place-items: center;
-  border-radius: 14px;
-  border: 1px solid color-mix(in srgb, white 10%, transparent);
-  background:
-    linear-gradient(160deg, color-mix(in srgb, white 10%, var(--tone)), color-mix(in srgb, var(--tone) 16%, rgba(255, 255, 255, 0.04)));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    0 12px 24px color-mix(in srgb, var(--tone) 16%, transparent);
-  transition: transform 180ms ease, box-shadow 180ms ease;
+.cta {
+  margin-top: auto;
+  padding-top: var(--space-2);
+  color: var(--color-accent);
+  font-weight: 650;
+  font-size: var(--fs-small);
 }
 
-.visualIcon {
-  width: 22px;
-  height: 22px;
-  color: white;
+.cta .arrow {
+  display: inline-block;
+  transition: transform var(--dur-fast) var(--ease);
 }
 
-.visualCopy {
-  min-width: 0;
-  flex: 1 1 auto;
+.projectCard:hover .cta .arrow {
+  transform: translateX(3px);
 }
 
-.content {
-  padding: 18px;
-}
-
-.construction {
-  margin: 0 0 12px;
-  display: inline-flex;
-  width: fit-content;
-  border-radius: var(--r-pill);
-  border: 1px dashed color-mix(in srgb, var(--tone) 52%, var(--border));
-  background: color-mix(in srgb, var(--tone) 14%, transparent);
-  color: var(--text);
-  padding: 6px 10px;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-}
-
-.visualMeta {
-  margin: 6px 0 0;
-  color: color-mix(in srgb, white 72%, var(--tone));
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.top {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-h3 {
-  margin: 0;
-  letter-spacing: -0.02em;
-  font-size: 21px;
-  line-height: 1.05;
-}
-
-.muted {
-  margin: 10px 0 0;
-  color: var(--muted);
-  line-height: 1.55;
-  font-size: 14px;
-}
-
-.tags {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 14px;
-}
-
-.tag {
-  border: 1px solid color-mix(in srgb, var(--tone) 12%, var(--border));
-  border-radius: var(--r-pill);
-  padding: 5px 10px;
-  font-weight: 850;
-  font-size: 11px;
-  letter-spacing: 0.02em;
-  color: color-mix(in srgb, var(--text) 70%, var(--muted));
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--tone) 10%, transparent), color-mix(in srgb, var(--tone) 4%, transparent));
-}
-
-.chev {
-  color: color-mix(in srgb, var(--tone) 48%, white);
-  font-weight: 900;
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.linkCard:hover .visualMark {
-  transform: translateY(-2px);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    0 14px 28px color-mix(in srgb, var(--tone) 22%, transparent);
-}
-
-.linkCard:hover .visualTexture {
-  opacity: 0.62;
-}
-
-@media (max-width: 640px) {
-  .visual {
-    min-height: 112px;
-    padding: 16px;
+@media (min-width: 900px) {
+  .horizontal {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   }
-
-  .eyebrow {
-    font-size: 16px;
-  }
-
-  h3 {
-    font-size: 18px;
+  .horizontal .thumb {
+    aspect-ratio: auto;
+    border-bottom: 0;
+    border-right: var(--border);
   }
 }
 </style>

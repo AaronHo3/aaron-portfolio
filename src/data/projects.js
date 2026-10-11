@@ -12,14 +12,28 @@
  *   inProgress: boolean                      // work-in-progress; shows an "In progress" badge + Lab strip
  *   headlineStats: [{ value, label }]        // big stat callouts at the top
  *   caseStudy: {
- *     problem:      string,                   // motivation: why this matters
- *     approach:     string,                   // the strategy, in one paragraph
+ *     problem:      string | [string],        // motivation; an array renders as paragraphs
+ *     approach:     string | [string],        // the strategy; an array renders as paragraphs
  *     architecture: [string],                 // ordered method/pipeline steps
- *     findings:     [string],                 // (optional) key takeaways
+ *     findings:     [string | { title, text }],// (optional) key takeaways; title = short heading
  *     results:      [{ metric, value, note }],// results table rows
  *     limitations:  [string],                 // honest constraints
  *     future:       [string],                 // future work / open questions
  *   }
+ *
+ * Optional presentation fields (cards and case-study header). Keep them
+ * consistent with the full content above; never add numbers that are not
+ * already stated in this entry.
+ *
+ *   displayTitle:  string    // short card/page title, e.g. "GutSense" (full `title` is kept)
+ *   cardSummary:   string    // one or two sentences for project cards
+ *   highlight:     string    // one verified result or distinguishing detail for cards
+ *   thumbnail:     string    // simplified card image in public/thumbnails/ (16:9)
+ *   imageCaption:  string    // caption for `image` on the case-study page
+ *   imageSize:     [w, h]    // intrinsic size of `image` if not 1600x900 (prevents layout shift)
+ *   context:       string    // where/why the work happened (event, dataset, team)
+ *   status:        string    // maturity and honest scope, e.g. "Prototype; not clinically validated"
+ *   channels:      [{ name, text }] // (Score the Story) the two control channels
  * ----------------------------------------------------------------------------
  */
 export const projects = [
@@ -61,6 +75,14 @@ export const projects = [
       "Researched and designed the toilet-mounted biosensor hardware architecture, outlining sensor layout, biomarker data flow, and clinical integration pathways for passive at-home screening.",
     ],
     image: "/previews/gutsense-architecture.webp",
+    imageSize: [1640, 1052],
+    displayTitle: "GutSense",
+    cardSummary: "A hackathon prototype for continuous colorectal-cancer screening: an 8-biomarker risk model, EHR retrieval in InterSystems IRIS, and Claude-generated clinical narratives.",
+    highlight: "3rd Place, InterSystems Challenge, MIT Grand Hack 2026",
+    thumbnail: "/thumbnails/gutsense.svg",
+    imageCaption: "System architecture of the prototype: biosensor design, 8-biomarker risk engine, IRIS vector retrieval over FHIR records, and Claude-generated narratives. The biosensor is an architectural specification, not a fabricated device.",
+    context: "Team project, MIT Grand Hack 2026 (InterSystems Challenge)",
+    status: "Hackathon prototype. Risk model trained on synthetic data; not clinically validated.",
     headlineStats: [
       { value: "3rd", label: "Place · InterSystems Challenge, MIT Grand Hack 2026" },
       { value: "8", label: "Biomarkers in the neural-net risk engine" },
@@ -132,6 +154,23 @@ export const projects = [
       "Designed an MFCC-based speaker-signature layer that deterministically maps vocal timbre to palette, key, and tempo, so the same narrator yields a recognizable musical identity, plus a shared harmony module that keeps the live take and its rendered keepsake in tune.",
     ],
     image: "/previews/score-the-story.svg",
+    displayTitle: "Score the Story",
+    cardSummary: "A real-time instrument where a narrator's voice is the controller: prosody shapes the music's texture while Whisper and Claude set the scene's style, and Magenta RealTime 2 composes live.",
+    highlight: "Built for the Google DeepMind challenge, Music Technology Hackathon 2026",
+    thumbnail: "/thumbnails/score-the-story.svg",
+    imageCaption: "Signal flow: live narration feeds a prosody channel (how it is said) and a Whisper-to-Claude semantic channel (what is said), which together steer Magenta RealTime 2 to generate the score in real time.",
+    context: "Google DeepMind challenge, Music Technology Hackathon 2026",
+    status: "Working prototype. Evaluation is qualitative so far.",
+    channels: [
+      {
+        "name": "Prosody: how it is said",
+        "text": "Energy, pitch, speech rate, and spectral brightness are extracted from live narration and mapped, via running auto-gain normalization, to MRT2 controls: energy drives density/chaos, brightness drives a dark-to-bright prompt blend, and silence pulls the texture sparse."
+      },
+      {
+        "name": "Semantics: what is said",
+        "text": "Whisper transcribes the narration and Claude reads the transcript to emit two scene style poles (a darker/tenser pole and a brighter/triumphant pole) that MRT2 embeds and morphs between, replacing brittle keyword maps with live language understanding."
+      }
+    ],
     headlineStats: [
       { value: "DeepMind", label: "Built for the Google DeepMind challenge at the Music Technology Hackathon 2026" },
       { value: "2 channels", label: "Prosody (how it's said) + Whisper/Claude semantics (what's said)" },
@@ -150,9 +189,18 @@ export const projects = [
         "MRT2 embeds both style poles and the voice blends continuously between them, rendering a 48 kHz score in real time via either the native magenta-rt engine or the MRT2 AU plugin driven over MIDI.",
       ],
       findings: [
-        "Separating how it's said (prosody) from what's said (semantics) is what makes the score feel intentional rather than reactive and jittery - each channel covers the other's blind spot.",
-        "Smoothing and running normalization matter more than the exact feature-to-parameter mapping: auto-gain keeps the instrument expressive across different speakers and rooms with no per-user calibration.",
-        "A deterministic timbre-to-identity mapping is enough to give each narrator a recognizable musical signature without training a learned speaker model.",
+        {
+          title: "Two channels cover each other's blind spots",
+          text: "Separating how it's said (prosody) from what's said (semantics) is what makes the score feel intentional rather than reactive and jittery - each channel covers the other's blind spot.",
+        },
+        {
+          title: "Normalization matters more than the exact mapping",
+          text: "Smoothing and running normalization matter more than the exact feature-to-parameter mapping: auto-gain keeps the instrument expressive across different speakers and rooms with no per-user calibration.",
+        },
+        {
+          title: "A deterministic identity is enough",
+          text: "A deterministic timbre-to-identity mapping is enough to give each narrator a recognizable musical signature without training a learned speaker model.",
+        },
       ],
       results: [
         { metric: "Generative core", value: "MRT2", note: "DeepMind Magenta RealTime 2 autoregressive model, 48 kHz" },
@@ -276,6 +324,12 @@ export const projects = [
       "Built the study so the refutation was possible: hypotheses, sweep grids and falsification criteria written down before any run; the deciding control's interpretation rule fixed in advance; every run emitting a JSON artifact with metrics, config, seed and git SHA (stamped '-dirty' on a modified tree); figures generated only from artifacts; and 37 tests including an integrity suite that fails if a number in the write-up drifts from the data backing it. 18 conditions run twice independently returned bit-identical error rates, so the quoted noise floor is initialization variance alone. That determinism was observed empirically on one GPU configuration rather than enforced by cuDNN flags, so it is a statement about these results, not a portable guarantee.",
     ],
     image: "/previews/neural-decoding.svg",
+    displayTitle: "Neural Decoding",
+    cardSummary: "Brain-to-text decoders train on alignment labels no one observed. Across 198 runs I injected controlled label error to find which kind of alignment mistake actually costs accuracy.",
+    highlight: "Mistiming 17% of frame labels had no measurable cost (-0.7 pp, inside the noise floor); mislabeling the same share cost +6.8 pp",
+    thumbnail: "/thumbnails/neural-decoding.svg",
+    imageCaption: "Study overview: boundary jitter (right characters, wrong times) versus identity corruption (right times, wrong characters), injected in controlled amounts and measured as character error rate cost. Data: Willett et al. (2021) intracortical handwriting recordings.",
+    context: "Research project on the Willett et al. (2021) imagined-handwriting dataset",
     headlineStats: [
       {
         value: "17% → 0 pp",
@@ -294,10 +348,18 @@ export const projects = [
       },
     ],
     caseStudy: {
-      problem:
-        "Willett et al. (2021) decode imagined handwriting at over 90 characters per minute, and their pipeline has become the template for the field. It has three stages: an HMM force-aligns neural recordings against the prompted sentence to produce a character label for every 10 ms bin, a recurrent network trains on those labels, and a language model rescores the output. Stage two is supervised entirely by stage one, and stage one's labels are not ground truth. They come from a generative model fit to isolated single letters and transferred to continuous sentences, and no one observed the true label of any individual bin. Subsequent work has explored decoders and language models thoroughly while adopting the alignment stage as given, so the literature does not report how much decoding error is attributable to alignment error, nor which KIND of alignment error is expensive. Forced alignment can fail two ways: it can find the right characters but mislocate the transitions, or it can assign the wrong character entirely. Those are different failures with different fixes.",
-      approach:
-        "Ground truth for frame labels does not exist, so the absolute cost of alignment error cannot be measured directly. What can be measured is the derivative: degrade the labels by a known amount and observe the response. I treated controlled corruption as an instrument rather than as an attempt to improve anything, using two corruption models chosen to mirror the two real failure modes, applied to training labels only so the evaluation metric is never perturbed. The test set is 10 sentences, fixed by the dataset and not negotiable, which is too few to support pairwise comparisons. So every experiment is a dose-response sweep across five pre-specified severity levels with three seeds: a monotone trend in a predicted direction is evidence even when adjacent points are individually indistinguishable, whereas a single A-beats-B gap is not. The sweep, not the comparison, is the unit of evidence. Hypotheses and falsification criteria were fixed in writing before anything ran.",
+      problem: [
+        "Willett et al. (2021) decode imagined handwriting at over 90 characters per minute, and their pipeline has become the template for the field. It has three stages: an HMM force-aligns neural recordings against the prompted sentence to produce a character label for every 10 ms bin, a recurrent network trains on those labels, and a language model rescores the output.",
+        "Stage two is supervised entirely by stage one, and stage one's labels are not ground truth. They come from a generative model fit to isolated single letters and transferred to continuous sentences, and no one observed the true label of any individual bin.",
+        "Subsequent work has explored decoders and language models thoroughly while adopting the alignment stage as given, so the literature does not report how much decoding error is attributable to alignment error, nor which KIND of alignment error is expensive.",
+        "Forced alignment can fail two ways: it can find the right characters but mislocate the transitions, or it can assign the wrong character entirely. Those are different failures with different fixes.",
+      ],
+      approach: [
+        "Ground truth for frame labels does not exist, so the absolute cost of alignment error cannot be measured directly. What can be measured is the derivative: degrade the labels by a known amount and observe the response.",
+        "I treated controlled corruption as an instrument rather than as an attempt to improve anything, using two corruption models chosen to mirror the two real failure modes, applied to training labels only so the evaluation metric is never perturbed.",
+        "The test set is 10 sentences, fixed by the dataset and not negotiable, which is too few to support pairwise comparisons. So every experiment is a dose-response sweep across five pre-specified severity levels with three seeds: a monotone trend in a predicted direction is evidence even when adjacent points are individually indistinguishable, whereas a single A-beats-B gap is not. The sweep, not the comparison, is the unit of evidence.",
+        "Hypotheses and falsification criteria were fixed in writing before anything ran.",
+      ],
       architecture: [
         "Take Willett et al.'s own precomputed HMM forced-alignment output as the zero-corruption reference condition, treating it as the best available labels rather than as ground truth.",
         "Inject boundary jitter: displace each character-segment boundary by a Gaussian perturbation (sigma 0 to 40 frames), then repair ordering so segments stay monotone. Character identity and sequence are preserved; only transition times move.",
@@ -307,10 +369,22 @@ export const projects = [
         "Sweep the full grid at three seeds, then repeat the entire grid at a second sequence length after a baseline disagreement suggested truncation was distorting the result.",
       ],
       findings: [
-        "Alignment error type dominates alignment error rate. For the best decoder, displacing boundaries so 4%, 8% and 17% of frame labels change moves character error rate by -1.0, -0.7 and -0.7 pp: no effect, well inside the 4.17 pp noise floor. Corrupting identities over the same range costs +2.8, +4.6 and +6.8 pp immediately and roughly linearly, then accelerates to +17.1 pp. Across architectures corruption is 2.4x to 10.8x steeper than jitter. This is a mechanistic result rather than a correlation, and it gives aligner design a concrete target: prioritize getting the character sequence right over tightening boundary placement.",
-        "Sequence truncation can invert an architecture conclusion. The first full grid, run at 1500-bin sequences to afford the run count, showed a 1.64 pp architecture spread sitting BELOW the 2.32 pp seed noise floor, implying the three decoders were indistinguishable and that label quality dominated them 3.77x. The identical grid at 3000 bins gives a 17.55 pp architecture spread and a 0.54x ratio. Truncating to 15 seconds cuts the tail off longer test sentences, inflating error toward a ceiling near 78% for every condition and compressing every effect. The failure was silent: each number was reproducible, seeds agreed, trends were monotone, and the conclusion was still an artifact.",
-        "The pre-registered central hypothesis was refuted, and inverted. It predicted label quality would dominate architecture; at full sequence length architecture dominates label quality roughly two to one. Both effects clear the noise floor, so both are real. A second hypothesis, that architecture rankings would be unstable under label noise, was also refuted: the RCNN wins at 9 of 10 corruption levels. Both predictions are reported unmodified, and the interpretation rule that produced the verdict was written down before the deciding control ran.",
-        "The finding that survived is more useful than the one predicted. 'Label quality matters more than architecture' would have been a claim about relative magnitudes, sensitive to which architectures happened to be in the comparison set. 'Timing errors are nearly free while identity errors are expensive' is a claim about mechanism, and it held across every architecture and strengthened once the truncation confound was removed.",
+        {
+          title: "Error type matters more than error rate",
+          text: "Alignment error type dominates alignment error rate. For the best decoder, displacing boundaries so 4%, 8% and 17% of frame labels change moves character error rate by -1.0, -0.7 and -0.7 pp: no effect, well inside the 4.17 pp noise floor. Corrupting identities over the same range costs +2.8, +4.6 and +6.8 pp immediately and roughly linearly, then accelerates to +17.1 pp. Across architectures corruption is 2.4x to 10.8x steeper than jitter. This is a mechanistic result rather than a correlation, and it gives aligner design a concrete target: prioritize getting the character sequence right over tightening boundary placement.",
+        },
+        {
+          title: "Sequence truncation inverted the architecture conclusion",
+          text: "Sequence truncation can invert an architecture conclusion. The first full grid, run at 1500-bin sequences to afford the run count, showed a 1.64 pp architecture spread sitting BELOW the 2.32 pp seed noise floor, implying the three decoders were indistinguishable and that label quality dominated them 3.77x. The identical grid at 3000 bins gives a 17.55 pp architecture spread and a 0.54x ratio. Truncating to 15 seconds cuts the tail off longer test sentences, inflating error toward a ceiling near 78% for every condition and compressing every effect. The failure was silent: each number was reproducible, seeds agreed, trends were monotone, and the conclusion was still an artifact.",
+        },
+        {
+          title: "The pre-registered hypothesis was refuted, and inverted",
+          text: "The pre-registered central hypothesis was refuted, and inverted. It predicted label quality would dominate architecture; at full sequence length architecture dominates label quality roughly two to one. Both effects clear the noise floor, so both are real. A second hypothesis, that architecture rankings would be unstable under label noise, was also refuted: the RCNN wins at 9 of 10 corruption levels. Both predictions are reported unmodified, and the interpretation rule that produced the verdict was written down before the deciding control ran.",
+        },
+        {
+          title: "Why the surviving finding is more useful",
+          text: "The finding that survived is more useful than the one predicted. 'Label quality matters more than architecture' would have been a claim about relative magnitudes, sensitive to which architectures happened to be in the comparison set. 'Timing errors are nearly free while identity errors are expensive' is a claim about mechanism, and it held across every architecture and strengthened once the truncation confound was removed.",
+        },
       ],
       results: [
         { metric: "Boundary jitter, 17% of frames", value: "-0.7 pp", note: "No measurable cost (RCNN); noise floor is 4.17 pp" },
@@ -377,6 +451,13 @@ export const projects = [
       "Traced one root cause, label shift across sites (prevalence 36% to 94%), through calibration drift (ECE up to 0.30), a missingness probe that predicts the hospital at 86% accuracy but disease at chance within a single cohort, and a fairness audit where a global threshold misses women's disease 2.4x as often as men's, then shipped SHAP (8/8 features cardiologically correct), split-conformal abstention (0.908 coverage at a 90% target, defers on 27%), a model card, a datasheet, 27 unit tests, and CI.",
     ],
     image: "/previews/uci-heart-disease.svg",
+    displayTitle: "Heart Disease",
+    cardSummary: "Does a heart-disease model trained at some hospitals work at one it has never seen? A multi-site methodology study across four UCI cohorts (n=920).",
+    highlight: "Logistic regression: pooled-CV AUC 0.88 falls to 0.80 inside a held-out hospital",
+    thumbnail: "/thumbnails/heart-disease.svg",
+    imageCaption: "Study design schematic: leave-one-hospital-out validation across four cohorts, three model families under nested cross-validation, then calibration and decision-curve analysis.",
+    context: "Methodology study on the UCI heart-disease cohorts",
+    status: "A methodology study and learning exercise, not a medical device or deployable tool.",
     headlineStats: [
       { value: "0.88 → 0.80", label: "Pooled-CV AUC vs. mean AUC inside a held-out hospital, for the best-transferring model; gradient boosting falls further, 0.87 to 0.78" },
       { value: "2.4×", label: "At a single threshold the model misses disease in women 2.4x as often as in men (a label-shift harm)" },
@@ -385,8 +466,11 @@ export const projects = [
     caseStudy: {
       problem:
         "Heart-disease prediction on the UCI cohorts is one of the most over-fit benchmarks in machine learning, so another high accuracy number proves almost nothing. The questions that actually decide whether a clinical model is trustworthy go unasked: does a model trained at one set of hospitals generalize to a hospital it has never seen, are its probabilities calibrated well enough to act on, does it improve decisions over a simple standard of care, is it equally accurate for every patient, and can it say when it does not know?",
-      approach:
-        "I treated the dataset's four hospital cohorts as a built-in multi-site experiment and rebuilt the study around external validity and clinical usefulness rather than leaderboard accuracy. Linear and tree-based models are evaluated both the usual pooled way and with leave-one-hospital-out validation, then stress-tested with calibration analysis, decision-curve net benefit, interpretability, conformal uncertainty, and a subgroup fairness audit. Every discrimination number carries a 95% bootstrap confidence interval and every model comparison carries a DeLong test, so the write-up can distinguish a real effect from noise.",
+      approach: [
+        "I treated the dataset's four hospital cohorts as a built-in multi-site experiment and rebuilt the study around external validity and clinical usefulness rather than leaderboard accuracy.",
+        "Linear and tree-based models are evaluated both the usual pooled way and with leave-one-hospital-out validation, then stress-tested with calibration analysis, decision-curve net benefit, interpretability, conformal uncertainty, and a subgroup fairness audit.",
+        "Every discrimination number carries a 95% bootstrap confidence interval and every model comparison carries a DeLong test, so the write-up can distinguish a real effect from noise.",
+      ],
       architecture: [
         "Aggregate the four UCI cohorts (n=920), keep the hospital column strictly as a grouping variable rather than a feature, and recode the known data-quality artifact (cholesterol coded 0 across all of Switzerland and part of VA) as missing.",
         "Train scikit-learn pipelines (logistic regression, random forest, histogram gradient boosting) under 5-fold outer / 3-fold inner nested cross-validation so hyperparameter tuning does not optimistically bias the reported metrics.",
@@ -397,12 +481,30 @@ export const projects = [
         "Lock it down for reproducibility: a single seed throughout, one make target per analysis, a provenance manifest recording commit and library versions, 27 unit and smoke tests, and CI.",
       ],
       findings: [
-        "The generalization gap is real and consistent: scored as the mean AUC inside each held-out hospital, transfer costs 0.077 AUC for logistic regression (0.879 to 0.802), 0.082 for random forest (0.876 to 0.794), and 0.088 for gradient boosting (0.866 to 0.778). The simplest model transfers best, because the flexible learners are partly fitting site-specific structure. Pooling every out-of-site prediction into one AUC looks milder, but that scoring rewards ranking a high-prevalence cohort above a low-prevalence one, which is exactly the prevalence-proxy effect the missingness analysis isolates.",
-        "A single number hides outright failure: held out per site, gradient boosting ranges from 0.84 at Hungary down to 0.66 [0.56, 0.76] at VA Long Beach, barely better than chance. Predicted probabilities barely move (about 0.47 to 0.64) while true prevalence spans 0.36 to 0.94, so every site sits below the calibration diagonal and ECE climbs to 0.30. The model exports the prevalence it was trained on.",
-        "Complexity didn't pay off: nested-CV AUCs are 0.880 / 0.875 / 0.880 with all three pairwise DeLong tests non-significant (p = 0.35, 0.96, 0.33), and a 7-feature clinical baseline (AUC 0.881) is statistically indistinguishable from the 13-feature gradient-boosting model (0.874), DeLong p = 0.68. On net benefit the full model only overtakes treat-all above a 0.14 threshold, while the simpler proxy beats treat-all across nearly the entire threshold range.",
-        "The missing data is a hospital fingerprint, not clinical information: the missingness pattern alone predicts which hospital a patient came from with 86% accuracy, and 'predicts' disease at AUC 0.747 pooled but 0.498, exactly chance, within the one complete cohort. Re-adding the site column as a feature inflates pooled AUC by 0.025, which is why it stays out.",
-        "Equal AUC hid an equity gap: discrimination is essentially identical between sexes (0.869 vs 0.855), yet at a single 0.5 threshold the model misses disease in women 2.4x as often as in men (FNR 0.36 vs 0.15). The mechanism is the same label shift as everything above, since women's prevalence here is 26% against 63% for men, and it mirrors the real-world under-diagnosis of heart disease in women.",
-        "The model is trustworthy where it should be: all 8 features checked against established cardiology are learned in the correct direction, and split-conformal prediction hits its 90% coverage target (0.908 over 100 random splits) while returning an honest 'uncertain' set for 27% of patients, an actionable refer-for-more-testing signal that a bare probability cannot express.",
+        {
+          title: "Generalization: a consistent out-of-hospital gap",
+          text: "The generalization gap is real and consistent: scored as the mean AUC inside each held-out hospital, transfer costs 0.077 AUC for logistic regression (0.879 to 0.802), 0.082 for random forest (0.876 to 0.794), and 0.088 for gradient boosting (0.866 to 0.778). The simplest model transfers best, because the flexible learners are partly fitting site-specific structure. Pooling every out-of-site prediction into one AUC looks milder, but that scoring rewards ranking a high-prevalence cohort above a low-prevalence one, which is exactly the prevalence-proxy effect the missingness analysis isolates.",
+        },
+        {
+          title: "Calibration: per-site failure under label shift",
+          text: "A single number hides outright failure: held out per site, gradient boosting ranges from 0.84 at Hungary down to 0.66 [0.56, 0.76] at VA Long Beach, barely better than chance. Predicted probabilities barely move (about 0.47 to 0.64) while true prevalence spans 0.36 to 0.94, so every site sits below the calibration diagonal and ECE climbs to 0.30. The model exports the prevalence it was trained on.",
+        },
+        {
+          title: "Model complexity did not pay off",
+          text: "Complexity didn't pay off: nested-CV AUCs are 0.880 / 0.875 / 0.880 with all three pairwise DeLong tests non-significant (p = 0.35, 0.96, 0.33), and a 7-feature clinical baseline (AUC 0.881) is statistically indistinguishable from the 13-feature gradient-boosting model (0.874), DeLong p = 0.68. On net benefit the full model only overtakes treat-all above a 0.14 threshold, while the simpler proxy beats treat-all across nearly the entire threshold range.",
+        },
+        {
+          title: "Missing data is a hospital fingerprint",
+          text: "The missing data is a hospital fingerprint, not clinical information: the missingness pattern alone predicts which hospital a patient came from with 86% accuracy, and 'predicts' disease at AUC 0.747 pooled but 0.498, exactly chance, within the one complete cohort. Re-adding the site column as a feature inflates pooled AUC by 0.025, which is why it stays out.",
+        },
+        {
+          title: "Fairness: equal AUC hid an equity gap",
+          text: "Equal AUC hid an equity gap: discrimination is essentially identical between sexes (0.869 vs 0.855), yet at a single 0.5 threshold the model misses disease in women 2.4x as often as in men (FNR 0.36 vs 0.15). The mechanism is the same label shift as everything above, since women's prevalence here is 26% against 63% for men, and it mirrors the real-world under-diagnosis of heart disease in women.",
+        },
+        {
+          title: "Uncertainty and face validity",
+          text: "The model is trustworthy where it should be: all 8 features checked against established cardiology are learned in the correct direction, and split-conformal prediction hits its 90% coverage target (0.908 over 100 random splits) while returning an honest 'uncertain' set for 27% of patients, an actionable refer-for-more-testing signal that a bare probability cannot express.",
+        },
       ],
       results: [
         { metric: "Generalization gap", value: "0.88 → 0.80", note: "Pooled-CV vs. mean within-held-out-hospital AUC (logistic regression); RF 0.88 → 0.79, GB 0.87 → 0.78" },
@@ -428,6 +530,105 @@ export const projects = [
         "Apply label-shift correction, such as prevalence re-weighting or domain adaptation, to recover the cross-site calibration that recalibrating on the source hospitals cannot.",
         "Replicate on a prospective, multi-site cohort with consistent feature collection, which would remove the feature-support shift that bounds transfer here.",
         "Carry the study's own recommendation forward: logistic regression with group-aware thresholds and conformal abstention, since it transfers best, is interpretable, is statistically as accurate as anything more complex, and can quantify its uncertainty with a guarantee.",
+      ],
+    },
+  },
+  {
+    slug: "fantasy-basketball-draft-copilot",
+    title: "Fantasy Draft Copilot | ESPN Nine-Category Draft Assistant",
+    subtitle:
+      "A side project for my ESPN fantasy basketball league with friends: a local draft assistant that ranks my next pick using learned player projections, the league's exact rules, and Monte Carlo matchup simulation, then tests its own advice in mock drafts",
+    tags: ["Sports Analytics", "Side Project"],
+    modelTypes: ["Sports Analytics"],
+    languages: ["Python", "TypeScript"],
+    stack: ["FastAPI", "React", "scikit-learn", "NumPy", "pandas", "SciPy", "SQLite", "nba_api", "pytest", "Vitest", "Playwright"],
+    metrics: [
+      "+0.53 ± 0.13 categories per matchup over value-order drafting (120 paired mock drafts, 2025-26)",
+      "Learned ensemble ranked players better than the baseline in all 4 holdout seasons",
+      "Monte Carlo refinement layer did not beat the simple ranking; kept as supplementary",
+      "Runs locally: no accounts, no ESPN credentials",
+    ],
+    links: {
+      github: "https://github.com/AaronHo3/fantasy_draft_simulator",
+      demo: "",
+      report: "https://github.com/AaronHo3/fantasy_draft_simulator/blob/Main/docs/MODEL_CARD.md",
+    },
+    summary:
+      "A local-first draft assistant for ESPN nine-category fantasy basketball. You record picks as they happen and get a ranked, explained shortlist for your next pick: who adds the most value above the player you could still get next turn, which lineup slot they fill, what they add to each category, and how likely they are to be gone before you pick again.",
+    bullets: [
+      "Built player projections from ten seasons of NBA data with a ridge and gradient-boosting ensemble, validated on four held-out seasons and blended with ESPN's published projections.",
+      "Encoded the league's exact rules (ESPN eligibility, roster slots, position caps, ties, punts) and a Monte Carlo draft-and-matchup simulation for lookahead and a punt advisor.",
+      "Tested the advice in paired mock drafts and kept the parts that held up, dropping or demoting the parts that did not.",
+    ],
+    displayTitle: "Fantasy Draft Copilot",
+    cardSummary:
+      "A side project for my fantasy basketball league with friends: a local draft assistant that ranks my next pick with learned player projections and the league's exact rules, then tests its own advice in mock drafts.",
+    highlight: "+0.53 categories per matchup over value-order drafting in 120 paired mock drafts (retrospective)",
+    thumbnail: "/thumbnails/fantasy-draft-copilot.svg",
+    context: "Personal side project for an ESPN league with friends",
+    status: "Working local app. Evaluation is retrospective and potentially leaky, not a rigorous draft backtest.",
+    headlineStats: [
+      { value: "+0.53", label: "Categories won per weekly matchup over value-order drafting (±0.13, 120 paired mock drafts, 2025-26)" },
+      { value: "4 of 4", label: "Held-out seasons where the learned ensemble ranked players better than the hand-tuned baseline" },
+      { value: "−0.32", label: "The Monte Carlo refinement layer versus the same bot (±0.31): not better, so it stays supplementary" },
+    ],
+    caseStudy: {
+      problem: [
+        "In a nine-category head-to-head league, the best pick depends on more than a player's overall rank: which categories your roster already covers, which lineup slots are still open, and who will still be available at your next turn.",
+        "I wanted a tool for my own league that answers 'who should I take now, and why?', and I wanted to know whether its advice actually beats drafting by value order before trusting it on draft day.",
+      ],
+      approach: [
+        "The copilot is a local web app (FastAPI and React) where picks are recorded as they happen. It ranks the next pick by value above replacement, where replacement is the best player likely to still be there at my following pick, and explains each suggestion by slot and category.",
+        "Projections come from a learned model trained on ten seasons of NBA data and validated on four held-out seasons, blended with ESPN's published projections. A Monte Carlo layer simulates the rest of the draft and weekly matchups for lookahead and a punt advisor. Each layer was then tested in paired mock drafts against the same seat drafting another way.",
+      ],
+      architecture: [
+        "Fetch NBA box-score history (nba_api) and ESPN's public player, eligibility, ADP and schedule endpoints, with no accounts or credentials.",
+        "Project per-game production in nine categories plus minutes and games with an ensemble of ridge regression and gradient boosting per stat, trained only on seasons before the projection year, and keep shooting coherent (makes never exceed attempts).",
+        "Standardize categories robustly over a fantasy-relevant pool, apply strategy weights (including punts), and rank by value above replacement at my next pick, with lineup legality solved as an assignment problem.",
+        "Optionally refine the shortlist with draft rollouts and a correlated weekly matchup simulation, and estimate how likely each player is to be taken before my next pick.",
+        "Evaluate every strategy in 120 paired mock drafts per setting (12 seats × 10 seeds), scored by the realized categories each finished roster wins per matchup.",
+      ],
+      findings: [
+        {
+          title: "The ranking beat value-order drafting, but not projected value alone",
+          text: "Against a bot drafting by value order with positional need, the copilot's fast ranking won +0.53 ± 0.13 more categories per weekly matchup (79 better, 34 worse, 7 equal in 120 paired drafts) and about one category more than drafting from last season's numbers. It was not distinguishable from simply drafting by projected value (+0.06 ± 0.06), so the projection model, not the ranking logic, carried the result.",
+        },
+        {
+          title: "The simulation layer did not earn its place",
+          text: "The refined layer (draft rollouts plus weekly matchup simulation) scored −0.32 ± 0.31 against the same bot at a 2-second budget over 20 drafts, and −0.14 ± 0.29 at 8 seconds. More compute did not rescue it, so the shortlist stays ordered by the fast ranking and the simulation columns are labeled as not yet validated.",
+        },
+        {
+          title: "Learned projections ranked players better in every holdout season",
+          text: "Rank correlation between projected and realized fantasy value for the ensemble versus the hand-tuned baseline was 0.740 vs 0.720 (2022-23), 0.784 vs 0.775 (2023-24), 0.759 vs 0.718 (2024-25) and 0.659 vs 0.644 (2025-26). In paired drafts the ensemble's edge over the baseline averaged +0.38 categories per matchup and was never negative, though individual years ranged from +0.01 to +0.81 with standard errors near 0.1.",
+        },
+        {
+          title: "Raw injury history is a trap",
+          text: "Using last season's games played directly ranked players worse than the model's games-played projection in both years tested, and it lost categories in paired drafts in both years (−0.14 and −0.48 per matchup). Injuries do not repeat cleanly, so the model's projection, which regresses heavily toward the league norm, is used instead.",
+        },
+        {
+          title: "An intuitive heuristic made drafts worse",
+          text: "Weighting categories with diminishing returns (worth less where the roster is already strong) sounded right for head-to-head categories, but at its natural scale it cost 1.23 categories per matchup in 2025-26 and was at best a wash at gentler settings, so it was left off.",
+        },
+      ],
+      results: [
+        { metric: "Fast ranking vs value-order bot", value: "+0.53", note: "± 0.13 categories per matchup; 120 paired drafts, 2025-26" },
+        { metric: "Fast ranking vs projected value alone", value: "+0.06", note: "± 0.06; not distinguishable" },
+        { metric: "Drafting from last season's numbers vs bot", value: "−0.54", note: "± 0.11; the naive approach loses" },
+        { metric: "Refined simulation layer vs bot", value: "−0.32", note: "± 0.31 at a 2 s budget (20 drafts); −0.14 ± 0.29 at 8 s" },
+        { metric: "Ensemble vs baseline rank correlation", value: "4 of 4", note: "Better in every holdout season, 2022-23 to 2025-26" },
+        { metric: "Fast recommendation latency", value: "8.9 ms", note: "p50 on a 600-player synthetic league (p95 10.3 ms)" },
+      ],
+      limitations: [
+        "The evaluation is retrospective and potentially leaky: scoring uses eventual games played and final rosters, and past preseason ADP is not available, so opponents are a value-order bot rather than real drafters.",
+        "Eligibility comes from the current ESPN snapshot rather than each past preseason, and holdout universes exclude rookies and players without a current ESPN link.",
+        "Draft-edge results vary a lot by season (standard errors near 0.1 against single-year swings up to 0.8), so small margins should be read as ties.",
+        "No injury forecasting: injury status is a label, and availability is a shrunk historical rate.",
+        "The 50/50 blend with ESPN's projections is not validated, because the 2026-27 season has not been played yet.",
+      ],
+      future: [
+        "Re-test the simulation layer with ADP-based opponents and more seeds, and remove it from the default flow if it still shows no gain.",
+        "Measure coverage of the 80% projection intervals, which has not been run yet.",
+        "Score the ESPN blend weight once the 2026-27 season can be evaluated, and re-check the ensemble as seasons accumulate.",
       ],
     },
   },
