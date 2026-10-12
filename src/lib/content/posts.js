@@ -167,10 +167,16 @@ export function collectTags(posts) {
     .map(([tag]) => tag);
 }
 
-/** Rough reading time at ~220 words per minute, minimum one minute. */
+/**
+ * Rough reading time at ~220 words per minute, minimum one minute.
+ * Code blocks, inline SVG diagrams, and HTML tag markup are not prose, so
+ * they are dropped before counting (figure captions still count).
+ */
 export function readingMinutes(markdown) {
   const words = markdown
     .replace(/```[\s\S]*?```/g, " ")
+    .replace(/<svg[\s\S]*?<\/svg>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
     .split(/\s+/)
     .filter(Boolean).length;
   return Math.max(1, Math.round(words / 220));

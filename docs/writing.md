@@ -131,6 +131,16 @@ everything below.
   `yaml`, ...) get syntax highlighting. Long lines scroll horizontally.
 - **Tables:** standard Markdown pipe tables; they scroll on small screens.
 - Raw HTML is allowed for anything else.
+- **Callouts:** wrap a short note in `<div class="callout" role="note">`, with
+  a blank line after the opening tag and before `</div>` so the Markdown
+  inside is still rendered.
+- **Diagrams:** inline SVG inside `<figure class="diagram">` with a
+  `<figcaption>`. Color shapes and text with the `dg-*` classes in
+  `src/styles/prose.css` (not hard-coded colors) so the diagram follows the
+  light/dark theme, give the `<svg>` a `<title>` and `<desc>`, and keep the
+  markup free of blank lines (a blank line ends the HTML block). A viewBox
+  about 400 units wide keeps labels legible on phones. See the BERT post for
+  examples.
 - Files whose names start with `_` are ignored, which is handy for notes.
 
 ## Managing the reading roadmap

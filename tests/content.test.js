@@ -8,7 +8,7 @@ import { describe, expect, it } from "vitest";
 import { blogPlugin, indexModuleSource, loadBlogContent, splitFrontMatter } from "../build/blog-plugin.js";
 import { buildRss, buildSitemap } from "../build/feeds.js";
 import { renderMarkdown } from "../build/markdown.js";
-import { isPublished, normalizePost, relatedPosts, selectPosts } from "../src/lib/content/posts.js";
+import { isPublished, normalizePost, readingMinutes, relatedPosts, selectPosts } from "../src/lib/content/posts.js";
 import { formatDate, todayIn } from "../src/lib/content/dates.js";
 import { site } from "../src/content/site.config.js";
 
@@ -178,5 +178,19 @@ describe("markdown rendering", () => {
     expect(html).toContain('href="/#/reading-club"');
     expect(html).toContain('href="https://example.org" target="_blank" rel="noopener noreferrer"');
     expect(html).toContain('href="/blog/x/data.csv"');
+  });
+});
+
+describe("reading time", () => {
+  const prose = (n) => Array.from({ length: n }, () => "word").join(" ");
+
+  it("counts prose at about 220 words per minute", () => {
+    expect(readingMinutes(prose(440))).toBe(2);
+  });
+
+  it("ignores inline SVG diagrams and HTML tag markup", () => {
+    const svg = `<figure class="diagram">\n<svg viewBox="0 0 400 300">${'<rect x="1" y="2" width="3" height="4"/>'.repeat(500)}</svg>\n<figcaption>A short caption here.</figcaption>\n</figure>`;
+    const callout = '<div class="callout" role="note">\n\n' + prose(10) + "\n\n</div>";
+    expect(readingMinutes(`${prose(440)}\n\n${svg}\n\n${callout}`)).toBe(2);
   });
 });

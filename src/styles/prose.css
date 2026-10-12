@@ -236,3 +236,132 @@ html[data-theme="dark"] .prose {
 .prose .katex {
   font-size: 1.06em;
 }
+
+/* Callouts: raw HTML in Markdown, e.g.
+   <div class="callout" role="note"> (blank line) **Label.** text (blank line) </div> */
+.prose .callout {
+  margin: 1.75em 0;
+  padding: 1em 1.2em;
+  border: var(--border);
+  border-left: 3px solid var(--color-accent);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.prose .callout > :last-child {
+  margin-bottom: 0;
+}
+
+/* Inline SVG diagrams. Shapes and text use the dg-* classes below instead of
+   hard-coded colors, so a diagram follows the light/dark theme. Keep the SVG
+   free of blank lines: markdown-it ends an HTML block at the first one. */
+.prose .diagram {
+  margin-block: 2em;
+  padding: 1.25em 1em 1em;
+  border: var(--border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.prose .diagram svg {
+  display: block;
+  width: 100%;
+  max-width: 540px;
+  height: auto;
+  margin-inline: auto;
+  font-family: var(--font-sans);
+}
+
+.prose .diagram figcaption {
+  margin-top: 1em;
+}
+
+.prose .diagram .dg-h {
+  fill: var(--color-text);
+  font-weight: 700;
+}
+
+.prose .diagram .dg-t {
+  fill: var(--color-text);
+}
+
+.prose .diagram .dg-m {
+  fill: var(--color-text-muted);
+}
+
+.prose .diagram .dg-b {
+  fill: var(--color-bg);
+  stroke: var(--color-control-border);
+  stroke-width: 1.25;
+}
+
+.prose .diagram .dg-a {
+  fill: var(--color-accent-soft);
+  stroke: var(--color-accent);
+  stroke-width: 1.5;
+}
+
+/* Corrupted or "B" inputs: warm fill; the dashed variant marks corruption. */
+.prose .diagram .dg-w {
+  fill: var(--color-notice-bg);
+  stroke: var(--hl-number);
+  stroke-width: 1.5;
+}
+
+.prose .diagram .dg-dash {
+  stroke-dasharray: 5 3;
+}
+
+.prose .diagram .dg-off {
+  fill: var(--color-surface-muted);
+  stroke: var(--color-control-border);
+  stroke-width: 1.25;
+  stroke-dasharray: 4 3;
+}
+
+.prose .diagram .dg-l {
+  fill: none;
+  stroke: var(--color-text-muted);
+  stroke-width: 1.5;
+}
+
+.prose .diagram .dg-la {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 2;
+}
+
+.prose .diagram .dg-ld {
+  fill: none;
+  stroke: var(--color-control-border);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+}
+
+.prose .diagram .dg-mk {
+  fill: var(--color-text-muted);
+}
+
+.prose .diagram .dg-mka {
+  fill: var(--color-accent);
+}
+
+.prose .diagram .dg-bar {
+  fill: var(--color-control-border);
+}
+
+.prose .diagram .dg-bar-a {
+  fill: var(--color-accent);
+}
+
+/* Phones: give the drawing the full column width so labels stay legible. */
+@media (max-width: 480px) {
+  .prose .diagram {
+    padding: 1em 0 0;
+    border-inline: 0;
+    border-radius: 0;
+  }
+  .prose .diagram figcaption {
+    padding: 0 0.75em 0.9em;
+  }
+}

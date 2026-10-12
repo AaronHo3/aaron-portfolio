@@ -61,6 +61,6 @@ export const papers = [
     exercise: "Mask tokens in short DNA or protein sequences and see what a small pre-trained model predicts.",
     topics: ["sequences", "representation-learning", "genomics", "proteins"],
     sessionDate: "2026-10-11",
-    status: "scheduled",
+    status: "published",
   },
 ];
