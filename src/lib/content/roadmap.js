@@ -154,6 +154,18 @@ export function buildRoadmap(papers, publicPosts) {
   return papers.map((paper) => ({ ...paper, article: resolvePaperArticle(paper, publicPosts) }));
 }
 
+/** Statuses meaning the session has already happened. */
+const DONE_STATUSES = new Set(["discussed", "published"]);
+
+/**
+ * The paper the club reads next: the first entry, in source order, whose
+ * session has not happened yet. Null when everything has been discussed.
+ * @param {object[]} papers
+ */
+export function nextPaper(papers) {
+  return papers.find((p) => !DONE_STATUSES.has(p.status)) ?? null;
+}
+
 /**
  * Paper details for an article. Front matter wins for title and URL (so the
  * article is self-contained); the roadmap entry, when it still exists, adds

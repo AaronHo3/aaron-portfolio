@@ -89,9 +89,9 @@
           <h3 class="writingTitle">
             <RouterLink to="/reading-club">Sunday evening papers, read with biology in mind</RouterLink>
           </h3>
-          <p v-if="firstPaper" class="muted">
-            Up first: <a :href="firstPaper.url" target="_blank" rel="noopener">{{ firstPaper.title }}</a>
-            ({{ firstPaper.year }})<span v-if="firstPaper.sessionDate">, {{ formatDate(firstPaper.sessionDate) }}</span>.
+          <p v-if="upNext" class="muted">
+            Up next: <a :href="upNext.url" target="_blank" rel="noopener">{{ upNext.title }}</a>
+            ({{ upNext.year }})<span v-if="upNext.sessionDate">, {{ formatDate(upNext.sessionDate) }}</span>.
           </p>
         </div>
       </div>
@@ -118,13 +118,14 @@ import { livePosts } from "../lib/content/blog.js";
 import { formatDate } from "../lib/content/dates.js";
 import { postPath } from "../lib/content/urls.js";
 import { papers } from "../content/reading-club/roadmap.js";
+import { nextPaper } from "../lib/content/roadmap.js";
 
 /** Featured projects, in display order. Edit this list to change the Home selection. */
 const FEATURED_SLUGS = ["gutsense-crc-screening", "imagined-handwriting-decoding", "uci-heart-disease-ml"];
 
 const featured = FEATURED_SLUGS.map((slug) => projects.find((p) => p.slug === slug)).filter(Boolean);
 const latestPost = livePosts[0] ?? null;
-const firstPaper = papers[0] ?? null;
+const upNext = nextPaper(papers);
 const resumeHref = `${import.meta.env.BASE_URL}${profile.resumePath}`;
 </script>
 

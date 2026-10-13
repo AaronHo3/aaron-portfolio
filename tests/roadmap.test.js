@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildRoadmap,
   crossCheckRoadmap,
+  nextPaper,
   resolvePaperForPost,
   validateRoadmap,
 } from "../src/lib/content/roadmap.js";
@@ -171,5 +172,21 @@ describe("validation", () => {
 
   it("warns when a scheduled paper has no date", () => {
     expect(validateRoadmap([paper("s", { status: "scheduled" })]).warnings.join()).toMatch(/no sessionDate/);
+  });
+});
+
+describe("next paper", () => {
+  it("is the first entry in source order not yet discussed", () => {
+    const list = [
+      paper("done", { status: "published" }),
+      paper("talked", { status: "discussed" }),
+      paper("soon", { status: "scheduled", sessionDate: "2026-10-18" }),
+      paper("later", { status: "backlog" }),
+    ];
+    expect(nextPaper(list)?.id).toBe("soon");
+  });
+
+  it("is null when every paper has been discussed", () => {
+    expect(nextPaper([paper("done", { status: "published" })])).toBeNull();
   });
 });

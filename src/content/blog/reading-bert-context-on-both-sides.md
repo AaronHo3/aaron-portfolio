@@ -436,6 +436,115 @@ MLM and NSP train the same encoder at the same time, and the pretraining loss is
 
 The authors report 97 to 98% NSP accuracy, and they add a useful caution: without fine-tuning, the `[CLS]` vector isn't a meaningful sentence representation.
 
+A point from our discussion that reframed this for me: even if `[CLS]` learns little during pretraining, it's still a useful starting point. Because attention is bidirectional, the `[CLS]` position attends to every other token in every layer, and MLM trains those tokens' vectors well. Fine-tuning mostly has to learn how to read what's already there. RoBERTa's results without NSP, below, fit this picture.
+
+## From a vector to a probability
+
+This part came out of our discussion, and it's what made the prediction heads click for me. The encoder's final layer outputs one vector of H numbers per token (1,024 for BERT Large). A head multiplies that vector by a weight matrix, and **the matrix's shape is set by how many outputs you need**:
+
+- **MLM** needs a score for every token in the vocabulary, so the matrix maps H values to about 30,000 scores. In the [released code](https://github.com/google-research/bert), a small transform layer comes first and the matrix is the input token-embedding table, reused.
+- **NSP** asks one yes/no question, so a single column (H × 1) giving one score is enough in principle.
+
+These raw scores, called *logits*, can be any real number. The function applied next turns them into probabilities, and the right choice depends on how many outputs there are.
+
+**Softmax** turns K scores into a probability distribution: every value positive, all of them summing to 1.
+
+$$
+\text{softmax}(z)_i = \frac{e^{z_i}}{\sum_{j=1}^{K} e^{z_j}}
+$$
+
+**Sigmoid** squashes one score into a probability between 0 and 1, the natural fit for a yes/no answer.
+
+$$
+\sigma(z) = \frac{1}{1 + e^{-z}}
+$$
+
+The two are closely related: a softmax over two scores equals a sigmoid of their difference. BERT's released code scores NSP with two outputs and a softmax, which comes to the same thing.
+
+<figure class="diagram" id="fig-heads">
+<svg viewBox="0 0 400 456" role="img" aria-labelledby="fig-heads-title fig-heads-desc">
+<title id="fig-heads-title">From a final vector to probabilities, and the curves involved</title>
+<desc id="fig-heads-desc">Top: two output heads. For masked language modeling, the final vector at the [MASK] position, H values long, is multiplied by an H by 30,000 matrix to give 30,000 scores, and a softmax turns them into 30,000 probabilities that sum to 1. For next sentence prediction, the final vector at [CLS] is multiplied by an H by 1 matrix to give one score, and a sigmoid turns it into the probability of IsNext, between 0 and 1. Bottom left: the sigmoid curve, an S shape rising from 0 to 1, crossing 0.5 at a score of 0. Bottom right: the loss, minus log p, which is 0 at p equals 1 and rises steeply as p approaches 0; at p equals 0.60 the loss is about 0.51.</desc>
+<defs><marker id="fig-heads-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="dg-mk"/></marker></defs>
+<text x="102.5" y="18" class="dg-h" font-size="13" text-anchor="middle">Masked token (MLM)</text>
+<rect x="10" y="28" width="185" height="44" rx="8" class="dg-b"/>
+<text x="102.5" y="46" class="dg-t" font-size="12.5" text-anchor="middle">final vector at [MASK]</text>
+<text x="102.5" y="63" class="dg-m" font-size="12" text-anchor="middle">H values</text>
+<path d="M102.5 74L102.5 82" class="dg-l"/>
+<text x="102.5" y="96" class="dg-m" font-size="12" text-anchor="middle">× (H × 30,000) matrix</text>
+<path d="M102.5 102L102.5 116" class="dg-l" marker-end="url(#fig-heads-arr)"/>
+<rect x="10" y="118" width="185" height="32" rx="8" class="dg-b"/>
+<text x="102.5" y="139" class="dg-t" font-size="12.5" text-anchor="middle">30,000 scores</text>
+<path d="M102.5 152L102.5 160" class="dg-l"/>
+<text x="102.5" y="174" class="dg-h" font-size="12.5" text-anchor="middle">softmax</text>
+<path d="M102.5 180L102.5 194" class="dg-l" marker-end="url(#fig-heads-arr)"/>
+<rect x="10" y="196" width="185" height="46" rx="8" class="dg-a"/>
+<text x="102.5" y="215" class="dg-t" font-size="12.5" text-anchor="middle">30,000 probabilities</text>
+<text x="102.5" y="232" class="dg-t" font-size="12.5" text-anchor="middle">that sum to 1</text>
+<text x="297.5" y="18" class="dg-h" font-size="13" text-anchor="middle">Next sentence (NSP)</text>
+<rect x="205" y="28" width="185" height="44" rx="8" class="dg-b"/>
+<text x="297.5" y="46" class="dg-t" font-size="12.5" text-anchor="middle">final vector at [CLS]</text>
+<text x="297.5" y="63" class="dg-m" font-size="12" text-anchor="middle">H values</text>
+<path d="M297.5 74L297.5 82" class="dg-l"/>
+<text x="297.5" y="96" class="dg-m" font-size="12" text-anchor="middle">× (H × 1) matrix</text>
+<path d="M297.5 102L297.5 116" class="dg-l" marker-end="url(#fig-heads-arr)"/>
+<rect x="205" y="118" width="185" height="32" rx="8" class="dg-b"/>
+<text x="297.5" y="139" class="dg-t" font-size="12.5" text-anchor="middle">1 score</text>
+<path d="M297.5 152L297.5 160" class="dg-l"/>
+<text x="297.5" y="174" class="dg-h" font-size="12.5" text-anchor="middle">sigmoid</text>
+<path d="M297.5 180L297.5 194" class="dg-l" marker-end="url(#fig-heads-arr)"/>
+<rect x="205" y="196" width="185" height="46" rx="8" class="dg-a"/>
+<text x="297.5" y="215" class="dg-t" font-size="12.5" text-anchor="middle">P(IsNext),</text>
+<text x="297.5" y="232" class="dg-t" font-size="12.5" text-anchor="middle">between 0 and 1</text>
+<text x="113.0" y="284" class="dg-h" font-size="13" text-anchor="middle">Sigmoid</text>
+<path d="M38 304.0L188 304.0" class="dg-ld"/>
+<text x="33" y="308.0" class="dg-m" font-size="11.5" text-anchor="end">1</text>
+<path d="M38 359.0L188 359.0" class="dg-ld"/>
+<text x="33" y="363.0" class="dg-m" font-size="11.5" text-anchor="end">0.5</text>
+<text x="33" y="418.0" class="dg-m" font-size="11.5" text-anchor="end">0</text>
+<path d="M38 298L38 414L188 414" class="dg-l"/>
+<text x="38.0" y="430" class="dg-m" font-size="11.5" text-anchor="middle">−6</text>
+<text x="113.0" y="430" class="dg-m" font-size="11.5" text-anchor="middle">0</text>
+<text x="188.0" y="430" class="dg-m" font-size="11.5" text-anchor="middle">6</text>
+<text x="113.0" y="448" class="dg-m" font-size="12" text-anchor="middle">score z</text>
+<path d="M38.0 413.7L41.8 413.6L45.5 413.5L49.2 413.3L53.0 413.1L56.8 412.8L60.5 412.4L64.2 411.8L68.0 411.1L71.8 410.1L75.5 408.8L79.2 407.1L83.0 404.9L86.8 402.0L90.5 398.4L94.2 393.9L98.0 388.5L101.8 382.2L105.5 375.0L109.2 367.2L113.0 359.0L116.8 350.8L120.5 343.0L124.3 335.8L128.0 329.5L131.8 324.1L135.5 319.6L139.2 316.0L143.0 313.1L146.8 310.9L150.5 309.2L154.2 307.9L158.0 306.9L161.8 306.2L165.5 305.6L169.2 305.2L173.0 304.9L176.8 304.7L180.5 304.5L184.2 304.4L188.0 304.3" class="dg-la"/>
+<text x="315.0" y="284" class="dg-h" font-size="13" text-anchor="middle">Loss: −log p</text>
+<path d="M240 326.0L390 326.0" class="dg-ld"/>
+<text x="235" y="330.0" class="dg-m" font-size="11.5" text-anchor="end">4</text>
+<path d="M240 370.0L390 370.0" class="dg-ld"/>
+<text x="235" y="374.0" class="dg-m" font-size="11.5" text-anchor="end">2</text>
+<text x="235" y="418.0" class="dg-m" font-size="11.5" text-anchor="end">0</text>
+<path d="M240 298L240 414L390 414" class="dg-l"/>
+<text x="240.0" y="430" class="dg-m" font-size="11.5" text-anchor="middle">0</text>
+<text x="315.0" y="430" class="dg-m" font-size="11.5" text-anchor="middle">0.5</text>
+<text x="390.0" y="430" class="dg-m" font-size="11.5" text-anchor="middle">1</text>
+<text x="315.0" y="448" class="dg-m" font-size="12" text-anchor="middle">p (correct answer)</text>
+<path d="M241.5 312.7L242.2 321.6L243.0 327.9L244.5 336.9L246.0 343.2L247.5 348.1L250.5 355.5L255.0 363.3L259.5 369.1L265.5 375.0L273.0 380.7L285.0 387.5L300.0 393.8L315.0 398.8L330.0 402.8L345.0 406.2L360.0 409.1L375.0 411.7L390.0 414.0" class="dg-la"/>
+<circle cx="330.0" cy="402.8" r="4" class="dg-bar-a"/>
+<text x="390" y="380.8" class="dg-t" font-size="11.5" text-anchor="end">p = 0.60</text>
+<text x="390" y="394.8" class="dg-t" font-size="11.5" text-anchor="end">loss ≈ 0.51</text>
+</svg>
+<figcaption><strong>Figure 5. From a vector to probabilities.</strong> Top: the head’s matrix sets how many scores come out, and the function after it turns scores into probabilities: softmax for many outputs, sigmoid for one. Simplified: BERT’s released code adds a small transform layer before the MLM matrix and scores NSP with two outputs and a softmax, which is equivalent to one score and a sigmoid. Bottom: the sigmoid curve, and the loss as a function of the probability given to the correct answer. The marked point is the illustrative 0.60 from Figure 3.</figcaption>
+</figure>
+
+**Cross-entropy loss** then scores the prediction: the negative log of the probability given to the correct answer, the same $-\log P(\text{aspirin})$ as in the MLM section. Why the negative log?
+
+- Training minimizes loss, and $\log$ only increases, so **minimizing $-\log p$ is the same as maximizing $p$**.
+- It's 0 when the correct answer gets probability 1 and climbs steeply as that probability nears 0, so confident mistakes cost the most.
+- The probability of a whole dataset's correct answers is a product of many small numbers. The log turns it into a sum, which is far easier to work with.
+
+<div class="callout" role="note">
+
+**Why activation functions must be nonlinear.** Softmax and sigmoid only appear at the output. Inside each layer, BERT's feed-forward network uses a different activation, GELU. What every hidden activation must provide is nonlinearity: without it, stacking layers gains nothing, because two linear layers collapse into one, $W_2(W_1x) = (W_2W_1)x$. Nonlinearity is what lets extra depth learn more complex relationships.
+
+</div>
+
+### Which layer holds what
+
+Every layer outputs vectors of the same length H, so layers differ in *what* they encode, not in size. Our group's intuition was that early layers capture simpler, more local information and later layers more detailed, context-dependent information. Probing studies support a version of this: Tenney et al. (2019) found that the information for part-of-speech tags, syntax, named entities, semantic roles and coreference is concentrated in roughly that order going up BERT's layers, though the model often revises lower-level decisions using higher-level information.
+
+The final layer is the most specialized, since its pretraining job is to feed the MLM head. That may be why, in the paper's frozen-feature NER experiment (BERT Base, development F1), the second-to-last layer (95.6) beat the last (94.9). Concatenating the last four layers did best (96.1), and the input embeddings alone reached 91.0.
+
 ## One checkpoint, many fine-tuned models
 
 Pretraining used BooksCorpus (800 million words) and English Wikipedia (2.5 billion words). Fine-tuning then starts from those weights, adds a small output head, and updates everything on one task's labels. **The same checkpoint initializes separate task models, each fine-tuned independently.** 
@@ -474,7 +583,7 @@ Pretraining used BooksCorpus (800 million words) and English Wikipedia (2.5 bill
 <text x="62" y="434" class="dg-t" font-size="12.5">Head: [CLS] → entailment, contradiction…</text>
 <text x="62" y="451" class="dg-m" font-size="12.5">Fine-tuned on: labeled sentence pairs</text>
 </svg>
-<figcaption><strong>Figure 5. Pretrain once, fine-tune separately.</strong> Each task model starts as a copy of the same checkpoint, adds its own small output head and is fine-tuned on its own labeled data. The four models end up with different weights. Gene-name recognition is my biomedical illustration; the other three task shapes appear in the paper.</figcaption>
+<figcaption><strong>Figure 6. Pretrain once, fine-tune separately.</strong> Each task model starts as a copy of the same checkpoint, adds its own small output head and is fine-tuned on its own labeled data. The four models end up with different weights. Gene-name recognition is my biomedical illustration; the other three task shapes appear in the paper.</figcaption>
 </figure>
 
 ## What the experiments showed
@@ -516,6 +625,7 @@ Takeaways:
 
 - **Bidirectional means what each position can see,** and it matters most for token-level predictions.
 - **Masking prevents copying,** and the 80/10/10 mix narrows the gap between pretraining and real inputs.
+- **The number of outputs picks the function:** softmax over many, sigmoid for one, both trained by minimizing $-\log$ of the correct answer's probability.
 - **Pretraining tasks are stand-ins.** NSP labels come from sampling, and later work dropped NSP without losing performance.
 - **Frozen features can be enough:** 0.3 F1 behind fine-tuning in the paper's NER experiment.
 
@@ -530,6 +640,7 @@ Questions I want to explore next:
 - Vaswani, A., Shazeer, N., Parmar, N., et al. (2017). Attention Is All You Need. *NeurIPS*. [arXiv:1706.03762](https://arxiv.org/abs/1706.03762)
 - Peters, M. E., Neumann, M., Iyyer, M., et al. (2018). Deep Contextualized Word Representations. *NAACL*. [arXiv:1802.05365](https://arxiv.org/abs/1802.05365)
 - Radford, A., Narasimhan, K., Salimans, T., and Sutskever, I. (2018). Improving Language Understanding by Generative Pre-Training. OpenAI. [PDF](https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf)
+- Tenney, I., Das, D., and Pavlick, E. (2019). BERT Rediscovers the Classical NLP Pipeline. *ACL*. [arXiv:1905.05950](https://arxiv.org/abs/1905.05950)
 - Liu, Y., Ott, M., Goyal, N., et al. (2019). RoBERTa: A Robustly Optimized BERT Pretraining Approach. [arXiv:1907.11692](https://arxiv.org/abs/1907.11692)
 - Lee, J., Yoon, W., Kim, S., et al. (2020). BioBERT: a pre-trained biomedical language representation model for biomedical text mining. *Bioinformatics*. [doi:10.1093/bioinformatics/btz682](https://doi.org/10.1093/bioinformatics/btz682)
 - Rives, A., Meier, J., Sercu, T., et al. (2021). Biological structure and function emerge from scaling unsupervised learning to 250 million protein sequences. *PNAS*. [doi:10.1073/pnas.2016239118](https://doi.org/10.1073/pnas.2016239118)

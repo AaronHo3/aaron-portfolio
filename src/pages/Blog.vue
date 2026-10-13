@@ -30,10 +30,10 @@
           See the reading list <span class="arrow" aria-hidden="true">→</span>
         </RouterLink>
       </div>
-      <div v-if="firstPaper" class="clubNext">
-        <p class="meta">{{ firstPaper.sessionDate ? `Session, ${formatDate(firstPaper.sessionDate)}` : "Up first" }}</p>
-        <p class="clubPaper">{{ firstPaper.title }}</p>
-        <p class="meta">{{ shortAuthors(firstPaper.authors) }} · {{ firstPaper.year }}</p>
+      <div v-if="upNext" class="clubNext">
+        <p class="meta">{{ upNext.sessionDate ? `Up next, ${formatDate(upNext.sessionDate)}` : "Up next" }}</p>
+        <p class="clubPaper">{{ upNext.title }}</p>
+        <p class="meta">{{ shortAuthors(upNext.authors) }} · {{ upNext.year }}</p>
       </div>
     </section>
 
@@ -98,6 +98,7 @@ import { shortAuthors, topicLabel } from "../lib/content/labels.js";
 import { absoluteUrl, BLOG_PATH } from "../lib/content/urls.js";
 import { READING_CLUB_SERIES, site } from "../content/site.config.js";
 import { papers } from "../content/reading-club/roadmap.js";
+import { nextPaper } from "../lib/content/roadmap.js";
 import { usePageHead } from "../lib/head.js";
 import "../styles/blog.css";
 
@@ -106,7 +107,7 @@ const router = useRouter();
 
 const tags = collectTags(posts);
 const hasClubPosts = posts.some((p) => p.series === READING_CLUB_SERIES);
-const firstPaper = papers[0] ?? null;
+const upNext = nextPaper(papers);
 
 const activeTopic = computed(() => (typeof route.query.topic === "string" ? route.query.topic : null));
 const activeSeries = computed(() => (typeof route.query.series === "string" ? route.query.series : null));

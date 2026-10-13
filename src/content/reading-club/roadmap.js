@@ -63,4 +63,22 @@ export const papers = [
     sessionDate: "2026-10-11",
     status: "published",
   },
+  {
+    id: "ddpm",
+    title: "Denoising Diffusion Probabilistic Models",
+    authors: ["Jonathan Ho", "Ajay Jain", "Pieter Abbeel"],
+    year: 2020,
+    venue: "NeurIPS 2020",
+    url: "https://arxiv.org/abs/2006.11239",
+    question: "How can a model generate new data by learning to undo noise, one small step at a time?",
+    concept:
+      "A fixed forward process gradually adds Gaussian noise to data; a network is trained to predict that noise so the process can be reversed step by step, starting from pure noise.",
+    prerequisites: ["Gaussian distributions", "Variational autoencoders and the evidence lower bound", "U-Net architecture"],
+    bioConnection:
+      "Diffusion is the generative approach behind protein design tools such as RFdiffusion, which generates new protein backbones.",
+    exercise: "Train a small diffusion model on a 2D toy dataset and watch samples emerge from noise across the reverse steps.",
+    topics: ["generative-models", "imaging", "proteins"],
+    sessionDate: "2026-10-18",
+    status: "scheduled",
+  },
 ];
