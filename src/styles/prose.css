@@ -252,6 +252,39 @@ html[data-theme="dark"] .prose {
   margin-bottom: 0;
 }
 
+/* Optional technical detail: raw HTML in Markdown, e.g.
+   <details> (blank line) <summary>Label</summary> (blank line) text (blank line) </details> */
+.prose details {
+  margin: 1.75em 0;
+  border: var(--border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.prose details > summary {
+  padding: 0.8em 1.2em;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.prose details > summary:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-md);
+}
+
+.prose details[open] > summary {
+  border-bottom: var(--border);
+}
+
+.prose details > :not(summary) {
+  margin-inline: 1.2em;
+}
+
+.prose details > :last-child {
+  margin-bottom: 1.2em;
+}
+
 /* Inline SVG diagrams. Shapes and text use the dg-* classes below instead of
    hard-coded colors, so a diagram follows the light/dark theme. Keep the SVG
    free of blank lines: markdown-it ends an HTML block at the first one. */
