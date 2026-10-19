@@ -2,7 +2,7 @@
 title: "Reading DDPM: How Predicting Noise Becomes a Way to Make Images"
 description: "Notes on the second ML × Bio Reading Club paper: how Denoising Diffusion Probabilistic Models turn a simple task, guessing the noise mixed into an image, into a way to generate new images, and why the best-looking samples did not come with the best likelihood."
 date: 2026-10-18
-draft: true
+draft: false
 tags: [generative-models, imaging, ml]
 series: ml-bio-reading-club
 paperId: ddpm
