@@ -10,12 +10,17 @@
       <!-- 2. Title and subtitle -->
       <h1 class="csTitle">{{ displayTitle }}</h1>
       <p v-if="titleRemainder" class="fullTitle">{{ titleRemainder }}</p>
+    </header>
 
-      <!-- 3. Question-led introduction, with the project's status kept beside it -->
+    <!-- 3. A demo video leads the page; a still figure waits below the summary (step 7) -->
+    <CaseStudyFigure v-if="project.video" v-bind="figureProps" />
+
+    <div class="csHeader csIntro">
+      <!-- 4. Question-led introduction, with the project's status kept beside it -->
       <p class="lead csLead">{{ project.intro || project.subtitle }}</p>
       <p v-if="project.status" class="statusNote"><strong>Status:</strong> {{ project.status }}</p>
 
-      <!-- 4. Primary links -->
+      <!-- 5. Primary links -->
       <div v-if="links.length" class="csLinks">
         <a
           v-for="(link, i) in links"
@@ -29,9 +34,9 @@
           {{ link.label }}<span class="visually-hidden"> (opens in a new tab)</span> <span aria-hidden="true">↗</span>
         </a>
       </div>
-    </header>
+    </div>
 
-    <!-- 5. Main takeaway -->
+    <!-- 6. Main takeaway -->
     <section v-if="project.headlineStats?.length" class="glance" aria-labelledby="glance-title">
       <h2 id="glance-title" class="eyebrow glanceTitle">At a glance</h2>
       <dl class="glanceList">
@@ -42,25 +47,10 @@
       </dl>
     </section>
 
-    <!-- 6. Overview figure (only when a real one exists) -->
-    <figure v-if="project.image" class="csFigure">
-      <img
-        :src="project.image"
-        :alt="figureAlt"
-        :width="imageSize[0]"
-        :height="imageSize[1]"
-        loading="lazy"
-        decoding="async"
-      />
-      <figcaption>
-        <span v-if="project.imageCaption">{{ project.imageCaption }}</span>
-        <a :href="project.image" target="_blank" rel="noopener" class="figureLink">
-          Open full-size figure<span class="visually-hidden"> (opens in a new tab)</span> ↗
-        </a>
-      </figcaption>
-    </figure>
+    <!-- 7. Overview figure, when the project has a still rather than a video -->
+    <CaseStudyFigure v-if="!project.video && project.image" v-bind="figureProps" />
 
-    <!-- 7. Compact supporting metadata -->
+    <!-- 8. Compact supporting metadata -->
     <dl v-if="project.context || builtWith" class="metaStrip">
       <div v-if="project.context">
         <dt>Context</dt>
@@ -192,6 +182,7 @@
 
 <script setup>
 import { computed } from "vue";
+import CaseStudyFigure from "../components/CaseStudyFigure.vue";
 import { useRoute } from "vue-router";
 import ProjectCard from "../components/ProjectCard.vue";
 import { projects } from "../data/projects";
@@ -229,7 +220,18 @@ const builtWith = computed(() => {
 const category = computed(() => project.value?.modelTypes?.[0] ?? "");
 const imageSize = computed(() => project.value?.imageSize ?? [1600, 900]);
 // Short alt text; the full description is in the visible figcaption, so it is not repeated here.
-const figureAlt = computed(() => `${displayTitle.value} overview diagram`);
+const figureAlt = computed(() =>
+  project.value?.video ? `${displayTitle.value} demo video` : `${displayTitle.value} overview diagram`,
+);
+
+const figureProps = computed(() => ({
+  video: project.value?.video ?? null,
+  image: project.value?.image ?? null,
+  caption: project.value?.imageCaption ?? null,
+  alt: figureAlt.value,
+  width: imageSize.value[0],
+  height: imageSize.value[1],
+}));
 
 /** Problem/approach may be one string or an array of paragraphs. */
 const asParagraphs = (value) => (Array.isArray(value) ? value : [value]);
@@ -306,6 +308,15 @@ usePageHead(() =>
 .csHeader {
   max-width: 820px;
   margin-top: var(--space-3);
+}
+
+/* Summary, status and links: a sibling of the header so a video can sit above it. */
+.csIntro {
+  margin-top: 0;
+}
+
+.csIntro .csLead {
+  margin-top: var(--space-5);
 }
 
 .csTitle {
@@ -399,37 +410,6 @@ usePageHead(() =>
   font-size: var(--fs-small);
   line-height: 1.5;
   color: var(--color-text-muted);
-}
-
-/* Figure */
-.csFigure {
-  margin: var(--space-6) 0 0;
-}
-
-.csFigure img {
-  display: block;
-  width: 100%;
-  height: auto;
-  border: var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface);
-}
-
-.csFigure figcaption {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2) var(--space-4);
-  justify-content: space-between;
-  max-width: var(--w-prose);
-  margin-top: var(--space-3);
-  font-size: var(--fs-small);
-  color: var(--color-text-muted);
-  line-height: 1.55;
-}
-
-.figureLink {
-  font-weight: 600;
-  white-space: nowrap;
 }
 
 /* Body with section menu */

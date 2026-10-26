@@ -164,3 +164,28 @@ Validation (refinement pass 2):
 - Home experience line removed at Aaron's request (duplicated the Background section); the
   `homeLine` fields in profile.js were removed with it. Home order is now hero, selected work,
   background, writing and reading club, contact.
+
+## Courtside replaces the two NBA projects (2026-10-25)
+
+- Aaron merged `fantasy_draft_simulator` and his NBA analytics project into one repo,
+  [NBA_courtside](https://github.com/AaronHo3/NBA_courtside). The portfolio now carries a single
+  entry, `courtside-nba-workspace`, replacing `fantasy-basketball-draft-copilot` and the hidden
+  `courtside-research-nba-analytics`. Both old entries and their thumbnails are in git history.
+- Every draft number was re-verified against the merged repo's own docs and is unchanged
+  (+0.53 ± 0.13 over the value-order bot, +0.06 ± 0.06 vs projected value, the refined layer at
+  −0.32 ± 0.31 and −0.14 ± 0.29, four-of-four holdouts, 8.9 ms p50).
+- Dropped claims that the merged repo no longer supports: the "eight views" framing and the
+  specific ingested-season range, since `data/` is gitignored and the analytics overview doc
+  predates the merge. Season coverage is now described by what the provider publishes.
+- `image` is the repo's own draft screenshot (`docs/media/shots/draft.png`, 1440x900 PNG converted
+  to WebP at q82, 225 KB -> 78 KB) at `public/previews/courtside-draft.webp`. The card thumbnail is
+  the old copilot results chart, copied to `public/thumbnails/courtside.svg`; its numbers still hold.
+- Added a `video` field to the case-study schema and a `<video>` branch in `ProjectDetail.vue`
+  (native controls, `playsinline`, `preload="metadata"`, `image` as the poster frame). Courtside
+  uses it for `public/previews/courtside-demo.mp4`, the repo's own 75-second silent tour (6.8 MB,
+  H.264, 1440x900). With a video present, `imageCaption` describes the video and the figure link
+  reads "Open the video". Case-study prose was cut from 1,141 to 666 words to match, with `problem` and
+  `approach` collapsed from arrays to single strings.
+- The figure moved into `src/components/CaseStudyFigure.vue` so it can render in two places. A
+  project with a `video` leads with it, directly under the title and at full container width; a
+  project with only an `image` keeps the figure below the summary and At a glance, unchanged.

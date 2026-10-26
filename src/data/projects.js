@@ -9,6 +9,10 @@
  *
  *   image: string                            // preview screenshot, e.g. "/previews/gutsense.png"
  *                                            //   (drop files in public/previews/, served from site root)
+ *   video: string                            // demo video, e.g. "/previews/courtside-demo.mp4".
+ *                                            //   Replaces `image` in the figure and uses it as the
+ *                                            //   poster frame; `imageCaption` describes the video.
+ *                                            //   Keep it short, silent and small (a few MB).
  *   inProgress: boolean                      // work-in-progress; shows an "In progress" badge + Lab strip
  *   hidden: boolean                          // true = not listed, not routable, not in related projects;
  *                                            //   delete the line to show the project again
@@ -553,83 +557,98 @@ export const projects = [
     },
   },
   {
-    slug: "fantasy-basketball-draft-copilot",
-    title: "Fantasy Draft Copilot | ESPN Nine-Category Draft Assistant",
+    slug: "courtside-nba-workspace",
+    title: "Courtside | NBA Research Workbench and Fantasy Draft Copilot",
     subtitle:
-      "A side project for my ESPN fantasy basketball league with friends: a local draft assistant that ranks my next pick using learned player projections, the league's exact rules, and Monte Carlo matchup simulation, then tests its own advice in mock drafts",
+      "Two NBA side projects merged into one local-first workspace: a research tool over normalized public NBA data, and an ESPN nine-category draft copilot whose advice was tested in paired mock drafts",
     tags: ["Sports Analytics", "Side Project"],
     modelTypes: ["Sports Analytics"],
     languages: ["Python", "TypeScript"],
-    stack: ["FastAPI", "React", "scikit-learn", "NumPy", "pandas", "SciPy", "SQLite", "nba_api", "pytest", "Vitest", "Playwright"],
+    stack: [
+      "FastAPI",
+      "DuckDB",
+      "Parquet",
+      "pandas",
+      "NumPy",
+      "SciPy",
+      "scikit-learn",
+      "SQLite",
+      "React",
+      "Vite",
+      "Tailwind CSS",
+      "Plotly.js",
+      "D3",
+      "TanStack",
+      "nba_api",
+      "pytest",
+      "Vitest",
+      "Playwright",
+    ],
     metrics: [
       "+0.53 ± 0.13 categories per matchup over value-order drafting (120 paired mock drafts, 2025-26)",
       "Learned ensemble ranked players better than the baseline in all 4 holdout seasons",
       "Monte Carlo refinement layer did not beat the simple ranking; kept as supplementary",
-      "Runs locally: no accounts, no ESPN credentials",
+      "17 normalized data families behind one UI; runs locally with no accounts required",
     ],
     links: {
-      github: "https://github.com/AaronHo3/fantasy_draft_simulator",
+      github: "https://github.com/AaronHo3/NBA_courtside",
       demo: "",
-      report: "https://github.com/AaronHo3/fantasy_draft_simulator/blob/Main/docs/MODEL_CARD.md",
+      report: "https://github.com/AaronHo3/NBA_courtside/blob/main/docs/fantasy/MODEL_CARD.md",
     },
     summary:
-      "A local-first draft assistant for ESPN nine-category fantasy basketball. You record picks as they happen and get a ranked, explained shortlist for your next pick: who adds the most value above the player you could still get next turn, which lineup slot they fill, what they add to each category, and how likely they are to be gone before you pick again.",
+      "One local-first workspace for NBA research and fantasy basketball, merged from two earlier side projects: a research service over normalized stats.nba.com data, and an ESPN nine-category draft copilot and in-season companion in the same shell. The draft advice was tested in paired mock drafts before I trusted it.",
     bullets: [
-      "Built player projections from ten seasons of NBA data with a ridge and gradient-boosting ensemble, validated on four held-out seasons and blended with ESPN's published projections.",
-      "Encoded the league's exact rules (ESPN eligibility, roster slots, position caps, ties, punts) and a Monte Carlo draft-and-matchup simulation for lookahead and a punt advisor.",
-      "Tested the advice in paired mock drafts and kept the parts that held up, dropping or demoting the parts that did not.",
+      "Merged two codebases into one workspace: two FastAPI services behind a single React UI, with a test that fails if the copilot imports from the research tree.",
+      "Built player projections from ten seasons of NBA data with a ridge and gradient-boosting ensemble, validated on four held-out seasons.",
+      "Tested each draft layer in 120 paired mock drafts per strategy and kept only the parts that held up.",
     ],
-    displayTitle: "Fantasy Draft Copilot",
+    displayTitle: "Courtside",
     intro:
-      "I wanted a tool for my ESPN league with friends that answers 'who should I take now, and why?', and I wanted to know whether its advice beats ordinary drafting before trusting it on draft day. The copilot ranks each pick with learned projections and the league's exact rules, and I tested every layer in mock drafts.",
+      "I had two NBA side projects that kept reaching for each other: a research workbench for exploring players and teams, and a draft copilot for my ESPN league with friends. I merged them so the player I am about to draft is one click from his shooting and matchup history. The video is the fastest way to see it.",
     cardSummary:
-      "A side project for my fantasy basketball league with friends: a draft assistant that ranks my next pick and tests its own advice in mock drafts.",
+      "Two NBA side projects merged into one local-first workspace: a research workbench over public NBA data, and an ESPN draft copilot that tests its own advice in mock drafts.",
     highlight:
-      "Beat value-order drafting by 0.53 categories per matchup in retrospective mock drafts, but no better than projected value alone.",
-    thumbnail: "/thumbnails/fantasy-draft-copilot.svg",
+      "The draft ranking beat value-order drafting by 0.53 categories per matchup, but was no better than projected value alone.",
+    thumbnail: "/thumbnails/courtside.svg",
+    video: "/previews/courtside-demo.mp4",
+    image: "/previews/courtside-draft.webp",
+    imageCaption:
+      "A 74-second silent tour: research pages, a live draft, then my league's matchups, power rankings and free agents. It runs on a copy of my own ESPN league, with real players and game logs, and every manager, team and league name replaced.",
+    imageSize: [1440, 900],
     context: "Personal side project for an ESPN league with friends",
-    status: "Working local app. Evaluation is retrospective and potentially leaky, not a rigorous draft backtest.",
+    status:
+      "Working local app. The draft evaluation is retrospective and potentially leaky, not a rigorous backtest; the research half is a workbench with no evaluated headline metric, and the scouting pages are early.",
     headlineStats: [
       { value: "+0.53", label: "Categories won per weekly matchup over value-order drafting (±0.13, 120 paired mock drafts, 2025-26)" },
       { value: "4 of 4", label: "Held-out seasons where the learned ensemble ranked players better than the hand-tuned baseline" },
       { value: "−0.32", label: "The Monte Carlo refinement layer versus the same bot (±0.31): not better, so it stays supplementary" },
     ],
     caseStudy: {
-      problem: [
-        "In a nine-category head-to-head league, the best pick depends on more than a player's overall rank: which categories your roster already covers, which lineup slots are still open, and who will still be available at your next turn.",
-        "I wanted a tool for my own league that answers 'who should I take now, and why?', and I wanted to know whether its advice actually beats drafting by value order before trusting it on draft day.",
-      ],
-      approach: [
-        "The copilot is a local web app (FastAPI and React) where picks are recorded as they happen. It ranks the next pick by value above replacement, where replacement is the best player likely to still be there at my following pick, and explains each suggestion by slot and category.",
-        "Projections come from a learned model trained on ten seasons of NBA data and validated on four held-out seasons, blended with ESPN's published projections. A Monte Carlo layer simulates the rest of the draft and weekly matchups for lookahead and a punt advisor. Each layer was then tested in paired mock drafts against the same seat drafting another way.",
-      ],
+      problem:
+        "In a nine-category head-to-head league, the best pick depends on more than a player's overall rank: which categories the roster already covers, which slots are open, and who will survive until the next turn. I had two tools circling that question and kept switching between them.",
+      approach:
+        "Courtside is local-first: the browser never talks to a data provider, and both halves render in one shell, so a player on a draft shortlist opens the same profile the research pages use. The copilot ranks the next pick by value above replacement, where replacement is the best player likely to still be there at my following pick. Every layer was then tested in paired mock drafts against the same seat drafting another way.",
       architecture: [
-        "Fetch NBA box-score history (nba_api) and ESPN's public player, eligibility, ADP and schedule endpoints, with no accounts or credentials.",
-        "Project per-game production in nine categories plus minutes and games with an ensemble of ridge regression and gradient boosting per stat, trained only on seasons before the projection year, and keep shooting coherent (makes never exceed attempts).",
-        "Standardize categories robustly over a fantasy-relevant pool, apply strategy weights (including punts), and rank by value above replacement at my next pick, with lineup legality solved as an assignment problem.",
-        "Optionally refine the shortlist with draft rollouts and a correlated weekly matchup simulation, and estimate how likely each player is to be taken before my next pick.",
-        "Evaluate every strategy in 120 paired mock drafts per setting (12 seats × 10 seeds), scored by the realized categories each finished roster wins per matchup.",
+        "Ingest from stats.nba.com in a resumable pipeline: every raw response cached, 17 normalized data families in Parquet, served through DuckDB. A labelled synthetic namespace keeps the app usable when the provider blocks the network.",
+        "Project nine categories plus minutes and games with a ridge and gradient-boosting ensemble per stat, trained only on seasons before the projection year, keeping shooting coherent so makes never exceed attempts.",
+        "Rank the next pick by value above replacement, with lineup legality solved as an assignment problem, and link an ESPN league for the in-season half. Private cookies stay in the fantasy service's env file and never reach the browser.",
       ],
       findings: [
         {
-          title: "The ranking beat value-order drafting, but not projected value alone",
-          text: "Against a bot drafting by value order with positional need, the copilot's fast ranking won +0.53 ± 0.13 more categories per weekly matchup (79 better, 34 worse, 7 equal in 120 paired drafts) and about one category more than drafting from last season's numbers. It was not distinguishable from simply drafting by projected value (+0.06 ± 0.06), so the projection model, not the ranking logic, carried the result.",
+          title: "The projection model carried the result, not the ranking logic",
+          text: "The copilot's ranking won +0.53 ± 0.13 more categories per weekly matchup than a value-order bot, but was not distinguishable from simply drafting by projected value (+0.06 ± 0.06). The learned ensemble did beat the hand-tuned baseline in all four holdout seasons.",
         },
         {
           title: "The simulation layer did not earn its place",
-          text: "The refined layer (draft rollouts plus weekly matchup simulation) scored −0.32 ± 0.31 against the same bot at a 2-second budget over 20 drafts, and −0.14 ± 0.29 at 8 seconds. More compute did not rescue it, so the shortlist stays ordered by the fast ranking and the simulation columns are labeled as not yet validated.",
+          text: "Draft rollouts plus weekly matchup simulation scored −0.32 ± 0.31 against the same bot, and more compute did not rescue it. The shortlist stays ordered by the fast ranking, and the simulation columns are labeled as not yet validated.",
         },
         {
-          title: "Learned projections ranked players better in every holdout season",
-          text: "Rank correlation between projected and realized fantasy value for the ensemble versus the hand-tuned baseline was 0.740 vs 0.720 (2022-23), 0.784 vs 0.775 (2023-24), 0.759 vs 0.718 (2024-25) and 0.659 vs 0.644 (2025-26). In paired drafts the ensemble's edge over the baseline averaged +0.38 categories per matchup and was never negative, though individual years ranged from +0.01 to +0.81 with standard errors near 0.1.",
+          title: "Two intuitive ideas made drafts worse",
+          text: "Using last season's games played instead of the model's projection lost categories in both years tested: injuries do not repeat cleanly. Weighting categories with diminishing returns cost 1.23 per matchup in 2025-26. Both were left off.",
         },
         {
-          title: "Raw injury history is a trap",
-          text: "Using last season's games played directly ranked players worse than the model's games-played projection in both years tested, and it lost categories in paired drafts in both years (−0.14 and −0.48 per matchup). Injuries do not repeat cleanly, so the model's projection, which regresses heavily toward the league norm, is used instead.",
-        },
-        {
-          title: "An intuitive heuristic made drafts worse",
-          text: "Weighting categories with diminishing returns (worth less where the roster is already strong) sounded right for head-to-head categories, but at its natural scale it cost 1.23 categories per matchup in 2025-26 and was at best a wash at gentler settings, so it was left off.",
+          title: "Merging two apps was a boundary problem, not a modelling one",
+          text: "The projects shared a domain but not their conventions, down to both backends shipping a package named app. Rather than unify them, I kept each service in its own environment, prefixed the copilot's stylesheets at build time, and added a test that fails the build if it imports from the research tree.",
         },
       ],
       results: [
@@ -641,94 +660,17 @@ export const projects = [
         { metric: "Fast recommendation latency", value: "8.9 ms", note: "p50 on a 600-player synthetic league (p95 10.3 ms)" },
       ],
       limitations: [
-        "The evaluation is retrospective and potentially leaky: scoring uses eventual games played and final rosters, and past preseason ADP is not available, so opponents are a value-order bot rather than real drafters.",
-        "Eligibility comes from the current ESPN snapshot rather than each past preseason, and holdout universes exclude rookies and players without a current ESPN link.",
-        "Draft-edge results vary a lot by season (standard errors near 0.1 against single-year swings up to 0.8), so small margins should be read as ties.",
-        "No injury forecasting: injury status is a label, and availability is a shrunk historical rate.",
-        "The 50/50 blend with ESPN's projections is not validated, because the 2026-27 season has not been played yet.",
+        "The draft evaluation is retrospective and potentially leaky: scoring uses eventual games played and final rosters, no past preseason ADP exists so opponents are a bot rather than real drafters, and eligibility comes from the current ESPN snapshot.",
+        "Results vary a lot by season (standard errors near 0.1 against single-year swings up to 0.8), so small margins should be read as ties.",
+        "The in-season half is not evaluated the way the draft advice is. Matchup odds, power rankings and free-agent swaps describe the simulator's assumptions, not measured accuracy.",
+        "No injury forecasting: status is a label and availability is a shrunk historical rate. The 50/50 blend with ESPN's projections is unvalidated until 2026-27 is played.",
+        "The research half has no adjusted impact metrics (no RAPM, EPM or similar) and no play-by-play possessions, so on/off and per-100 rates inherit the provider's figures. Coverage is limited to what the provider publishes and what I have ingested locally.",
+        "The scouting and film pages are early: the plumbing is built and tested, but no footage is on disk and the computer-vision work is still a roadmap.",
       ],
       future: [
-        "Re-test the simulation layer with ADP-based opponents and more seeds, and remove it from the default flow if it still shows no gain.",
-        "Measure coverage of the 80% projection intervals, which has not been run yet.",
-        "Score the ESPN blend weight once the 2026-27 season can be evaluated, and re-check the ensemble as seasons accumulate.",
-      ],
-    },
-  },
-  {
-    slug: "courtside-research-nba-analytics",
-    hidden: true, // hidden for now; delete this line to show it again
-    title: "Courtside Research | NBA Player & Team Analytics Workbench",
-    subtitle:
-      "A local-first research tool for exploring NBA players and teams from every angle the public data supports: league-wide scatter exploration, player profiles, a shot chart lab, offender-vs-defender matchups, lineups and on/off, transparent rankings, and a methodology page that documents every number",
-    tags: ["Sports Analytics", "Side Project"],
-    modelTypes: ["Sports Analytics"],
-    languages: ["Python", "TypeScript"],
-    stack: ["FastAPI", "pandas", "NumPy", "SciPy", "DuckDB", "Parquet", "React", "Vite", "Tailwind", "Plotly.js", "D3", "TanStack", "nba_api", "pytest", "Vitest", "Playwright", "Docker"],
-    metrics: [
-      "Eight analysis views over a resumable nba_api ingestion pipeline",
-      "Live-ingested 2023-24 to 2025-26; season totals verified against summed game logs",
-      "Clearly labelled synthetic demo league so the app works when stats.nba.com is unreachable",
-    ],
-    links: {
-      github: "", // repo is private; add https://github.com/AaronHo3/nba_advanced_statistics once public
-      demo: "",
-      report: "",
-    },
-    summary:
-      "A local-first workbench for exploring NBA players and teams: league-wide scatter exploration, player profiles with measurement provenance, an interactive shot chart lab, offender-vs-defender matchups, multi-player comparison, team rosters, lineups and on/off, transparent rankings, and a methodology page that documents every number.",
-    bullets: [
-      "Built a resumable nba_api ingestion pipeline that caches every raw response, writes normalized Parquet per data family, and records the status and coverage of each family, season, and season type in a manifest.",
-      "Served the data through FastAPI and DuckDB to a React, Plotly, and D3 front end with a league explorer, player profiles, shooting lab, matchups, comparison, teams, rankings, and a methodology page.",
-      "Added a deterministic, visibly labelled synthetic league so the app stays usable when stats.nba.com blocks the network, and kept it strictly separate from real data.",
-    ],
-    displayTitle: "Courtside Research",
-    intro:
-      "Public NBA data is rich but scattered across dozens of endpoints with different shapes and quirks. I built a local workbench to explore players and teams from every angle that data supports, where each number on screen can be traced back to how it was measured and computed.",
-    cardSummary:
-      "A local workbench for exploring NBA players and teams from every angle the public data supports, where each number traces back to how it was measured.",
-    highlight:
-      "Live data for 2023-24 to 2025-26 matched summed game logs after three provider quirks were fixed.",
-    thumbnail: "/thumbnails/courtside-research.svg",
-    context: "Personal side project",
-    status: "Working local app. Real data ingested and verified for 2023-24 to 2025-26; code repository is currently private.",
-    headlineStats: [
-      { value: "8", label: "Analysis views: league explorer, player profiles, shooting lab, matchups, compare, teams, rankings, methodology" },
-      { value: "3", label: "Seasons ingested live from stats.nba.com (2023-24 to 2025-26), with season totals checked against summed game logs" },
-      { value: "2", label: "Data namespaces, real and a labelled synthetic demo, that never mix" },
-    ],
-    caseStudy: {
-      problem: [
-        "Public NBA data is rich but scattered across dozens of endpoints with different shapes, coverage start dates, and quirks, and the provider blocks or rate-limits many networks.",
-        "I wanted one place to explore players and teams from every angle the public data supports, where each number on screen can be traced back to how it was measured and computed.",
-      ],
-      approach: [
-        "The app is local-first: the browser never talks to the provider. A backend pipeline fetches cheap league summaries first and expensive families (game logs, lineups, on/off, defensive dashboards, matchups, league-wide shots) last, caching every raw response so runs resume where they stopped.",
-        "Normalized data is stored as Parquet and queried through DuckDB by a FastAPI backend, and a React front end turns it into eight views. A methodology page documents formulas, thresholds, uncertainty, shooting geometry, and ranking construction, and a coverage matrix shows exactly which seasons and families are available.",
-      ],
-      architecture: [
-        "Ingest with nba_api in a resumable pipeline: every raw response is cached, every normalized family is written to Parquet, and a manifest records status (ok, missing, stale, failed, partial), row counts, fetch times, and source for each family, season, and season type.",
-        "Serve two namespaces, real NBA data and a deterministic synthetic demo league, which never mix; the demo is labelled on every page so it cannot be mistaken for real data.",
-        "Compute analytics in the backend: metrics, uncertainty (Wilson intervals for shooting), shrinkage toward a league-wide prior for matchup efficiency, court geometry and shooting bins, percentiles, and user-defined composite ranking lenses.",
-        "Present it in eight views: league explorer, player profile with measurement provenance, shooting lab with an interactive shot chart, offender-vs-defender matchups, multi-player comparison, team rosters with lineups and on/off, rankings, and a data and methods page.",
-        "Test with pytest (analytics, data, demo invariants, API contract, ingestion fixtures), Vitest, and Playwright smoke tests; ship with Docker Compose.",
-      ],
-      findings: [
-        {
-          title: "Real totals reconcile with game logs",
-          text: "The pipeline was run live against stats.nba.com for the 2025-26 regular season (all families) and for 2024-25 and 2023-24 from a residential US connection, and a verification step confirmed that player-season and team-season totals equal the provider's summed game logs.",
-        },
-        {
-          title: "The provider data needed reconciling before analysis",
-          text: "That live run surfaced three provider quirks, all handled in the pipeline: per-team player rows carry the player's current team id rather than the team for that stint; one turnover percentage is published on a 0-100 scale while every other percentage is a fraction; and the defensive dashboard names its made, attempted, and normal columns differently for each defense category.",
-        },
-      ],
-      limitations: [
-        "No adjusted impact metrics (no RAPM, EPM, RAPTOR, LEBRON or similar). On/off, plus-minus, net rating, and PIE are shown as the provider publishes them, unadjusted for teammates, opponents, minutes, or garbage time.",
-        "No play-by-play possessions: per-100 rates inherit the provider's possession estimates, and no lineup or on/off figure is rebuilt from play-by-play.",
-        "Shooting has no defender distance, shot clock, or shot-quality model, and Wilson intervals assume independent attempts, so they are somewhat too narrow.",
-        "Matchup possessions are fractional and scheme-dependent, and shrinkage uses one league-wide prior rather than a position- or role-specific one.",
-        "Ranking percentiles are computed within a season and do not remove era effects; overlapping components in a lens can double-count a signal.",
-        "Historical coverage depends on the provider: matchups start in 2017-18, defensive dashboards in 2013-14, and shot locations in 1996-97. When stats.nba.com is unreachable, only the synthetic demo is available.",
+        "Re-test the simulation layer with ADP-based opponents, and drop it from the default flow if it still shows no gain.",
+        "Evaluate the in-season advice against what actually happened: whether free-agent swaps and matchup odds hold up over a season.",
+        "Measure coverage of the 80% projection intervals, and score the ESPN blend weight once 2026-27 can be evaluated.",
       ],
     },
   },

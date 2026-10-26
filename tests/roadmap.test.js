@@ -4,6 +4,8 @@ import {
   crossCheckRoadmap,
   nextPaper,
   resolvePaperForPost,
+  sessionSchedule,
+  unitStarts,
   validateRoadmap,
 } from "../src/lib/content/roadmap.js";
 import { isPublished } from "../src/lib/content/posts.js";
@@ -188,5 +190,60 @@ describe("next paper", () => {
 
   it("is null when every paper has been discussed", () => {
     expect(nextPaper([paper("done", { status: "published" })])).toBeNull();
+  });
+});
+
+describe("units", () => {
+  it("rejects a unit that is not a non-empty string", () => {
+    expect(validateRoadmap([paper("a", { unit: "" })]).errors.join()).toMatch(/"unit"/);
+    expect(validateRoadmap([paper("a", { unit: "Graphs" })]).errors).toEqual([]);
+  });
+
+  it("marks an entry as starting a unit only when its unit differs from the previous entry's", () => {
+    const list = [
+      paper("a", { unit: "Foundations" }),
+      paper("b", { unit: "Foundations" }),
+      paper("c", { unit: "Graphs" }),
+      paper("d"),
+      paper("e", { unit: "Graphs" }),
+    ];
+    expect(unitStarts(list)).toEqual([true, false, true, false, true]);
+  });
+
+  it("follows the entries when one is moved", () => {
+    const list = [paper("a", { unit: "One" }), paper("b", { unit: "Two" }), paper("c", { unit: "One" })];
+    expect(unitStarts([list[0], list[2], list[1]])).toEqual([true, false, true]);
+  });
+});
+
+describe("session schedule", () => {
+  it("groups entries that share a date into one session, in source order", () => {
+    const list = [
+      paper("past", { status: "published", sessionDate: "2026-10-18", unit: "Foundations" }),
+      paper("main", { status: "scheduled", sessionDate: "2026-11-01", unit: "Foundations" }),
+      paper("companion", { status: "scheduled", sessionDate: "2026-11-01", unit: "Foundations" }),
+      paper("undated"),
+      paper("later", { status: "scheduled", sessionDate: "2026-11-08", unit: "Graphs" }),
+    ];
+    const sessions = sessionSchedule(list);
+    expect(sessions.map((s) => s.date)).toEqual(["2026-10-18", "2026-11-01", "2026-11-08"]);
+    expect(sessions[1].papers.map((p) => p.id)).toEqual(["main", "companion"]);
+    expect(sessions.map((s) => s.unit)).toEqual(["Foundations", "Foundations", "Graphs"]);
+  });
+
+  it("marks a session done only when every reading in it has been discussed", () => {
+    const list = [
+      paper("a", { status: "discussed", sessionDate: "2026-10-11" }),
+      paper("b", { status: "published", sessionDate: "2026-11-01" }),
+      paper("c", { status: "scheduled", sessionDate: "2026-11-01" }),
+    ];
+    expect(sessionSchedule(list).map((s) => s.done)).toEqual([true, false]);
+  });
+
+  it("does not mutate the source entries", () => {
+    const list = [paper("a", { status: "scheduled", sessionDate: "2026-11-01" })];
+    const snapshot = structuredClone(list);
+    sessionSchedule(list);
+    expect(list).toEqual(snapshot);
   });
 });

@@ -153,6 +153,23 @@ date. The numbers on the page are computed from the position.
 Every entry has a stable `id` (like `bert`). Never derive it from the title,
 and do not change it once an article uses it as `paperId`.
 
+### Units and sessions
+
+Two optional fields shape the `/reading-club` page:
+
+- **`unit`** groups papers under a theme, like `"Structure prediction"`. The
+  page prints a heading wherever an entry's `unit` differs from the one above
+  it, so keep a unit's papers together in the file. There is no separate list
+  of units to maintain: adding one to an entry is all it takes.
+- **`sessionDate`** also feeds the **Schedule** section at the top of the page,
+  which lists every dated entry. Two entries that share a date (a paper plus a
+  companion reading, as with Attention Is All You Need and The Annotated
+  Transformer) appear as one session. A session shows as "Discussed" once every
+  reading in it has status `discussed` or `published`.
+
+Entries without a `unit` or a `sessionDate` still render; they simply get no
+heading and stay out of the schedule.
+
 ### Add a paper
 
 Copy this block, fill it in, and paste it where it belongs in the list
@@ -172,6 +189,7 @@ Copy this block, fill it in, and paste it where it belongs in the list
     bioConnection: "Structure prediction and variant-effect scoring from sequence.",
     exercise: "Embed a few protein families and check whether they cluster.",
     topics: ["proteins", "sequences"],
+    unit: "Protein language models",                        // optional; prints a heading when it changes
     status: "backlog",
   },
 ```

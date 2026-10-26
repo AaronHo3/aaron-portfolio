@@ -63,7 +63,7 @@ export function validateRoadmap(papers) {
         errors.push(`${where} "${field}" must be a list of strings when present`);
       }
     }
-    for (const field of ["question", "concept", "bioConnection", "exercise", "venue"]) {
+    for (const field of ["question", "concept", "bioConnection", "exercise", "venue", "unit"]) {
       if (paper[field] != null && !isNonEmptyString(paper[field])) {
         errors.push(`${where} "${field}" must be a non-empty string when present`);
       }
@@ -156,6 +156,39 @@ export function buildRoadmap(papers, publicPosts) {
 
 /** Statuses meaning the session has already happened. */
 const DONE_STATUSES = new Set(["discussed", "published"]);
+
+/**
+ * For each entry, whether a unit heading belongs above it: true when it has a
+ * unit that differs from the previous entry's. Derived from neighbors, so
+ * moving an entry can never leave a stale heading behind.
+ * @param {object[]} papers
+ * @returns {boolean[]}
+ */
+export function unitStarts(papers) {
+  return papers.map((paper, i) => Boolean(paper.unit) && paper.unit !== papers[i - 1]?.unit);
+}
+
+/**
+ * Dated entries grouped into sessions, in source order. Entries sharing a
+ * `sessionDate` (a paper plus a companion reading) form one session. A session
+ * is done once every reading in it has been discussed.
+ * @param {object[]} papers
+ * @returns {{ date: string, time: string | null, unit: string | null, papers: object[], done: boolean }[]}
+ */
+export function sessionSchedule(papers) {
+  const byDate = new Map();
+  for (const paper of papers) {
+    if (!paper.sessionDate) continue;
+    const session = byDate.get(paper.sessionDate);
+    byDate.set(
+      paper.sessionDate,
+      session
+        ? { ...session, papers: [...session.papers, paper] }
+        : { date: paper.sessionDate, time: paper.sessionTime ?? null, unit: paper.unit ?? null, papers: [paper] },
+    );
+  }
+  return [...byDate.values()].map((s) => ({ ...s, done: s.papers.every((p) => DONE_STATUSES.has(p.status)) }));
+}
 
 /**
  * The paper the club reads next: the first entry, in source order, whose
