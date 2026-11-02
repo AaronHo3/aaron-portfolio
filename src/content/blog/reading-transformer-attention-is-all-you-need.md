@@ -40,43 +40,60 @@ Self-attention allows the representation of "it" to incorporate information from
 Now, the original Transformer paper used an **encoder-decoder architecture**.
 
 <figure class="diagram" id="fig-architecture">
-<svg viewBox="0 0 400 404" role="img" aria-labelledby="fig-architecture-t fig-architecture-d">
+<svg viewBox="0 0 400 428" role="img" aria-labelledby="fig-architecture-t fig-architecture-d">
 <title id="fig-architecture-t">The encoder-decoder Transformer</title>
-<desc id="fig-architecture-d">On the left, the encoder: input embedding plus positional encoding feeds a stack of six identical layers, each with multi-head self-attention and a feed-forward network, both followed by add and norm. On the right, the decoder: output embedding plus positional encoding, shifted right, feeds six identical layers with masked self-attention, cross-attention and a feed-forward network. An arrow carries the encoder's n by 512 output into every decoder layer's cross-attention. The decoder stack ends in a linear layer and a softmax producing output probabilities.</desc>
+<desc id="fig-architecture-d">Data flows from the bottom of the figure to the top. On the left, the inputs pass through an input embedding, have a positional encoding added, and enter the encoder: a stack, repeated six times, of multi-head attention, add and norm, a feed-forward network, and add and norm. On the right, the outputs shifted right pass through an output embedding and positional encoding into the decoder: a stack, repeated six times, of masked multi-head attention, add and norm, multi-head attention, add and norm, a feed-forward network, and add and norm. An arrow carries the encoder's output into the decoder's middle multi-head attention, where it supplies the keys and values. Above the decoder, a linear layer and a softmax produce the output probabilities.</desc>
 <defs><marker id="fig-architecture-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="dg-mk"/></marker><marker id="fig-architecture-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="dg-mka"/></marker></defs>
-<text x="94" y="16" class="dg-h" font-size="13.5" text-anchor="middle">Encoder</text>
-<text x="306" y="16" class="dg-h" font-size="13.5" text-anchor="middle">Decoder</text>
-<rect x="10" y="24" width="168" height="150" rx="8" class="dg-a"/>
-<rect x="20" y="34" width="148" height="40" rx="6" class="dg-b"/><text x="94" y="53" class="dg-h" font-size="12" text-anchor="middle">Multi-Head</text><text x="94" y="68" class="dg-m" font-size="11" text-anchor="middle">Self-Attention</text>
-<text x="94" y="88" class="dg-m" font-size="10.5" text-anchor="middle">Add & Norm</text>
-<rect x="20" y="96" width="148" height="36" rx="6" class="dg-b"/><text x="94" y="118.5" class="dg-h" font-size="12" text-anchor="middle">Feed Forward</text>
-<text x="94" y="146" class="dg-m" font-size="10.5" text-anchor="middle">Add & Norm</text>
-<text x="94" y="165" class="dg-t" font-size="11.5" text-anchor="middle">× 6 layers</text>
-<rect x="222" y="24" width="168" height="186" rx="8" class="dg-a"/>
-<rect x="232" y="32" width="148" height="36" rx="6" class="dg-b"/><text x="306" y="54.5" class="dg-h" font-size="11.5" text-anchor="middle">Masked Self-Attn</text>
-<text x="306" y="80" class="dg-m" font-size="10.5" text-anchor="middle">Add & Norm</text>
-<rect x="232" y="88" width="148" height="36" rx="6" class="dg-w"/><text x="306" y="110.5" class="dg-h" font-size="11.5" text-anchor="middle">Cross-Attention</text>
-<text x="306" y="136" class="dg-m" font-size="10.5" text-anchor="middle">Add & Norm</text>
-<rect x="232" y="144" width="148" height="32" rx="6" class="dg-b"/><text x="306" y="164.5" class="dg-h" font-size="11.5" text-anchor="middle">Feed Forward</text>
-<text x="306" y="188" class="dg-m" font-size="10.5" text-anchor="middle">Add & Norm</text>
-<text x="306" y="203" class="dg-t" font-size="11.5" text-anchor="middle">× 6 layers</text>
-<path d="M178 112H228" class="dg-la" marker-end="url(#fig-architecture-b)"/>
-<text x="200" y="104" class="dg-t" font-size="10" text-anchor="middle">n<tspan dy="3" font-size="0.72em"></tspan><tspan dy="-3"></tspan>×512</text>
-<rect x="10" y="226" width="168" height="34" rx="6" class="dg-b"/><text x="94" y="247.5" class="dg-h" font-size="11.5" text-anchor="middle">Input Embedding + PE</text>
-<rect x="222" y="226" width="168" height="34" rx="6" class="dg-b"/><text x="306" y="247.5" class="dg-h" font-size="11.5" text-anchor="middle">Output Embedding + PE</text>
-<text x="306" y="276" class="dg-m" font-size="11" text-anchor="middle">(outputs shifted right)</text>
-<path d="M94 224L94 178" class="dg-l" marker-end="url(#fig-architecture-a)"/>
-<path d="M306 224L306 214" class="dg-l" marker-end="url(#fig-architecture-a)"/>
-<path d="M306 22L306 8" class="dg-l" marker-end="url(#fig-architecture-a)"/>
-<rect x="244" y="300" width="124" height="30" rx="6" class="dg-b"/><text x="306" y="319.5" class="dg-h" font-size="12" text-anchor="middle">Linear</text>
-<rect x="244" y="340" width="124" height="30" rx="6" class="dg-a"/><text x="306" y="359.5" class="dg-h" font-size="12" text-anchor="middle">Softmax</text>
-<text x="306" y="390" class="dg-t" font-size="11.5" text-anchor="middle">output probabilities</text>
-<path d="M390 8H392V300" class="dg-l"/>
-<path d="M392 300L380 300" class="dg-l" marker-end="url(#fig-architecture-a)"/>
-<path d="M306 332L306 338" class="dg-l" marker-end="url(#fig-architecture-a)"/>
-<path d="M306 372L306 380" class="dg-l" marker-end="url(#fig-architecture-a)"/>
+<text x="291" y="34" class="dg-t" font-size="11.5" text-anchor="middle">output probabilities</text>
+<path d="M291 50V40" class="dg-l" marker-end="url(#fig-architecture-a)"/>
+<rect x="226" y="50" width="130" height="24" rx="6" class="dg-a"/><text x="291" y="66.5" class="dg-h" font-size="11" text-anchor="middle">Softmax</text>
+<path d="M291 88V76" class="dg-l" marker-end="url(#fig-architecture-a)"/>
+<rect x="226" y="88" width="130" height="24" rx="6" class="dg-b"/><text x="291" y="104.5" class="dg-h" font-size="11" text-anchor="middle">Linear</text>
+<path d="M291 132V114" class="dg-l" marker-end="url(#fig-architecture-a)"/>
+<rect x="216" y="132" width="150" height="198" rx="8" class="dg-off"/>
+<text x="362" y="126" class="dg-h" font-size="12" text-anchor="end">Decoder</text>
+<rect x="226" y="286" width="130" height="36" rx="6" class="dg-a"/><text x="291" y="303" class="dg-h" font-size="11" text-anchor="middle">Masked Multi-Head</text><text x="291" y="318" class="dg-m" font-size="11" text-anchor="middle">Attention</text>
+<path d="M291 286V280" class="dg-l"/>
+<rect x="226" y="264" width="130" height="16" rx="6" class="dg-w"/><text x="291" y="276.5" class="dg-h" font-size="9.5" text-anchor="middle">Add &amp; Norm</text>
+<path d="M291 264V258" class="dg-l"/>
+<rect x="226" y="222" width="130" height="36" rx="6" class="dg-a"/><text x="291" y="239" class="dg-h" font-size="11" text-anchor="middle">Multi-Head</text><text x="291" y="254" class="dg-m" font-size="11" text-anchor="middle">Attention</text>
+<path d="M291 222V216" class="dg-l"/>
+<rect x="226" y="200" width="130" height="16" rx="6" class="dg-w"/><text x="291" y="212.5" class="dg-h" font-size="9.5" text-anchor="middle">Add &amp; Norm</text>
+<path d="M291 200V194" class="dg-l"/>
+<rect x="226" y="164" width="130" height="30" rx="6" class="dg-v"/><text x="291" y="183.5" class="dg-h" font-size="11" text-anchor="middle">Feed Forward</text>
+<path d="M291 164V158" class="dg-l"/>
+<rect x="226" y="142" width="130" height="16" rx="6" class="dg-w"/><text x="291" y="154.5" class="dg-h" font-size="9.5" text-anchor="middle">Add &amp; Norm</text>
+<text x="372" y="235" class="dg-h" font-size="12" text-anchor="start">6×</text>
+<rect x="34" y="196" width="150" height="134" rx="8" class="dg-off"/>
+<text x="36" y="188" class="dg-h" font-size="12" text-anchor="start">Encoder</text>
+<rect x="44" y="286" width="130" height="36" rx="6" class="dg-a"/><text x="109" y="303" class="dg-h" font-size="11" text-anchor="middle">Multi-Head</text><text x="109" y="318" class="dg-m" font-size="11" text-anchor="middle">Attention</text>
+<path d="M109 286V280" class="dg-l"/>
+<rect x="44" y="264" width="130" height="16" rx="6" class="dg-w"/><text x="109" y="276.5" class="dg-h" font-size="9.5" text-anchor="middle">Add &amp; Norm</text>
+<path d="M109 264V258" class="dg-l"/>
+<rect x="44" y="228" width="130" height="30" rx="6" class="dg-v"/><text x="109" y="247.5" class="dg-h" font-size="11" text-anchor="middle">Feed Forward</text>
+<path d="M109 228V222" class="dg-l"/>
+<rect x="44" y="206" width="130" height="16" rx="6" class="dg-w"/><text x="109" y="218.5" class="dg-h" font-size="9.5" text-anchor="middle">Add &amp; Norm</text>
+<text x="28" y="267" class="dg-h" font-size="12" text-anchor="end">6×</text>
+<path d="M109 196V172H200V240H224" class="dg-la" marker-end="url(#fig-architecture-b)"/>
+<text x="155" y="165" class="dg-t" font-size="10.5" text-anchor="middle">K, V</text>
+<path d="M109 341V324" class="dg-l" marker-end="url(#fig-architecture-a)"/>
+<circle cx="109" cy="350" r="9" class="dg-b"/>
+<path d="M104 350H114M109 345V355" class="dg-l"/>
+<text x="94" y="347" class="dg-m" font-size="10" text-anchor="end">Positional</text>
+<text x="94" y="359" class="dg-m" font-size="10" text-anchor="end">Encoding</text>
+<path d="M109 374V361" class="dg-l" marker-end="url(#fig-architecture-a)"/>
+<rect x="34" y="374" width="150" height="26" rx="6" class="dg-b"/><text x="109" y="391.5" class="dg-h" font-size="11" text-anchor="middle">Input Embedding</text>
+<path d="M291 341V324" class="dg-l" marker-end="url(#fig-architecture-a)"/>
+<circle cx="291" cy="350" r="9" class="dg-b"/>
+<path d="M286 350H296M291 345V355" class="dg-l"/>
+<text x="306" y="347" class="dg-m" font-size="10" text-anchor="start">Positional</text>
+<text x="306" y="359" class="dg-m" font-size="10" text-anchor="start">Encoding</text>
+<path d="M291 374V361" class="dg-l" marker-end="url(#fig-architecture-a)"/>
+<rect x="216" y="374" width="150" height="26" rx="6" class="dg-b"/><text x="291" y="391.5" class="dg-h" font-size="11" text-anchor="middle">Output Embedding</text>
+<text x="109" y="420" class="dg-t" font-size="11.5" text-anchor="middle">Inputs</text>
+<text x="291" y="420" class="dg-t" font-size="11.5" text-anchor="middle">Outputs (shifted right)</text>
 </svg>
-<figcaption><strong>Figure 1. The whole architecture.</strong> Redrawn from Figure 1 of Vaswani et al. (2017). The encoder reads the whole input at once; the decoder produces one token at a time and reaches back into the encoder's output through cross-attention.</figcaption>
+<figcaption><strong>Figure 1. The whole architecture.</strong> Redrawn from Figure 1 of Vaswani et al. (2017); read it from the bottom up. The encoder reads the whole input at once. The decoder produces one token at a time and reaches back into the encoder's output through its middle attention layer (cross-attention), which takes its keys and values from the encoder.</figcaption>
 </figure>
 
 - **Encoder:** Processes the input sequence and produces contextual representations of its tokens.
