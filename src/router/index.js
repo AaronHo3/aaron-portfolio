@@ -1,5 +1,7 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 
+import { clearChunkReload, recoverFromStaleChunk } from "../lib/staleChunk.js";
+
 import Home from "../pages/Home.vue";
 import Projects from "../pages/Projects.vue";
 import About from "../pages/About.vue";
@@ -7,7 +9,8 @@ import Contact from "../pages/Contact.vue";
 import ProjectDetail from "../pages/ProjectDetail.vue";
 
 // Blog pages are lazy-loaded so their styles (KaTeX, article typography) and
-// content stay out of the main bundle.
+// content stay out of the main bundle. If a deploy renames these chunks under
+// an already-open tab, router.onError below recovers; see ../lib/staleChunk.js.
 const Blog = () => import("../pages/Blog.vue");
 const BlogPost = () => import("../pages/BlogPost.vue");
 const ReadingClub = () => import("../pages/ReadingClub.vue");
@@ -39,4 +42,13 @@ export const router = createRouter({
 
 router.afterEach((to) => {
   if (to.meta.title) document.title = to.meta.title;
+  // A navigation finished, so the bundle is current again: let a future deploy
+  // trigger its own one-time reload.
+  clearChunkReload();
+});
+
+// A lazy page whose chunk a deploy has removed. Reload at the target route so
+// the reader lands where they clicked rather than back where they started.
+router.onError((error, to) => {
+  recoverFromStaleChunk(error, to?.fullPath);
 });
