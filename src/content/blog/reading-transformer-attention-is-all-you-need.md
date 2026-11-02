@@ -2,7 +2,7 @@
 title: "Reading the Transformer: Attention Is All You Need"
 description: "My notes on the Transformer: how self-attention replaced recurrence, what every matrix dimension actually is, and a worked example of attention you can follow by hand."
 date: 2026-11-01
-draft: true
+draft: false
 tags: [sequences, representation-learning, ml]
 series: ml-bio-reading-club
 paperId: transformer
@@ -704,4 +704,3 @@ The number of attention scores grows quadratically with the sequence length.
 
 - Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, Ł., and Polosukhin, I. (2017). Attention Is All You Need. *NeurIPS*. [arXiv:1706.03762](https://arxiv.org/abs/1706.03762)
 - Alammar, J. (2018). The Illustrated Transformer. [jalammar.github.io](https://jalammar.github.io/illustrated-transformer/)
-- Huang, A., Subramanian, S., Sum, J., Almubarak, K., and Biderman, S. (2022). The Annotated Transformer. Harvard NLP, after the original post by Sasha Rush. [nlp.seas.harvard.edu](https://nlp.seas.harvard.edu/annotated-transformer/)
